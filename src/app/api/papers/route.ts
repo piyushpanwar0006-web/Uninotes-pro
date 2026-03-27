@@ -24,7 +24,7 @@ export const GET = withAuth(async (req: NextRequest, { supabase }) => {
   });
 
   if (!parsed.success) {
-    return errorResponse(parsed.error.errors[0].message, 400, 'VALIDATION_ERROR');
+    return errorResponse(parsed.error.issues[0].message, 400, 'VALIDATION_ERROR');
   }
 
   const { subjectId, page, limit } = parsed.data;

@@ -2,6 +2,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BranchCatalog from '@/components/BranchCatalog';
+import HomeSearch from '@/components/HomeSearch';
 import { Search, Users, Star, BookOpen, CheckCircle2 } from 'lucide-react';
 
 export default function Home() {
@@ -30,19 +31,8 @@ export default function Home() {
               PYQs, and resource guides curated by the MBM community.
             </p>
 
-            <div className="max-w-2xl mx-auto relative group animate-fade-in stagger-3">
-              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
-              <div className="relative flex items-center bg-white rounded-2xl p-2 shadow-2xl shadow-slate-200 border border-slate-100">
-                <Search className="ml-4 text-slate-400 w-5 h-5" />
-                <input 
-                  type="text" 
-                  placeholder="What subject or topic do you want to study today?" 
-                  className="flex-grow px-4 py-3 outline-none text-slate-900 font-medium placeholder:text-slate-400"
-                />
-                <button className="btn-premium-primary text-sm">
-                  Search
-                </button>
-              </div>
+            <div className="max-w-2xl mx-auto flex justify-center w-full">
+              <HomeSearch />
             </div>
 
             <div className="mt-12 flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">

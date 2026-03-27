@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { successResponse, errorResponse } from '@/types/api';
 
 const schema = z.object({
@@ -30,8 +31,9 @@ export const POST = withAuth(async (req: NextRequest, { supabase }) => {
 
   const { branch, semester, name, code } = parsed.data;
 
-  // Upsert: find existing or create
-  const { data, error } = await supabase
+  // Upsert: find existing or create bypassing RLS
+  const adminClient = createAdminClient();
+  const { data, error } = await adminClient
     .from('subjects')
     .upsert(
       { branch, semester, name, code: code ?? null },
