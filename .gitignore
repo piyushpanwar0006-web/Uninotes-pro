@@ -173,3 +173,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 >>>>>>> 59b1fac (Initial commit)
+
+# Local Netlify folder
+.netlify

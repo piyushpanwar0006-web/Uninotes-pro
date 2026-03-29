@@ -1,7 +1,9 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { branchData } from '@/data/branches';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { createClient } from '@/lib/supabase/client';
 import {
   FileText,
   ChevronRight,
@@ -9,7 +11,10 @@ import {
   Download,
   ExternalLink,
   BookOpen,
-  Filter
+  Filter,
+  Eye,
+  Upload,
+  Loader2
 } from 'lucide-react';
 
 export default function BranchPage({ params }) {
@@ -17,9 +22,10 @@ export default function BranchPage({ params }) {
 
   // Normalize branch name to match branchData keys
   const getBranchKey = (name) => {
+    // 1. Direct match
     if (branchData[name]) return name;
 
-    // Mapping from table names to data keys
+    // 2. Formal mapping (from database labels or variants)
     const mapping = {
       'B.E. (Chemical Engineering (CE))': 'Chemical Engineering',
       'B.E. (Civil Engineering (CE))': 'Civil Engineering',
@@ -38,9 +44,22 @@ export default function BranchPage({ params }) {
       'Bachelor of Architecture (B.Arch)': 'Bachelor of Architecture (B.Arch)',
       'Civil Semester': 'Civil Engineering (CE)',
       'Mechanical Semester': 'Mechanical Engineering (ME)',
+      // Partial/Variant matches
+      'Artificial Intelligence and Data Science (AI&DS)': 'Artificial Intelligence & Data Science (ADS)',
+      'AI&DS': 'Artificial Intelligence & Data Science (ADS)',
+      'CSE': 'Computer Science Engineering (CSE)',
+      'ECE': 'Electronics & Communication Engineering (ECE)',
+      'IT': 'Information Technology',
     };
 
-    return mapping[name] || name;
+    if (mapping[name]) return mapping[name];
+
+    // 3. Try stripping "B.E. " prefix
+    const stripped = name.replace(/^B\.E\.\s+\((.*)\)$/, '$1').replace(/^B\.E\.\s+/, '');
+    if (branchData[stripped]) return stripped;
+    if (mapping[stripped]) return mapping[stripped];
+
+    return name;
   };
 
   const dataKey = getBranchKey(branchName);
@@ -61,6 +80,63 @@ export default function BranchPage({ params }) {
   }
 
   const semesters = Object.keys(data).sort((a, b) => a - b);
+
+  // Database ID mapping state
+  const [subjectMappings, setSubjectMappings] = useState({});
+  const [dbLoading, setDbLoading] = useState(true);
+
+  useEffect(() => {
+    async function resolveAllSubjects() {
+      setDbLoading(true);
+      const supabase = createClient();
+      const newMappings = {};
+
+      try {
+        // Collect all subjects across all semesters for this branch
+        const allSubjects = [];
+        semesters.forEach(sem => {
+          data[sem].forEach(subject => {
+            allSubjects.push({ sem, ...subject });
+          });
+        });
+
+        // Resolve each subject (using the API to ensure upsert happens if needed)
+        // We do this in parallel for speed
+        await Promise.all(allSubjects.map(async (subj) => {
+          try {
+            const res = await fetch('/api/subjects/resolve', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                branch: branchName,
+                semester: parseInt(subj.sem),
+                name: subj.name,
+                code: subj.code
+              })
+            });
+            const result = await res.json();
+            if (result.success && result.data?.id) {
+              newMappings[`${subj.sem}-${subj.name}`] = result.data.id;
+            }
+          } catch (err) {
+            console.error(`Failed to resolve subject ${subj.name}:`, err);
+          }
+        }));
+
+        setSubjectMappings(newMappings);
+      } catch (err) {
+        console.error('Error in batch resolution:', err);
+      } finally {
+        setDbLoading(false);
+      }
+    }
+
+    if (data && branchName) {
+      resolveAllSubjects();
+    }
+  }, [dataKey, branchName]);
+
+  const getDbId = (sem, name) => subjectMappings[`${sem}-${name}`];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
@@ -136,7 +212,7 @@ export default function BranchPage({ params }) {
             {/* Subjects Grid */}
             <div className="flex-grow space-y-20">
               {semesters.map((sem) => (
-                <div key={sem} id={`#sem-${sem}`} className="scroll-mt-28">
+                <div key={sem} id={`sem-${sem}`} className="scroll-mt-28">
                   <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
                     <h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">
                       <span className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs">
@@ -150,35 +226,91 @@ export default function BranchPage({ params }) {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {data[sem].map((subject, idx) => (
-                      <div key={idx} className="glass-card p-6 hover-lift border-slate-100">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-500 transition-colors">
-                            {FileText && <FileText size={24} strokeWidth={1.5} />}
+                    {data[sem].map((subject, idx) => {
+                      const dbId = getDbId(sem, subject.name);
+                      // Always have a View Notes URL — use DB id if exists, otherwise a search URL
+                      const viewNotesUrl = subject.code && subject.code !== '—'
+                        ? `/subjects/${subject.code}`
+                        : dbId 
+                          ? `/subjects/${dbId}`
+                          : `/subjects/search?branch=${encodeURIComponent(branchName)}&semester=${sem}&name=${encodeURIComponent(subject.name)}`;
+                      const uploadUrl = `/upload?branch=${encodeURIComponent(branchName)}&semester=${sem}&subject=${encodeURIComponent(subject.name)}`;
+
+                      return (
+                        <div key={idx} className="glass-card p-6 hover-lift border-slate-100 flex flex-col">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
+                              <FileText size={24} strokeWidth={1.5} />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {dbId && !dbLoading && (
+                                <span className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded text-[10px] font-black uppercase tracking-wider">
+                                  PDFs Available
+                                </span>
+                              )}
+                              <span className="px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-black uppercase tracking-wider">
+                                {subject.code || 'CODE'}
+                              </span>
+                            </div>
                           </div>
-                          <span className="px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-black uppercase tracking-wider">
-                            {subject.code || 'CODE'}
-                          </span>
+
+                          <a href={viewNotesUrl} className="group/title block mb-2">
+                            <h3 className="text-lg font-black text-slate-900 leading-snug group-hover/title:text-emerald-600 transition-colors">
+                              {subject.name}
+                            </h3>
+                          </a>
+
+                          <p className="text-sm text-slate-400 font-medium mb-6 flex-grow">
+                            Access verified lecture materials and past papers for better preparation.
+                          </p>
+
+                          <div className="flex flex-col gap-2">
+                            {/* View Notes — always present */}
+                            <a
+                              href={viewNotesUrl}
+                              className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                                dbId
+                                  ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                              }`}
+                            >
+                              <span className="flex items-center gap-1.5">
+                                <Eye size={14} />
+                                View Notes
+                              </span>
+                              {dbId && !dbLoading && (
+                                <span className="bg-white/20 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                                  PDFs ✓
+                                </span>
+                              )}
+                            </a>
+
+                            {/* Upload Notes */}
+                            <button
+                              disabled={dbLoading}
+                              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-all disabled:opacity-60"
+                              onClick={() => {
+                                window.location.href = uploadUrl;
+                              }}
+                            >
+                              {dbLoading ? (
+                                <><Loader2 size={12} className="animate-spin" /> Loading…</>
+                              ) : (
+                                <>Upload Notes <Upload size={14} /></>
+                              )}
+                            </button>
+
+                            {/* PYQs & Prep */}
+                            <a
+                              href={viewNotesUrl}
+                              className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs font-bold hover:bg-slate-50 transition-all"
+                            >
+                              PYQs &amp; Prep <ExternalLink size={14} />
+                            </a>
+                          </div>
                         </div>
-
-                        <h3 className="text-lg font-black text-slate-900 mb-2 truncate">
-                          {subject.name}
-                        </h3>
-
-                        <p className="text-sm text-slate-400 font-medium mb-6">
-                          Access verified lecture materials for better preparation.
-                        </p>
-
-                        <div className="flex flex-col gap-2">
-                          <button className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-all">
-                            Access Notes {Download && <Download size={14} />}
-                          </button>
-                          <button className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs font-bold hover:bg-slate-50 transition-all">
-                            PYQs & Prep {ExternalLink && <ExternalLink size={14} />}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ))}

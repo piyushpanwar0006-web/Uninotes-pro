@@ -17,8 +17,11 @@ const querySchema = z.object({
 export const GET = withAuth(async (req: NextRequest, { supabase }) => {
   const { searchParams } = new URL(req.url);
 
+  const subjectIdParam = searchParams.get('subjectId');
+  const normalizedSubjectId = (subjectIdParam === 'null' || subjectIdParam === 'undefined') ? undefined : (subjectIdParam ?? undefined);
+
   const parsed = querySchema.safeParse({
-    subjectId: searchParams.get('subjectId') ?? undefined,
+    subjectId: normalizedSubjectId,
     page: searchParams.get('page') ?? 1,
     limit: searchParams.get('limit') ?? 20,
   });

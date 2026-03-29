@@ -1052,7 +1052,7 @@ export const branchData = {
       { name: "Basic Electronics", code: "FCC36A(ECE)" }
     ]
   },
-  "Mechanical Engineering (ME)": {
+  "Mechanical Semester": {
     1: [
       // THEORY
       { name: "Basic Electronics", code: "FCC36A(ECE)" },

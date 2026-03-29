@@ -1,11 +1,22 @@
 'use client';
-import { Github, Twitter, Mail } from 'lucide-react';
+import { Mail, XIcon } from 'lucide-react';
 
-// Inline LinkedIn SVG — lucide-react renamed this icon across versions
 const LinkedInIcon = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-    <rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const GithubIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a5.4 5.4 0 0 0-1.5-3.8 5.4 5.4 0 0 0-.1-3.7s-1.2-.4-3.9 1.4a13.3 13.3 0 0 0-7 0c-2.7-1.8-3.9-1.4-3.9-1.4a5.4 5.4 0 0 0-.1 3.7 5.4 5.4 0 0 0-1.5 3.8c0 4.9 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4" /><path d="M9 18c-4.5 1.5-5-2.5-7-3" />
+  </svg>
+);
+
+const TwitterIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
   </svg>
 );
 
@@ -24,12 +35,12 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-slate-400 font-medium leading-relaxed mb-6">
-              The smartest, fastest, and most trusted way to learn and prepare 
+              The smartest, fastest, and most trusted way to learn and prepare
               for MBM University engineering exams.
             </p>
             <div className="flex items-center gap-4 text-slate-400">
-              {Twitter && <Twitter className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />}
-              {Github && <Github className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />}
+              <XIcon className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />
+              <GithubIcon className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />
               <LinkedInIcon className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />
               {Mail && <Mail className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />}
             </div>
