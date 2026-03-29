@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 15, 23, 42; /* Slate 900 */
+  --background-start-rgb: 248, 250, 252; /* Slate 50 */
+  --background-end-rgb: 241, 245, 249; /* Slate 100 */
+  
+  --primary: 16, 185, 129; /* Emerald 500 */
+  --primary-dark: 5, 150, 105; /* Emerald 600 */
+  --accent: 59, 130, 246; /* Blue 500 */
+}
+
+@layer base {
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  .btn-premium {
+    @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2;
+  }
+  
+  .btn-premium-primary {
+    @apply btn-premium bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 hover:shadow-emerald-600/30;
+  }
+  
+  .btn-premium-secondary {
+    @apply btn-premium bg-white text-slate-900 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300;
+  }
+
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-xl shadow-slate-200/50 rounded-2xl transition-all duration-500;
+  }
+
+  .glass-nav {
+    @apply bg-white/80 backdrop-blur-lg border-b border-slate-200/50 sticky top-0 z-50;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-600;
+  }
+}
+
+.hover-lift {
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-300/60;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-up {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slide-in-right 0.6s ease-out forwards;
+}
+
+.animate-scale-up {
+  animation: scale-up 0.5s ease-out forwards;
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
