@@ -4,6 +4,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 const querySchema = z.object({
   subjectId: z.string().uuid('subjectId must be a valid UUID').optional(),
+  branch: z.string().optional(),
+  semester: z.coerce.number().int().min(1).max(10).optional(),
+  subject: z.string().optional(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(20),
 });
@@ -18,6 +21,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const parsed = querySchema.safeParse({
     subjectId: searchParams.get('subjectId') ?? undefined,
+    branch: searchParams.get('branch') ?? undefined,
+    semester: searchParams.get('semester') ?? undefined,
+    subject: searchParams.get('subject') ?? undefined,
     page: searchParams.get('page') ?? 1,
     limit: searchParams.get('limit') ?? 20,
   });
@@ -29,18 +35,24 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const { subjectId, page, limit } = parsed.data;
+  const { subjectId, branch, semester, subject, page, limit } = parsed.data;
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
   try {
     const adminClient = createAdminClient();
 
+    // If using branch/semester/subject filtering, we force an inner join
+    const doInnerJoin = branch || semester || subject;
+    const subjectSelector = doInnerJoin
+      ? `subjects!inner( id, branch, semester, name, code )`
+      : `subjects( id, branch, semester, name, code )`;
+
     let query = adminClient
       .from('papers')
       .select(
         `id, title, description, size_bytes, status, created_at,
-         subjects ( id, branch, semester, name, code ),
+         ${subjectSelector},
          users ( full_name, avatar_url )`,
         { count: 'exact' }
       )
@@ -48,9 +60,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       .order('created_at', { ascending: false })
       .range(from, to);
 
-    if (subjectId) {
-      query = query.eq('subject_id', subjectId);
-    }
+    if (subjectId) query = query.eq('subject_id', subjectId);
+    if (branch) query = query.eq('subjects.branch', branch);
+    if (semester) query = query.eq('subjects.semester', semester);
+    if (subject) query = query.eq('subjects.name', subject);
 
     const { data, error, count } = await query;
 
@@ -62,10 +75,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       );
     }
 
+    // Compute average ratings on the fly
+    const computedData = (data ?? []).map((paper: any) => {
+      return { ...paper, avg_rating: 0, total_ratings: 0 };
+    });
+
     return NextResponse.json({
       success: true,
       data: {
-        papers: data,
+        papers: computedData,
         pagination: {
           page,
           limit,

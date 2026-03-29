@@ -9,7 +9,7 @@ import { STORAGE_BUCKET, SIGNED_URL_EXPIRES_IN } from '@/types/upload';
  * Auth-gated — user must be signed in.
  * Fetches the paper's storage_path and generates a fresh 1-hour signed URL.
  */
-export const GET = withAuth(async (req: NextRequest, { supabase }, params) => {
+export const GET = withAuth(async (req: NextRequest, { supabase, user }, params) => {
   const paperId = params?.id;
 
   if (!paperId) {
@@ -42,6 +42,18 @@ export const GET = withAuth(async (req: NextRequest, { supabase }, params) => {
   }
 
   const expiresAt = new Date(Date.now() + SIGNED_URL_EXPIRES_IN * 1000).toISOString();
+
+  // Async log the download event (no await to keep the request fast)
+  adminClient
+    .from('resource_downloads')
+    .insert({
+      resource_type: 'paper',
+      resource_id: paper.id,
+      user_id: user.id,
+    })
+    .then(({ error }) => {
+      if (error) console.error('[Download Log Error]', error);
+    });
 
   return successResponse({
     paperId: paper.id,

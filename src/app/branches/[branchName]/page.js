@@ -219,9 +219,11 @@ export default function BranchPage({ params }) {
                             </div>
                           </div>
 
-                          <h3 className="text-lg font-black text-slate-900 mb-2 leading-snug">
-                            {subject.name}
-                          </h3>
+                          <a href={viewNotesUrl} className="group/title block mb-2">
+                            <h3 className="text-lg font-black text-slate-900 leading-snug group-hover/title:text-emerald-600 transition-colors">
+                              {subject.name}
+                            </h3>
+                          </a>
 
                           <p className="text-sm text-slate-400 font-medium mb-6 flex-grow">
                             Access verified lecture materials and past papers for better preparation.
