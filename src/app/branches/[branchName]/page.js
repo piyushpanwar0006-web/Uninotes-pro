@@ -1,15 +1,18 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { branchData } from '@/data/branches';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import {
   FileText,
   ChevronRight,
-  Search,
   Download,
   ExternalLink,
   BookOpen,
-  Filter
+  Filter,
+  Loader2,
+  Upload,
+  Eye,
 } from 'lucide-react';
 
 export default function BranchPage({ params }) {
@@ -19,7 +22,6 @@ export default function BranchPage({ params }) {
   const getBranchKey = (name) => {
     if (branchData[name]) return name;
 
-    // Mapping from table names to data keys
     const mapping = {
       'B.E. (Chemical Engineering (CE))': 'Chemical Engineering',
       'B.E. (Civil Engineering (CE))': 'Civil Engineering',
@@ -45,6 +47,45 @@ export default function BranchPage({ params }) {
 
   const dataKey = getBranchKey(branchName);
   const data = branchData[dataKey];
+
+  // DB subjects: { [semester]: { [subjectName]: { id, paperCount } } }
+  const [dbSubjects, setDbSubjects] = useState({});
+  const [dbLoading, setDbLoading] = useState(true);
+
+  // Fetch DB subjects for this branch to get UUIDs and paper counts
+  useEffect(() => {
+    async function fetchDbSubjects() {
+      try {
+        const res = await fetch(
+          `/api/subjects?branch=${encodeURIComponent(branchName)}`,
+          { credentials: 'include' }
+        );
+        const json = await res.json();
+        if (!json.success) return;
+
+        // Build a lookup: semester → name (lowercased) → { id }
+        const lookup = {};
+        for (const subj of json.data ?? []) {
+          const sem = String(subj.semester);
+          if (!lookup[sem]) lookup[sem] = {};
+          lookup[sem][subj.name.toLowerCase()] = { id: subj.id };
+        }
+        setDbSubjects(lookup);
+      } catch {
+        // Non-critical — cards still render without DB link
+      } finally {
+        setDbLoading(false);
+      }
+    }
+
+    fetchDbSubjects();
+  }, [branchName]);
+
+  // Helper: get DB subject ID for a static subject, if it exists
+  const getDbId = (sem, subjectName) => {
+    const semLookup = dbSubjects[String(sem)] ?? {};
+    return semLookup[subjectName.toLowerCase()]?.id ?? null;
+  };
 
   if (!data) {
     return (
@@ -75,12 +116,12 @@ export default function BranchPage({ params }) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center sm:text-left">
             <div className="flex flex-col sm:flex-row items-center gap-6 mb-8">
               <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-emerald-500/20">
-                {BookOpen && <BookOpen size={32} />}
+                <BookOpen size={32} />
               </div>
               <div>
                 <nav className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">
                   <a href="/" className="hover:text-emerald-400">Home</a>
-                  {ChevronRight && <ChevronRight size={12} />}
+                  <ChevronRight size={12} />
                   <span className="text-slate-300">{branchName}</span>
                 </nav>
                 <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter">
@@ -105,7 +146,7 @@ export default function BranchPage({ params }) {
             <aside className="hidden lg:block w-72 shrink-0">
               <div className="glass-card p-6 sticky top-28">
                 <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
-                  {Filter && <Filter size={14} className="text-emerald-500" />} Jump to Semester
+                  <Filter size={14} className="text-emerald-500" /> Jump to Semester
                 </h2>
                 <div className="space-y-2">
                   {semesters.map((sem) => (
@@ -115,19 +156,21 @@ export default function BranchPage({ params }) {
                       className="flex items-center justify-between p-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition-all group"
                     >
                       Semester {sem}
-                      {ChevronRight && <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />}
+                      <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                   ))}
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-slate-100">
                   <div className="p-4 bg-slate-900 rounded-2xl">
-                    <div className="text-emerald-400 text-xs font-black uppercase tracking-widest mb-1">Status</div>
-                    <div className="text-white text-sm font-bold mb-3">{branchName}</div>
-                    <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                      <div className="w-[85%] h-full bg-emerald-500" />
-                    </div>
-                    <div className="text-[10px] text-slate-500 mt-2 font-bold uppercase">85% Resources Verified</div>
+                    <div className="text-emerald-400 text-xs font-black uppercase tracking-widest mb-1">Contribute</div>
+                    <div className="text-white text-sm font-bold mb-3">Have notes or PYQs?</div>
+                    <a
+                      href="/upload"
+                      className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-600 transition-all"
+                    >
+                      <Upload size={13} /> Upload PDF
+                    </a>
                   </div>
                 </div>
               </div>
@@ -136,7 +179,7 @@ export default function BranchPage({ params }) {
             {/* Subjects Grid */}
             <div className="flex-grow space-y-20">
               {semesters.map((sem) => (
-                <div key={sem} id={`#sem-${sem}`} className="scroll-mt-28">
+                <div key={sem} id={`sem-${sem}`} className="scroll-mt-28">
                   <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
                     <h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">
                       <span className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs">
@@ -145,40 +188,92 @@ export default function BranchPage({ params }) {
                       Semester {sem}
                     </h2>
                     <span className="text-xs font-black text-slate-400 uppercase tracking-widest">
-                      {data[sem].length} Courses Available
+                      {data[sem].length} Courses
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {data[sem].map((subject, idx) => (
-                      <div key={idx} className="glass-card p-6 hover-lift border-slate-100">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-500 transition-colors">
-                            {FileText && <FileText size={24} strokeWidth={1.5} />}
+                    {data[sem].map((subject, idx) => {
+                      const dbId = getDbId(sem, subject.name);
+                      // Always have a View Notes URL — use DB id if exists, otherwise a search URL
+                      const viewNotesUrl = dbId
+                        ? `/subjects/${dbId}`
+                        : `/subjects/search?branch=${encodeURIComponent(branchName)}&semester=${sem}&name=${encodeURIComponent(subject.name)}`;
+                      const uploadUrl = `/upload?branch=${encodeURIComponent(branchName)}&semester=${sem}&subject=${encodeURIComponent(subject.name)}`;
+
+                      return (
+                        <div key={idx} className="glass-card p-6 hover-lift border-slate-100 flex flex-col">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
+                              <FileText size={24} strokeWidth={1.5} />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {dbId && !dbLoading && (
+                                <span className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded text-[10px] font-black uppercase tracking-wider">
+                                  PDFs Available
+                                </span>
+                              )}
+                              <span className="px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-black uppercase tracking-wider">
+                                {subject.code || 'CODE'}
+                              </span>
+                            </div>
                           </div>
-                          <span className="px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-black uppercase tracking-wider">
-                            {subject.code || 'CODE'}
-                          </span>
+
+                          <h3 className="text-lg font-black text-slate-900 mb-2 leading-snug">
+                            {subject.name}
+                          </h3>
+
+                          <p className="text-sm text-slate-400 font-medium mb-6 flex-grow">
+                            Access verified lecture materials and past papers for better preparation.
+                          </p>
+
+                          <div className="flex flex-col gap-2">
+                            {/* View Notes — always present */}
+                            <a
+                              href={viewNotesUrl}
+                              className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                                dbId
+                                  ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                              }`}
+                            >
+                              <span className="flex items-center gap-1.5">
+                                <Eye size={14} />
+                                View Notes
+                              </span>
+                              {dbId && !dbLoading && (
+                                <span className="bg-white/20 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                                  PDFs ✓
+                                </span>
+                              )}
+                            </a>
+
+                            {/* Upload Notes */}
+                            <button
+                              disabled={dbLoading}
+                              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-all disabled:opacity-60"
+                              onClick={() => {
+                                window.location.href = uploadUrl;
+                              }}
+                            >
+                              {dbLoading ? (
+                                <><Loader2 size={12} className="animate-spin" /> Loading…</>
+                              ) : (
+                                <>Upload Notes <Upload size={14} /></>
+                              )}
+                            </button>
+
+                            {/* PYQs & Prep */}
+                            <a
+                              href={viewNotesUrl}
+                              className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs font-bold hover:bg-slate-50 transition-all"
+                            >
+                              PYQs &amp; Prep <ExternalLink size={14} />
+                            </a>
+                          </div>
                         </div>
-
-                        <h3 className="text-lg font-black text-slate-900 mb-2 truncate">
-                          {subject.name}
-                        </h3>
-
-                        <p className="text-sm text-slate-400 font-medium mb-6">
-                          Access verified lecture materials for better preparation.
-                        </p>
-
-                        <div className="flex flex-col gap-2">
-                          <button className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-all">
-                            Access Notes {Download && <Download size={14} />}
-                          </button>
-                          <button className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs font-bold hover:bg-slate-50 transition-all">
-                            PYQs & Prep {ExternalLink && <ExternalLink size={14} />}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ))}

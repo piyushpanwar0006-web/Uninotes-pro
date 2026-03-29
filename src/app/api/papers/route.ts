@@ -1,7 +1,6 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { withAuth } from '@/lib/auth';
-import { successResponse, errorResponse } from '@/types/api';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 const querySchema = z.object({
   subjectId: z.string().uuid('subjectId must be a valid UUID').optional(),
@@ -11,10 +10,10 @@ const querySchema = z.object({
 
 /**
  * GET /api/papers?subjectId=<uuid>&page=1&limit=20
- * Lists ready papers, optionally filtered by subject.
- * Protected — requires authentication.
+ * Public server-side endpoint — uses admin client to bypass RLS.
+ * Returns ready papers. Actual file access is gated by the signed-url endpoint (auth required).
  */
-export const GET = withAuth(async (req: NextRequest, { supabase }) => {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
 
   const parsed = querySchema.safeParse({
@@ -24,42 +23,62 @@ export const GET = withAuth(async (req: NextRequest, { supabase }) => {
   });
 
   if (!parsed.success) {
-    return errorResponse(parsed.error.errors[0].message, 400, 'VALIDATION_ERROR');
+    return NextResponse.json(
+      { success: false, error: parsed.error.issues[0].message },
+      { status: 400 }
+    );
   }
 
   const { subjectId, page, limit } = parsed.data;
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  let query = supabase
-    .from('papers')
-    .select(
-      `id, title, description, size_bytes, status, created_at,
-       subjects ( branch, semester, name, code ),
-       users ( full_name, avatar_url )`,
-      { count: 'exact' }
-    )
-    .eq('status', 'ready')
-    .order('created_at', { ascending: false })
-    .range(from, to);
+  try {
+    const adminClient = createAdminClient();
 
-  if (subjectId) {
-    query = query.eq('subject_id', subjectId);
+    let query = adminClient
+      .from('papers')
+      .select(
+        `id, title, description, size_bytes, status, created_at,
+         subjects ( id, branch, semester, name, code ),
+         users ( full_name, avatar_url )`,
+        { count: 'exact' }
+      )
+      .eq('status', 'ready')
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (subjectId) {
+      query = query.eq('subject_id', subjectId);
+    }
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      console.error('[GET /api/papers]', error);
+      return NextResponse.json(
+        { success: false, error: 'Failed to fetch papers.' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        papers: data,
+        pagination: {
+          page,
+          limit,
+          total: count ?? 0,
+          totalPages: Math.ceil((count ?? 0) / limit),
+        },
+      },
+    });
+  } catch (err) {
+    console.error('[GET /api/papers]', err);
+    return NextResponse.json(
+      { success: false, error: 'Internal server error.' },
+      { status: 500 }
+    );
   }
-
-  const { data, error, count } = await query;
-
-  if (error) {
-    return errorResponse('Failed to fetch papers.', 500, 'DB_ERROR');
-  }
-
-  return successResponse({
-    papers: data,
-    pagination: {
-      page,
-      limit,
-      total: count ?? 0,
-      totalPages: Math.ceil((count ?? 0) / limit),
-    },
-  });
-});
+}

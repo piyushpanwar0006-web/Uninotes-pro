@@ -1,5 +1,5 @@
 'use client';
-import { Github, Twitter, Mail } from 'lucide-react';
+import { Github, Twitter as X, Mail } from 'lucide-react';
 
 // Inline LinkedIn SVG — lucide-react renamed this icon across versions
 const LinkedInIcon = ({ className }) => (
@@ -28,7 +28,7 @@ export default function Footer() {
               for MBM University engineering exams.
             </p>
             <div className="flex items-center gap-4 text-slate-400">
-              {Twitter && <Twitter className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />}
+              {X && <X className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />}
               {Github && <Github className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />}
               <LinkedInIcon className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />
               {Mail && <Mail className="w-5 h-5 hover:text-emerald-500 cursor-pointer transition-colors" />}
