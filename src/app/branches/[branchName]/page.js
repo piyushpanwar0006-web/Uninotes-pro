@@ -3,18 +3,30 @@ import { useState, useEffect } from 'react';
 import { branchData } from '@/data/branches';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+<<<<<<< HEAD
 import { createClient } from '@/lib/supabase/client';
 import {
   FileText,
   ChevronRight,
   Search,
+=======
+import {
+  FileText,
+  ChevronRight,
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
   Download,
   ExternalLink,
   BookOpen,
   Filter,
+<<<<<<< HEAD
   Eye,
   Upload,
   Loader2
+=======
+  Loader2,
+  Upload,
+  Eye,
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
 } from 'lucide-react';
 
 export default function BranchPage({ params }) {
@@ -22,10 +34,15 @@ export default function BranchPage({ params }) {
 
   // Normalize branch name to match branchData keys
   const getBranchKey = (name) => {
+<<<<<<< HEAD
     // 1. Direct match
     if (branchData[name]) return name;
 
     // 2. Formal mapping (from database labels or variants)
+=======
+    if (branchData[name]) return name;
+
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
     const mapping = {
       'B.E. (Chemical Engineering (CE))': 'Chemical Engineering',
       'B.E. (Civil Engineering (CE))': 'Civil Engineering',
@@ -44,6 +61,7 @@ export default function BranchPage({ params }) {
       'Bachelor of Architecture (B.Arch)': 'Bachelor of Architecture (B.Arch)',
       'Civil Semester': 'Civil Engineering (CE)',
       'Mechanical Semester': 'Mechanical Engineering (ME)',
+<<<<<<< HEAD
       // Partial/Variant matches
       'Artificial Intelligence and Data Science (AI&DS)': 'Artificial Intelligence & Data Science (ADS)',
       'AI&DS': 'Artificial Intelligence & Data Science (ADS)',
@@ -60,11 +78,58 @@ export default function BranchPage({ params }) {
     if (mapping[stripped]) return mapping[stripped];
 
     return name;
+=======
+    };
+
+    return mapping[name] || name;
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
   };
 
   const dataKey = getBranchKey(branchName);
   const data = branchData[dataKey];
 
+<<<<<<< HEAD
+=======
+  // DB subjects: { [semester]: { [subjectName]: { id, paperCount } } }
+  const [dbSubjects, setDbSubjects] = useState({});
+  const [dbLoading, setDbLoading] = useState(true);
+
+  // Fetch DB subjects for this branch to get UUIDs and paper counts
+  useEffect(() => {
+    async function fetchDbSubjects() {
+      try {
+        const res = await fetch(
+          `/api/subjects?branch=${encodeURIComponent(branchName)}`,
+          { credentials: 'include' }
+        );
+        const json = await res.json();
+        if (!json.success) return;
+
+        // Build a lookup: semester → name (lowercased) → { id }
+        const lookup = {};
+        for (const subj of json.data ?? []) {
+          const sem = String(subj.semester);
+          if (!lookup[sem]) lookup[sem] = {};
+          lookup[sem][subj.name.toLowerCase()] = { id: subj.id };
+        }
+        setDbSubjects(lookup);
+      } catch {
+        // Non-critical — cards still render without DB link
+      } finally {
+        setDbLoading(false);
+      }
+    }
+
+    fetchDbSubjects();
+  }, [branchName]);
+
+  // Helper: get DB subject ID for a static subject, if it exists
+  const getDbId = (sem, subjectName) => {
+    const semLookup = dbSubjects[String(sem)] ?? {};
+    return semLookup[subjectName.toLowerCase()]?.id ?? null;
+  };
+
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
   if (!data) {
     return (
       <div className="min-h-screen flex flex-col bg-slate-50">
@@ -81,6 +146,7 @@ export default function BranchPage({ params }) {
 
   const semesters = Object.keys(data).sort((a, b) => a - b);
 
+<<<<<<< HEAD
   // Database ID mapping state
   const [subjectMappings, setSubjectMappings] = useState({});
   const [dbLoading, setDbLoading] = useState(true);
@@ -138,6 +204,8 @@ export default function BranchPage({ params }) {
 
   const getDbId = (sem, name) => subjectMappings[`${sem}-${name}`];
 
+=======
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
       <Navbar />
@@ -151,12 +219,20 @@ export default function BranchPage({ params }) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center sm:text-left">
             <div className="flex flex-col sm:flex-row items-center gap-6 mb-8">
               <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-emerald-500/20">
+<<<<<<< HEAD
                 {BookOpen && <BookOpen size={32} />}
+=======
+                <BookOpen size={32} />
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
               </div>
               <div>
                 <nav className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">
                   <a href="/" className="hover:text-emerald-400">Home</a>
+<<<<<<< HEAD
                   {ChevronRight && <ChevronRight size={12} />}
+=======
+                  <ChevronRight size={12} />
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
                   <span className="text-slate-300">{branchName}</span>
                 </nav>
                 <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter">
@@ -181,7 +257,11 @@ export default function BranchPage({ params }) {
             <aside className="hidden lg:block w-72 shrink-0">
               <div className="glass-card p-6 sticky top-28">
                 <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+<<<<<<< HEAD
                   {Filter && <Filter size={14} className="text-emerald-500" />} Jump to Semester
+=======
+                  <Filter size={14} className="text-emerald-500" /> Jump to Semester
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
                 </h2>
                 <div className="space-y-2">
                   {semesters.map((sem) => (
@@ -191,19 +271,34 @@ export default function BranchPage({ params }) {
                       className="flex items-center justify-between p-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition-all group"
                     >
                       Semester {sem}
+<<<<<<< HEAD
                       {ChevronRight && <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />}
+=======
+                      <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
                     </a>
                   ))}
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-slate-100">
                   <div className="p-4 bg-slate-900 rounded-2xl">
+<<<<<<< HEAD
                     <div className="text-emerald-400 text-xs font-black uppercase tracking-widest mb-1">Status</div>
                     <div className="text-white text-sm font-bold mb-3">{branchName}</div>
                     <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
                       <div className="w-[85%] h-full bg-emerald-500" />
                     </div>
                     <div className="text-[10px] text-slate-500 mt-2 font-bold uppercase">85% Resources Verified</div>
+=======
+                    <div className="text-emerald-400 text-xs font-black uppercase tracking-widest mb-1">Contribute</div>
+                    <div className="text-white text-sm font-bold mb-3">Have notes or PYQs?</div>
+                    <a
+                      href="/upload"
+                      className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-600 transition-all"
+                    >
+                      <Upload size={13} /> Upload PDF
+                    </a>
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
                   </div>
                 </div>
               </div>
@@ -221,7 +316,11 @@ export default function BranchPage({ params }) {
                       Semester {sem}
                     </h2>
                     <span className="text-xs font-black text-slate-400 uppercase tracking-widest">
+<<<<<<< HEAD
                       {data[sem].length} Courses Available
+=======
+                      {data[sem].length} Courses
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
                     </span>
                   </div>
 
@@ -229,11 +328,17 @@ export default function BranchPage({ params }) {
                     {data[sem].map((subject, idx) => {
                       const dbId = getDbId(sem, subject.name);
                       // Always have a View Notes URL — use DB id if exists, otherwise a search URL
+<<<<<<< HEAD
                       const viewNotesUrl = subject.code && subject.code !== '—'
                         ? `/subjects/${subject.code}`
                         : dbId 
                           ? `/subjects/${dbId}`
                           : `/subjects/search?branch=${encodeURIComponent(branchName)}&semester=${sem}&name=${encodeURIComponent(subject.name)}`;
+=======
+                      const viewNotesUrl = dbId
+                        ? `/subjects/${dbId}`
+                        : `/subjects/search?branch=${encodeURIComponent(branchName)}&semester=${sem}&name=${encodeURIComponent(subject.name)}`;
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
                       const uploadUrl = `/upload?branch=${encodeURIComponent(branchName)}&semester=${sem}&subject=${encodeURIComponent(subject.name)}`;
 
                       return (

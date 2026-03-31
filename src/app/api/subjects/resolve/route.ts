@@ -31,7 +31,11 @@ export const POST = withAuth(async (req: NextRequest, { supabase }) => {
 
   const { branch, semester, name, code } = parsed.data;
 
+<<<<<<< HEAD
   // Upsert: find existing or create bypassing RLS
+=======
+  // Upsert with admin client to bypass RLS (restricted to admins in DB)
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
   const adminClient = createAdminClient();
   const { data, error } = await adminClient
     .from('subjects')

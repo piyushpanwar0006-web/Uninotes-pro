@@ -1,5 +1,10 @@
 'use client';
+<<<<<<< HEAD
 import { useState, useRef } from 'react';
+=======
+import { useState, useRef, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Upload, FileText, X, CheckCircle2, AlertCircle, Loader2, BookOpen } from 'lucide-react';
@@ -31,6 +36,10 @@ const MAX_BYTES = MAX_MB * 1024 * 1024;
 
 export default function UploadPage() {
   const fileRef = useRef(null);
+<<<<<<< HEAD
+=======
+  const searchParams = useSearchParams();
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
 
   const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
@@ -45,6 +54,24 @@ export default function UploadPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(null); // { paperId, signedUrl }
 
+<<<<<<< HEAD
+=======
+  // Pre-fill form if URL params are provided (e.g. from branch page)
+  useEffect(() => {
+    const branch = searchParams.get('branch') || '';
+    const semester = searchParams.get('semester') || '';
+    const subject = searchParams.get('subject') || '';
+    if (branch || semester || subject) {
+      setForm((f) => ({
+        ...f,
+        branch: branch || f.branch,
+        semester: semester || f.semester,
+        subjectName: subject || f.subjectName,
+      }));
+    }
+  }, [searchParams]);
+
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
   const handleFile = (f) => {
     setError('');
     if (!f) return;

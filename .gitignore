@@ -41,12 +41,15 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+/.pnp
+.pnp.js
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
 # TypeScript cache
 *.tsbuildinfo
+next-env.d.ts
 
 # Optional npm cache directory
 .npm
@@ -138,6 +141,7 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+<<<<<<< HEAD
 =======
 # dependencies
 /node_modules
@@ -150,6 +154,8 @@ vite.config.ts.timestamp-*
 # next.js
 /.next/
 /out/
+=======
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
 
 # production
 /build
@@ -157,6 +163,7 @@ vite.config.ts.timestamp-*
 # misc
 .DS_Store
 *.pem
+<<<<<<< HEAD
 
 # debug
 npm-debug.log*
@@ -176,3 +183,6 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+=======
+.vercel
+>>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
