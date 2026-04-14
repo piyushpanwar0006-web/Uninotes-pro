@@ -4,7 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root 
+{
 <<<<<<< HEAD
   --foreground-rgb: 15, 23, 42; /* Slate 900 */
   --background-start-rgb: 248, 250, 252; /* Slate 50 */
