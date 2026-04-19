@@ -31,12 +31,18 @@ export const POST = withAuth(async (req: NextRequest, { supabase }) => {
 
   const { branch, semester, name, code } = parsed.data;
 
+  // Build payload dynamically so we don't overwrite code with null if it's unspecified
+  const payload: any = { branch, semester, name };
+  if (code !== undefined) {
+    payload.code = code;
+  }
+
   // Upsert with admin client to bypass RLS (restricted to admins in DB)
   const adminClient = createAdminClient();
   const { data, error } = await adminClient
     .from('subjects')
     .upsert(
-      { branch, semester, name, code: code ?? null },
+      payload,
       { onConflict: 'branch,semester,name', ignoreDuplicates: false }
     )
     .select('id, branch, semester, name, code')

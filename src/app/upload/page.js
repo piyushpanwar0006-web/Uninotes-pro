@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -36,7 +36,15 @@ const isSemesterOptional = (branch) => {
   return lower.includes('civil semester') || lower.includes('mechanical semester');
 };
 
-export default function UploadPage() {
+export default function UploadPageWrapper() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-slate-400">Loading…</div></div>}>
+      <UploadPage />
+    </Suspense>
+  );
+}
+
+function UploadPage() {
   const fileRef = useRef(null);
   const searchParams = useSearchParams();
   const [file, setFile] = useState(null);

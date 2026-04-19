@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -96,7 +96,15 @@ function PaperCard({ paper }) {
   );
 }
 
-export default function SubjectSearchPage() {
+export default function SubjectSearchPageWrapper() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-slate-400">Loading…</div></div>}>
+      <SubjectSearchPage />
+    </Suspense>
+  );
+}
+
+function SubjectSearchPage() {
   const searchParams = useSearchParams();
   const branch = searchParams.get('branch') || '';
   const semester = searchParams.get('semester') || '';

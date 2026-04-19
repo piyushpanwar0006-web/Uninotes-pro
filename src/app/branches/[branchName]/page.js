@@ -92,7 +92,7 @@ export default function BranchPage({ params }) {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                branch: branchName,
+                branch: dataKey,
                 semester: parseInt(subj.sem),
                 name: subj.name,
                 code: subj.code
@@ -233,8 +233,8 @@ export default function BranchPage({ params }) {
                         ? `/subjects/${subject.code}`
                         : dbId
                           ? `/subjects/${dbId}`
-                          : `/subjects/search?branch=${encodeURIComponent(branchName)}&semester=${sem}&name=${encodeURIComponent(subject.name)}`;
-                      const uploadUrl = `/upload?branch=${encodeURIComponent(branchName)}&semester=${sem}&subject=${encodeURIComponent(subject.name)}`;
+                          : `/subjects/search?branch=${encodeURIComponent(dataKey)}&semester=${sem}&name=${encodeURIComponent(subject.name)}`;
+                      const uploadUrl = `/upload?branch=${encodeURIComponent(dataKey)}&semester=${sem}&subject=${encodeURIComponent(subject.name)}`;
 
                       return (
                         <div key={idx} className="glass-card p-6 hover-lift border-slate-100 flex flex-col">
