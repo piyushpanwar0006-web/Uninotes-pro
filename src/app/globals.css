@@ -4,51 +4,20 @@
 @tailwind components;
 @tailwind utilities;
 
-:root 
-{
-<<<<<<< HEAD
-  --foreground-rgb: 15, 23, 42; /* Slate 900 */
-  --background-start-rgb: 248, 250, 252; /* Slate 50 */
-  --background-end-rgb: 241, 245, 249; /* Slate 100 */
-  
-  --primary: 16, 185, 129; /* Emerald 500 */
-  --primary-dark: 5, 150, 105; /* Emerald 600 */
-  --accent: 59, 130, 246; /* Blue 500 */
-=======
+:root {
   --foreground-rgb: 15, 23, 42;
-  /* Slate 900 */
   --background-start-rgb: 248, 250, 252;
-  /* Slate 50 */
   --background-end-rgb: 241, 245, 249;
-  /* Slate 100 */
 
   --primary: 16, 185, 129;
-  /* Emerald 500 */
   --primary-dark: 5, 150, 105;
-  /* Emerald 600 */
   --accent: 59, 130, 246;
-  /* Blue 500 */
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
 }
 
 @layer base {
   body {
     color: rgb(var(--foreground-rgb));
-<<<<<<< HEAD
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgb(var(--background-end-rgb))
-      )
-      rgb(var(--background-start-rgb));
-    font-family: 'Inter', sans-serif;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-=======
-    background: linear-gradient(to bottom,
-        transparent,
-        rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
     font-family: 'Inter', sans-serif;
   }
 
@@ -58,30 +27,21 @@
   h4,
   h5,
   h6 {
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
     font-family: 'Outfit', sans-serif;
     @apply font-bold tracking-tight;
   }
 }
 
 @layer components {
-  .btn-premium {
-    @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2;
-  }
-<<<<<<< HEAD
-  
-  .btn-premium-primary {
-    @apply btn-premium bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 hover:shadow-emerald-600/30;
-  }
-  
-=======
+.btn-premium {
+  @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2;
+}
 
-  .btn-premium-primary {
-    @apply btn-premium bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 hover:shadow-emerald-600/30;
-  }
+.btn-premium-primary {
+  @apply btn-premium bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 hover:shadow-emerald-600/30;
+}
 
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
-  .btn-premium-secondary {
+.btn-premium-secondary {
     @apply btn-premium bg-white text-slate-900 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300;
   }
 
@@ -103,20 +63,6 @@
 }
 
 @keyframes fade-in {
-<<<<<<< HEAD
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slide-in-right {
-  from { opacity: 0; transform: translateX(20px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes scale-up {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-=======
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -150,7 +96,6 @@
     opacity: 1;
     transform: scale(1);
   }
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
 }
 
 .animate-fade-in {
@@ -165,11 +110,6 @@
   animation: scale-up 0.5s ease-out forwards;
 }
 
-<<<<<<< HEAD
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-=======
 .stagger-1 {
   animation-delay: 0.1s;
 }
@@ -181,4 +121,3 @@
 .stagger-3 {
   animation-delay: 0.3s;
 }
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
