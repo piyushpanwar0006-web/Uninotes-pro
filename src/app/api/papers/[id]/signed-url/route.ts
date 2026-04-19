@@ -43,7 +43,6 @@ export const GET = withAuth(async (req: NextRequest, { supabase, user }, params)
 
   const expiresAt = new Date(Date.now() + SIGNED_URL_EXPIRES_IN * 1000).toISOString();
 
-<<<<<<< HEAD
   // Log the download event
   try {
     await adminClient
@@ -56,19 +55,6 @@ export const GET = withAuth(async (req: NextRequest, { supabase, user }, params)
   } catch (logError) {
     console.error('[Download Log Error]', logError);
   }
-=======
-  // Async log the download event (no await to keep the request fast)
-  adminClient
-    .from('resource_downloads')
-    .insert({
-      resource_type: 'paper',
-      resource_id: paper.id,
-      user_id: user.id,
-    })
-    .then(({ error }) => {
-      if (error) console.error('[Download Log Error]', error);
-    });
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
 
   return successResponse({
     paperId: paper.id,

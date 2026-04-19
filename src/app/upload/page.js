@@ -1,10 +1,6 @@
 'use client';
-<<<<<<< HEAD
-import { useState, useRef } from 'react';
-=======
 import { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Upload, FileText, X, CheckCircle2, AlertCircle, Loader2, BookOpen } from 'lucide-react';
@@ -34,13 +30,15 @@ const SEMESTERS = [3, 4, 5, 6, 7, 8];
 const MAX_MB = 25;
 const MAX_BYTES = MAX_MB * 1024 * 1024;
 
+const isSemesterOptional = (branch) => {
+  if (!branch) return false;
+  const lower = branch.toLowerCase();
+  return lower.includes('civil semester') || lower.includes('mechanical semester');
+};
+
 export default function UploadPage() {
   const fileRef = useRef(null);
-<<<<<<< HEAD
-=======
   const searchParams = useSearchParams();
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
-
   const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const [form, setForm] = useState({
@@ -54,8 +52,6 @@ export default function UploadPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(null); // { paperId, signedUrl }
 
-<<<<<<< HEAD
-=======
   // Pre-fill form if URL params are provided (e.g. from branch page)
   useEffect(() => {
     const branch = searchParams.get('branch') || '';
@@ -70,8 +66,6 @@ export default function UploadPage() {
       }));
     }
   }, [searchParams]);
-
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
   const handleFile = (f) => {
     setError('');
     if (!f) return;
@@ -101,7 +95,10 @@ export default function UploadPage() {
     setError('');
 
     if (!file) return setError('Please select a PDF file.');
-    if (!form.branch || !form.semester) return setError('Please select a branch and semester.');
+    const semOptional = isSemesterOptional(form.branch);
+    if (!form.branch) return setError('Please select a branch.');
+    if (!semOptional && !form.semester) return setError('Please select a semester.');
+
     if (!form.title.trim()) return setError('Please enter a title.');
 
     setLoading(true);
@@ -115,7 +112,7 @@ export default function UploadPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           branch: form.branch,
-          semester: Number(form.semester),
+          semester: semOptional ? (form.semester ? Number(form.semester) : 1) : Number(form.semester),
           name: form.subjectName || form.title,
         }),
       });
@@ -272,7 +269,7 @@ export default function UploadPage() {
                 </div>
 
                 {/* Branch + Semester */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className={`grid grid-cols-1 ${isSemesterOptional(form.branch) ? '' : 'sm:grid-cols-2'} gap-4`}>
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
                       Branch *
@@ -290,23 +287,25 @@ export default function UploadPage() {
                       ))}
                     </select>
                   </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                      Semester *
-                    </label>
-                    <select
-                      name="semester"
-                      value={form.semester}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
-                    >
-                      <option value="">Select semester…</option>
-                      {SEMESTERS.map((s) => (
-                        <option key={s} value={s}>Semester {s}</option>
-                      ))}
-                    </select>
-                  </div>
+                  {!isSemesterOptional(form.branch) && (
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                        Semester *
+                      </label>
+                      <select
+                        name="semester"
+                        value={form.semester}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
+                      >
+                        <option value="">Select semester…</option>
+                        {SEMESTERS.map((s) => (
+                          <option key={s} value={s}>Semester {s}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
 
                 {/* Subject */}

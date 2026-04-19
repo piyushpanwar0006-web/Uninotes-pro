@@ -15,7 +15,7 @@ CREATE INDEX IF NOT EXISTS idx_resource_downloads_id_time
 
 -- 2. View: paper_stats
 -- Computes the average rating and total ratings for each paper on the fly automatically.
-CREATE OR REPLACE VIEW public.paper_stats AS
+CREATE OR REPLACE VIEW public.paper_stats WITH (security_invoker = true) AS
 SELECT 
   p.id AS paper_id,
   COALESCE(AVG(r.score), 0) AS average_rating,
@@ -51,4 +51,4 @@ BEGIN
     download_count DESC
   LIMIT max_limit;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';

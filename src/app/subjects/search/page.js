@@ -116,36 +116,49 @@ export default function SubjectSearchPage() {
     setError('');
 
     try {
-      // Look up subject by branch + semester + name
-      const subjParams = new URLSearchParams();
-      if (branch) subjParams.set('branch', branch);
-      if (semester) subjParams.set('semester', semester);
+      const papersParams = new URLSearchParams();
+      if (branch) papersParams.set('branch', branch);
+      if (semester) papersParams.set('semester', semester);
+      if (name) papersParams.set('subject', name);
+      papersParams.set('page', '1');
+      papersParams.set('limit', '20');
 
-      const subjRes = await fetch(`/api/subjects?${subjParams}`, { credentials: 'include' });
-      const subjJson = await subjRes.json();
+      const papersRes = await fetch(`/api/papers?${papersParams}`, { credentials: 'include' });
+      const papersJson = await papersRes.json();
 
-      if (subjJson.success && subjJson.data) {
-        // Find the matching subject by name (case-insensitive)
-        const found = subjJson.data.find(
-          (s) => s.name.toLowerCase() === name.toLowerCase()
-        );
+      if (papersJson.success) {
+        const p = papersJson.data.papers ?? [];
+        setPapers(p);
+        setTotal(papersJson.data.pagination?.total ?? 0);
 
-        if (found) {
-          setSubject(found);
-          // Fetch papers for this subject
-          const papersRes = await fetch(`/api/papers?subjectId=${found.id}&page=1&limit=20`, { credentials: 'include' });
-          const papersJson = await papersRes.json();
-          if (papersJson.success) {
-            setPapers(papersJson.data.papers ?? []);
-            setTotal(papersJson.data.pagination?.total ?? 0);
-          }
+        if (p.length > 0 && p[0].subjects) {
+          setSubject(p[0].subjects);
         } else {
-          // Subject doesn't exist in DB yet
-          setSubject(null);
-          setPapers([]);
+          // Fallback to fetch subject details if papers list is empty
+          try {
+            const subjParams = new URLSearchParams();
+            if (branch) subjParams.set('branch', branch);
+            if (semester) subjParams.set('semester', semester);
+            if (name) subjParams.set('name', name);
+            
+            const subjRes = await fetch(`/api/subjects?${subjParams}`, { credentials: 'include' });
+            const subjJson = await subjRes.json();
+            
+            if (subjJson.success && subjJson.data && subjJson.data.length > 0) {
+              setSubject(subjJson.data[0]);
+            } else {
+               setSubject(null);
+            }
+          } catch (err) {
+            console.error("Failed to fetch subject details", err);
+            setSubject(null);
+          }
         }
+      } else {
+        setError(papersJson.error || 'Failed to fetch notes.');
       }
-    } catch {
+    } catch (err) {
+      console.error(err);
       setError('Network error. Please check your connection.');
     } finally {
       setLoading(false);

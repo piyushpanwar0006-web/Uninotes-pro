@@ -172,15 +172,23 @@ export default function SubjectNotesPage() {
         setSubject(p[0].subjects);
       } else if (!subject) {
         // Fallback: fetch subject info directly
-        const subjRes = await fetch(`/api/subjects?subjectId=${subjectId}`, {
-          credentials: 'include',
-        });
-        const subjJson = await subjRes.json();
-        if (subjJson.success && subjJson.data?.length > 0) {
-          setSubject(subjJson.data[0]);
+        try {
+          const subjRes = await fetch(`/api/subjects?subjectId=${subjectId}`, {
+            credentials: 'include',
+          });
+          const subjJson = await subjRes.json();
+          if (subjJson.success && subjJson.data?.length > 0) {
+            setSubject(subjJson.data[0]);
+          } else {
+            setSubject({ name: 'Subject Not Found', branch: 'Unknown' });
+          }
+        } catch (err) {
+          console.error("Failed to fetch subject details", err);
+          setSubject({ name: 'Subject', branch: 'Unknown' });
         }
       }
-    } catch {
+    } catch (err) {
+      console.error(err);
       setError('Network error. Please check your connection.');
     } finally {
       setLoading(false);

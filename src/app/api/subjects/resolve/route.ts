@@ -6,7 +6,7 @@ import { successResponse, errorResponse } from '@/types/api';
 
 const schema = z.object({
   branch: z.string().min(1, 'Branch is required'),
-  semester: z.number().int().min(1).max(10),
+  semester: z.number().int().min(1).max(10), // Use 1 to satisfy subjects_semester_check
   name: z.string().min(1, 'Subject name is required'),
   code: z.string().optional(),
 });
@@ -31,11 +31,7 @@ export const POST = withAuth(async (req: NextRequest, { supabase }) => {
 
   const { branch, semester, name, code } = parsed.data;
 
-<<<<<<< HEAD
-  // Upsert: find existing or create bypassing RLS
-=======
   // Upsert with admin client to bypass RLS (restricted to admins in DB)
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
   const adminClient = createAdminClient();
   const { data, error } = await adminClient
     .from('subjects')
