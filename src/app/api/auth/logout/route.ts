@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { successResponse, errorResponse } from '@/types/api';
+export const dynamic = 'force-dynamic';
 
 export async function POST() {
   try {

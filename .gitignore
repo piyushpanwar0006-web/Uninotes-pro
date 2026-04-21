@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -72,6 +71,7 @@ next-env.d.ts
 # dotenv environment variable files
 .env
 .env.*
+.env*.local
 !.env.example
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -79,8 +79,8 @@ next-env.d.ts
 .parcel-cache
 
 # Next.js build output
-.next
-out
+.next/
+out/
 
 # Nuxt.js build / generate output
 .nuxt
@@ -88,28 +88,6 @@ dist
 
 # Gatsby files
 .cache/
-# Comment in the public line in if your project uses Gatsby and not Next.js
-# https://nextjs.org/blog/next-9-1#public-directory-support
-# public
-
-# vuepress build output
-.vuepress/dist
-
-# vuepress v2.x temp and cache directory
-.temp
-.cache
-
-# Sveltekit cache directory
-.svelte-kit/
-
-# vitepress build output
-**/.vitepress/dist
-
-# vitepress cache directory
-**/.vitepress/cache
-
-# Docusaurus cache and generated files
-.docusaurus
 
 # Serverless directories
 .serverless/
@@ -138,51 +116,15 @@ dist
 !.yarn/sdks
 !.yarn/versions
 
-# Vite logs files
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-<<<<<<< HEAD
-=======
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-=======
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183
-
 # production
 /build
 
 # misc
 .DS_Store
 *.pem
-<<<<<<< HEAD
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env*.local
 
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
->>>>>>> 59b1fac (Initial commit)
-
 # Local Netlify folder
 .netlify
-=======
-.vercel
->>>>>>> a63fb2346cc2fdd196bd0a2af0c2ec4911af1183

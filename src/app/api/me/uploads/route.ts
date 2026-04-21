@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
+export const dynamic = 'force-dynamic';
 
 const querySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),

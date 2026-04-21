@@ -3,6 +3,7 @@ import { withAuth } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { successResponse, errorResponse } from '@/types/api';
 import { getSignedUrl, deleteFromStorage } from '@/services/upload';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/papers/[id]

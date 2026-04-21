@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
 import { successResponse, errorResponse } from '@/types/api';
 
+export const dynamic = 'force-dynamic';
+
 const querySchema = z.object({
   subjectCode: z.string().min(1, 'subjectCode is required'),
   page: z.coerce.number().int().min(1).default(1),

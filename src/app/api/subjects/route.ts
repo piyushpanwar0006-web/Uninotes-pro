@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { successResponse, errorResponse } from '@/types/api';
+export const dynamic = 'force-dynamic';
 
 const schema = z.object({
   branch: z.string().min(1, 'Branch is required'),

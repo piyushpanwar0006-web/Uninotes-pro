@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { successResponse, errorResponse } from '@/types/api';
+export const dynamic = 'force-dynamic';
 
 const postSchema = z.object({
   resource_type: z.enum(['paper', 'note']),

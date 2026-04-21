@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/admin';
+export const dynamic = 'force-dynamic';
 
 const querySchema = z.object({
   subjectId: z.string().optional(),

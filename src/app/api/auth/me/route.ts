@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { withAuth } from '@/lib/auth';
 import { successResponse, errorResponse } from '@/types/api';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/auth/me

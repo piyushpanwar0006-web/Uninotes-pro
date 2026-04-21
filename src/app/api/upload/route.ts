@@ -11,6 +11,8 @@ import {
   deleteFromStorage,
 } from '@/services/upload';
 
+export const dynamic = 'force-dynamic';
+
 // Zod schema for form-data fields
 const uploadSchema = z.object({
   subjectId: z.string().uuid('subjectId must be a valid UUID'),

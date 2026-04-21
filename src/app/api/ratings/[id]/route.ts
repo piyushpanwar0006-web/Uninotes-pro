@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
 import { successResponse, errorResponse } from '@/types/api';
+export const dynamic = 'force-dynamic';
 
 const updateRateSchema = z.object({
   score: z.number().int().min(1).max(5, 'Score must be between 1 and 5'),

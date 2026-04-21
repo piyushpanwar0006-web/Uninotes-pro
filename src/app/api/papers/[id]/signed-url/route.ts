@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { successResponse, errorResponse } from '@/types/api';
 import { STORAGE_BUCKET, SIGNED_URL_EXPIRES_IN } from '@/types/upload';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/papers/[id]/signed-url

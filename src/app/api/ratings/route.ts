@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
 import { successResponse, errorResponse } from '@/types/api';
+export const dynamic = 'force-dynamic';
 
 const rateSchema = z.object({
   resource_type: z.enum(['paper', 'note']),

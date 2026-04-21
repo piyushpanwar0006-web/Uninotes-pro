@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { successResponse, errorResponse } from '@/types/api';
 import { assertEnvVars } from '@/lib/env';
+export const dynamic = 'force-dynamic';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),

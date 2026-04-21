@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/me/stats
