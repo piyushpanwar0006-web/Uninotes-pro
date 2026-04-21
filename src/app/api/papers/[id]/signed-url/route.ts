@@ -1,23 +1,48 @@
-import { NextRequest } from 'next/server';
-import { withAuth } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { successResponse, errorResponse } from '@/types/api';
 import { STORAGE_BUCKET, SIGNED_URL_EXPIRES_IN } from '@/types/upload';
 
 /**
  * GET /api/papers/[id]/signed-url
- * Auth-gated — user must be signed in.
- * Fetches the paper's storage_path and generates a fresh 1-hour signed URL.
+ *
+ * PUBLIC — no authentication required.
+ * Guests and logged-in users can both view PDFs.
+ *
+ * Signed URLs are time-limited (1 hour) and generated on-demand from Supabase
+ * Storage. There is no security concern in granting guest access to public
+ * academic notes via time-limited signed URLs.
+ *
+ * If the user is authenticated, their download is logged for analytics.
  */
-export const GET = withAuth(async (req: NextRequest, { supabase, user }, params) => {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
   const paperId = params?.id;
 
   if (!paperId) {
     return errorResponse('Missing paper ID.', 400, 'MISSING_PARAM');
   }
 
-  // Look up the paper's storage path (user client respects RLS — only ready papers)
-  const { data: paper, error: paperError } = await supabase
+  const adminClient = createAdminClient();
+
+  // Optionally resolve the current user — used only for download logging.
+  // This does NOT gate access; failure to get a user is fine.
+  let userId: string | null = null;
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    userId = user?.id ?? null;
+  } catch {
+    // Non-blocking — guests don't need to be authenticated
+  }
+
+  // Look up the paper using admin client (bypasses RLS, always works for guests)
+  const { data: paper, error: paperError } = await adminClient
     .from('papers')
     .select('id, storage_path, title, status')
     .eq('id', paperId)
@@ -31,8 +56,7 @@ export const GET = withAuth(async (req: NextRequest, { supabase, user }, params)
     return errorResponse('Paper is not ready yet.', 400, 'NOT_READY');
   }
 
-  // Generate a fresh signed URL using the admin client
-  const adminClient = createAdminClient();
+  // Generate a fresh signed URL
   const { data: urlData, error: urlError } = await adminClient.storage
     .from(STORAGE_BUCKET)
     .createSignedUrl(paper.storage_path, SIGNED_URL_EXPIRES_IN);
@@ -43,17 +67,17 @@ export const GET = withAuth(async (req: NextRequest, { supabase, user }, params)
 
   const expiresAt = new Date(Date.now() + SIGNED_URL_EXPIRES_IN * 1000).toISOString();
 
-  // Log the download event
-  try {
-    await adminClient
-      .from('resource_downloads')
-      .insert({
+  // Log download event for authenticated users (non-blocking, best-effort)
+  if (userId) {
+    try {
+      await adminClient.from('resource_downloads').insert({
         resource_type: 'paper',
         resource_id: paper.id,
-        user_id: user.id,
+        user_id: userId,
       });
-  } catch (logError) {
-    console.error('[Download Log Error]', logError);
+    } catch (logError) {
+      console.error('[Download Log Error]', logError);
+    }
   }
 
   return successResponse({
@@ -62,4 +86,5 @@ export const GET = withAuth(async (req: NextRequest, { supabase, user }, params)
     signedUrl: urlData.signedUrl,
     expiresAt,
   });
-});
+}
+

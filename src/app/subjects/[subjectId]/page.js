@@ -3,6 +3,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import GuestNudge from '@/components/GuestNudge';
+import AuthModal from '@/components/AuthModal';
+import { useAuth } from '@/lib/hooks/useAuth';
 import {
   FileText,
   Download,
@@ -16,6 +19,8 @@ import {
   Loader2,
   ArrowLeft,
   Eye,
+  Bookmark,
+  BookmarkCheck,
 } from 'lucide-react';
 
 function formatBytes(bytes) {
@@ -32,26 +37,32 @@ function formatDate(iso) {
   });
 }
 
-function PaperCard({ paper }) {
+/**
+ * PaperCard — displays a single paper with View PDF and Bookmark actions.
+ *
+ * Props:
+ *   paper      — paper object from API
+ *   user       — current Supabase user (null for guests)
+ *   onAuthOpen — function(trigger) to open AuthModal with context
+ */
+function PaperCard({ paper, user, onAuthOpen }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
+  const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
 
   const handleView = async () => {
     setError('');
     setLoading(true);
     try {
+      // No auth required — guests and logged-in users can both view PDFs
       const res = await fetch(`/api/papers/${paper.id}/signed-url`, {
         credentials: 'include',
       });
       const json = await res.json();
 
       if (!json.success) {
-        if (res.status === 401) {
-          setError('Sign in to view this paper.');
-        } else {
-          setError(json.error || 'Failed to get PDF link.');
-        }
+        setError(json.error || 'Failed to get PDF link. Please try again.');
         setLoading(false);
         return;
       }
@@ -61,6 +72,33 @@ function PaperCard({ paper }) {
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleBookmark = async () => {
+    if (!user) {
+      // Guest: open AuthModal with bookmark context
+      onAuthOpen?.('bookmark');
+      return;
+    }
+    setBookmarkLoading(true);
+    try {
+      if (bookmarked) {
+        await fetch(`/api/bookmarks/${paper.id}`, { method: 'DELETE', credentials: 'include' });
+        setBookmarked(false);
+      } else {
+        await fetch('/api/bookmarks', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paperId: paper.id }),
+        });
+        setBookmarked(true);
+      }
+    } catch {
+      // Silently fail for bookmark actions
+    } finally {
+      setBookmarkLoading(false);
     }
   };
 
@@ -125,6 +163,27 @@ function PaperCard({ paper }) {
             <><Eye size={13} /> View PDF</>
           )}
         </button>
+
+        {/* Bookmark — prompts login for guests, saves for logged-in users */}
+        <button
+          onClick={handleBookmark}
+          disabled={bookmarkLoading}
+          title={user ? (bookmarked ? 'Remove bookmark' : 'Bookmark') : 'Sign in to bookmark'}
+          className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold border transition-all disabled:opacity-50 ${
+            bookmarked
+              ? 'bg-violet-50 border-violet-200 text-violet-600 hover:bg-violet-100'
+              : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700'
+          }`}
+        >
+          {bookmarkLoading ? (
+            <Loader2 size={13} className="animate-spin" />
+          ) : bookmarked ? (
+            <BookmarkCheck size={13} />
+          ) : (
+            <Bookmark size={13} />
+          )}
+          {!user && <span className="hidden sm:inline">Save</span>}
+        </button>
       </div>
     </div>
   );
@@ -134,6 +193,16 @@ export default function SubjectNotesPage() {
   const params = useParams();
   const router = useRouter();
   const subjectId = params?.subjectId;
+  const { user, isLoading: authLoading } = useAuth();
+
+  // Track auth modal state for guest nudges (passed up from PaperCard)
+  const [authModalTrigger, setAuthModalTrigger] = useState(null);
+  const [showAuthFromCard, setShowAuthFromCard] = useState(false);
+
+  const handleCardAuthOpen = (trigger) => {
+    setAuthModalTrigger(trigger);
+    setShowAuthFromCard(true);
+  };
 
   const [subject, setSubject] = useState(null);
   const [papers, setPapers] = useState([]);
@@ -263,6 +332,11 @@ export default function SubjectNotesPage() {
               <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
                 <FileText size={16} className="text-emerald-500" />
                 {total} {total === 1 ? 'paper' : 'papers'} available
+                {!user && !authLoading && (
+                  <span className="ml-3 text-xs font-semibold text-slate-400">
+                    · Sign in to bookmark &amp; upload
+                  </span>
+                )}
               </div>
               <button
                 onClick={() => router.back()}
@@ -306,20 +380,41 @@ export default function SubjectNotesPage() {
               <p className="text-slate-500 font-medium max-w-sm mx-auto mb-8">
                 No PDFs have been uploaded for this subject yet. Be the first to contribute!
               </p>
-              <a
-                href="/upload"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20"
-              >
-                <Download size={16} /> Upload a PDF
-              </a>
+              {user ? (
+                <a
+                  href="/upload"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20"
+                >
+                  <Download size={16} /> Upload a PDF
+                </a>
+              ) : (
+                <button
+                  onClick={() => handleCardAuthOpen('upload')}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20"
+                >
+                  <Download size={16} /> Sign in to Upload
+                </button>
+              )}
             </div>
           )}
 
           {!loading && !error && papers.length > 0 && (
             <>
+              {/* Guest nudge banner — slides in after 600ms, auto-dismissible */}
+              {!user && !authLoading && (
+                <div className="mb-6">
+                  <GuestNudge feature="bookmark" onAuthOpen={handleCardAuthOpen} />
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {papers.map((paper) => (
-                  <PaperCard key={paper.id} paper={paper} />
+                  <PaperCard
+                    key={paper.id}
+                    paper={paper}
+                    user={user}
+                    onAuthOpen={handleCardAuthOpen}
+                  />
                 ))}
               </div>
 
@@ -351,6 +446,14 @@ export default function SubjectNotesPage() {
       </main>
 
       <Footer />
+
+      {/* Auth modal triggered from PaperCard bookmark/upload actions */}
+      {showAuthFromCard && (
+        <AuthModal
+          onClose={() => { setShowAuthFromCard(false); setAuthModalTrigger(null); }}
+          trigger={authModalTrigger}
+        />
+      )}
     </div>
   );
 }

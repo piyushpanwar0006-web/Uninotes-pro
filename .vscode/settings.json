@@ -1,0 +1,12 @@
+{
+  // Disable the built-in CSS validator for files that use Tailwind directives.
+  // The default CSS language server doesn't understand @tailwind, @apply, or
+  // @layer — flagging them as "Unknown at rule". The Tailwind CSS IntelliSense
+  // extension (bradlc.vscode-tailwindcss) handles validation instead.
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+
+  // Recommended: install Tailwind CSS IntelliSense for autocomplete + hover docs
+  "extensions.recommendations": ["bradlc.vscode-tailwindcss"]
+}

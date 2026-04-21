@@ -1,17 +1,39 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams, usePathname } from 'next/navigation';
 import AuthModal from './AuthModal';
 import { createClient } from '@/lib/supabase/client';
-import { LogOut, ChevronDown, User } from 'lucide-react';
+import { LogOut, ChevronDown, User, Sparkles } from 'lucide-react';
+
+/**
+ * Isolated component that reads ?login=1 from the URL and notifies the
+ * parent Navbar to open the auth modal. Must be wrapped in <Suspense> because
+ * useSearchParams() opts the subtree into client-side rendering.
+ */
+function NavbarAutoLoginHandler({ onLoginParam }) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams?.get('login') === '1') {
+      const next = searchParams.get('next') || null;
+      onLoginParam(next);
+    }
+  }, [searchParams, onLoginParam]);
+
+  return null; // Renders nothing — side-effect only
+}
 
 export default function Navbar() {
   const [showAuth, setShowAuth] = useState(false);
+  const [authTrigger, setAuthTrigger] = useState(null);
+  const [authNext, setAuthNext] = useState(null);
   const [user, setUser] = useState(null);          // null = loading | false = logged out | object = logged in
   const [hydrated, setHydrated] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const supabase = createClient();
+  const pathname = usePathname();
 
   /* ── Fetch session on mount & subscribe to auth changes ── */
   useEffect(() => {
@@ -34,6 +56,27 @@ export default function Navbar() {
     return () => { isMounted = false; subscription.unsubscribe(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /* ── Auto-open auth modal when middleware redirects with ?login=1 ── */
+  // Handled by <NavbarAutoLoginHandler> below (requires Suspense for useSearchParams)
+  const handleLoginParam = (next) => {
+    setAuthNext(next);
+    setAuthTrigger('generic');
+    setShowAuth(true);
+  };
+
+  /* ── Open auth modal with a specific feature trigger ── */
+  const openAuth = (trigger = null, next = null) => {
+    setAuthTrigger(trigger);
+    setAuthNext(next);
+    setShowAuth(true);
+  };
+
+  const closeAuth = () => {
+    setShowAuth(false);
+    setAuthTrigger(null);
+    setAuthNext(null);
+  };
 
   /* ── Close dropdown when clicking outside ── */
   useEffect(() => {
@@ -66,6 +109,11 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Suspense-safe handler for ?login=1 query param from middleware redirects */}
+      <Suspense fallback={null}>
+        <NavbarAutoLoginHandler onLoginParam={handleLoginParam} />
+      </Suspense>
+
       <nav className="glass-nav relative z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20 pt-2 sm:pt-0">
@@ -90,7 +138,14 @@ export default function Navbar() {
 
             {/* Right side: auth */}
             <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-              <Link href="/upload" className="text-sm font-semibold text-slate-600 hover:text-emerald-500 transition-colors hidden sm:block">
+              <Link href="/upload" className="text-sm font-semibold text-slate-600 hover:text-emerald-500 transition-colors hidden sm:block"
+                onClick={(e) => {
+                  if (!user && hydrated) {
+                    e.preventDefault();
+                    openAuth('upload', '/upload');
+                  }
+                }}
+              >
                 Upload
               </Link>
 
@@ -155,7 +210,7 @@ export default function Navbar() {
               ) : (
                 /* ── Sign In button ── */
                 <button
-                  onClick={() => setShowAuth(true)}
+                  onClick={() => openAuth(null, null)}
                   className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-sm font-bold hover:from-emerald-600 hover:to-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-500/20"
                 >
                   Sign In
@@ -174,7 +229,29 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
+      {/* Guest feature nudge strip — shows only when not logged in and not on homepage */}
+      {hydrated && !user && pathname !== '/' && (
+        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between gap-4 py-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Sparkles size={13} className="text-amber-400 shrink-0" />
+                <p className="text-xs text-slate-300 font-medium truncate">
+                  Sign in to upload notes, bookmark papers &amp; unlock all features
+                </p>
+              </div>
+              <button
+                onClick={() => openAuth('generic', null)}
+                className="text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors whitespace-nowrap shrink-0"
+              >
+                Sign In →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAuth && <AuthModal onClose={closeAuth} trigger={authTrigger} next={authNext} />}
     </>
   );
 }

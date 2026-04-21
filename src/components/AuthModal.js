@@ -2,7 +2,8 @@
 import { useState, useCallback } from 'react';
 import {
   X, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2,
-  Mail, Lock, User, Phone, Globe, ArrowLeft, ShieldCheck
+  Mail, Lock, User, Phone, Globe, ArrowLeft, ShieldCheck,
+  Bookmark, Upload, Sparkles,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -134,9 +135,64 @@ function Divider({ text = 'OR CONTINUE WITH' }) {
 }
 
 /* ─────────────────────────────────────────────
+   Contextual trigger banner configs
+───────────────────────────────────────────── */
+const TRIGGER_CONFIG = {
+  bookmark: {
+    icon: Bookmark,
+    iconBg: 'bg-violet-100',
+    iconColor: 'text-violet-600',
+    border: 'border-violet-200',
+    bg: 'bg-violet-50',
+    title: 'Save this note',
+    description: 'Sign in to bookmark papers and build your personal study collection.',
+  },
+  upload: {
+    icon: Upload,
+    iconBg: 'bg-emerald-100',
+    iconColor: 'text-emerald-600',
+    border: 'border-emerald-200',
+    bg: 'bg-emerald-50',
+    title: 'Upload notes',
+    description: 'Sign in to contribute notes and help your fellow students study smarter.',
+  },
+  generic: {
+    icon: Sparkles,
+    iconBg: 'bg-amber-100',
+    iconColor: 'text-amber-600',
+    border: 'border-amber-200',
+    bg: 'bg-amber-50',
+    title: 'Unlock more features',
+    description: 'Sign in to upload notes, bookmark papers, and access your dashboard.',
+  },
+};
+
+function TriggerBanner({ trigger }) {
+  if (!trigger || !TRIGGER_CONFIG[trigger]) return null;
+  const cfg = TRIGGER_CONFIG[trigger];
+  const Icon = cfg.icon;
+  return (
+    <div className={`flex items-start gap-3 p-3.5 rounded-xl border ${cfg.bg} ${cfg.border} mb-5`}>
+      <div className={`w-8 h-8 ${cfg.iconBg} rounded-lg flex items-center justify-center shrink-0 mt-0.5`}>
+        <Icon size={15} className={cfg.iconColor} />
+      </div>
+      <div>
+        <p className="text-sm font-bold text-slate-800">{cfg.title}</p>
+        <p className="text-xs text-slate-500 font-medium mt-0.5 leading-relaxed">{cfg.description}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
    Main AuthModal
 ───────────────────────────────────────────── */
-export default function AuthModal({ onClose }) {
+/**
+ * @param {function} onClose - Close the modal
+ * @param {'bookmark'|'upload'|'generic'|null} trigger - Contextual reason for opening
+ * @param {string|null} next - Path to redirect to after successful sign-in
+ */
+export default function AuthModal({ onClose, trigger = null, next = null }) {
   const supabase = createClient();
 
   // View: 'signin' | 'signup' | 'forgot'
@@ -219,7 +275,12 @@ export default function AuthModal({ onClose }) {
         setBannerError(json.error || 'Invalid email or password.');
         return;
       }
-      window.location.reload();
+      // Redirect to the originally-requested page, or reload to refresh session
+      if (next) {
+        window.location.href = next;
+      } else {
+        window.location.reload();
+      }
     } catch {
       setBannerError('Network error. Please check your connection.');
     } finally {
@@ -372,6 +433,9 @@ export default function AuthModal({ onClose }) {
           ══════════════════════════════════ */}
           {view === 'signin' && (
             <>
+              {/* Contextual trigger banner */}
+              <TriggerBanner trigger={trigger} />
+
               <div className="mb-6">
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">Welcome back</h1>
                 <p className="text-sm text-slate-500 font-medium mt-1">Sign in to your Uninotes account</p>
@@ -490,6 +554,9 @@ export default function AuthModal({ onClose }) {
           ══════════════════════════════════ */}
           {view === 'signup' && (
             <>
+              {/* Contextual trigger banner */}
+              <TriggerBanner trigger={trigger} />
+
               <div className="mb-6">
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">Begin your journey</h1>
                 <p className="text-sm text-slate-500 font-medium mt-1">Join thousands of MBM students learning smarter</p>
