@@ -12,10 +12,10 @@ import { createClient } from '@/lib/supabase/client';
 ───────────────────────────────────────────── */
 function getStrength(pwd) {
   let score = 0;
-  if (pwd.length >= 8)           score++;
-  if (pwd.length >= 12)          score++;
-  if (/[A-Z]/.test(pwd))        score++;
-  if (/[0-9]/.test(pwd))        score++;
+  if (pwd.length >= 8) score++;
+  if (pwd.length >= 12) score++;
+  if (/[A-Z]/.test(pwd)) score++;
+  if (/[0-9]/.test(pwd)) score++;
   if (/[^A-Za-z0-9]/.test(pwd)) score++;
   return score; // 0-5
 }
@@ -28,8 +28,7 @@ const STRENGTH_COLORS = [
   'bg-amber-400',
   'bg-emerald-400',
   'bg-emerald-500',
-];
-const STRENGTH_TEXT = [
+]; const STRENGTH_TEXT = [
   '',
   'text-red-500',
   'text-orange-500',
@@ -48,9 +47,8 @@ function PasswordStrengthBar({ password }) {
         {[1, 2, 3, 4, 5].map((i) => (
           <div
             key={i}
-            className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-              i <= score ? STRENGTH_COLORS[score] : 'bg-slate-200'
-            }`}
+            className={`h-1 flex-1 rounded-full transition-all duration-300 ${i <= score ? STRENGTH_COLORS[score] : 'bg-slate-200'
+              }`}
           />
         ))}
       </div>
@@ -81,9 +79,8 @@ function InputField({ label, icon: Icon, rightElement, error, ...props }) {
         )}
         <input
           {...props}
-          className={`w-full ${Icon ? 'pl-10' : 'pl-4'} ${
-            rightElement ? 'pr-11' : 'pr-4'
-          } py-3 rounded-xl border text-slate-900 text-sm font-medium outline-none transition-all placeholder:text-slate-300
+          className={`w-full ${Icon ? 'pl-10' : 'pl-4'} ${rightElement ? 'pr-11' : 'pr-4'
+            } py-3 rounded-xl border text-slate-900 text-sm font-medium outline-none transition-all placeholder:text-slate-300
             ${error
               ? 'border-red-300 focus:ring-2 focus:ring-red-300 bg-red-50/50'
               : 'border-slate-200 focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white hover:border-slate-300'
@@ -493,13 +490,12 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
                 <label className="flex items-center gap-2.5 cursor-pointer group select-none">
                   <div
                     onClick={() => setRememberMe(v => !v)}
-                    className={`w-4 h-4 rounded flex items-center justify-center border-2 transition-all cursor-pointer ${
-                      rememberMe ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-white group-hover:border-emerald-400'
-                    }`}
+                    className={`w-4 h-4 rounded flex items-center justify-center border-2 transition-all cursor-pointer ${rememberMe ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-white group-hover:border-emerald-400'
+                      }`}
                   >
                     {rememberMe && (
                       <svg viewBox="0 0 10 8" fill="none" className="w-2.5 h-2.5">
-                        <path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     )}
                   </div>
@@ -638,9 +634,8 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
                   />
                   {/* Inline match indicator */}
                   {signUpForm.confirmPassword && signUpForm.password && !signUpErrors.confirmPassword && (
-                    <p className={`mt-1 text-xs font-semibold flex items-center gap-1 ${
-                      signUpForm.password === signUpForm.confirmPassword ? 'text-emerald-500' : 'text-red-500'
-                    }`}>
+                    <p className={`mt-1 text-xs font-semibold flex items-center gap-1 ${signUpForm.password === signUpForm.confirmPassword ? 'text-emerald-500' : 'text-red-500'
+                      }`}>
                       {signUpForm.password === signUpForm.confirmPassword
                         ? <><CheckCircle2 size={11} /> Passwords match</>
                         : <><AlertCircle size={11} /> Passwords don&apos;t match yet</>
@@ -654,13 +649,12 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
                   <label className="flex items-start gap-2.5 cursor-pointer group select-none">
                     <div
                       onClick={() => { setTermsAccepted(v => !v); setSignUpErrors(p => ({ ...p, terms: '' })); }}
-                      className={`mt-0.5 w-4 h-4 rounded flex items-center justify-center border-2 shrink-0 transition-all cursor-pointer ${
-                        termsAccepted ? 'bg-emerald-500 border-emerald-500' : `border-slate-300 bg-white group-hover:border-emerald-400 ${signUpErrors.terms ? 'border-red-400' : ''}`
-                      }`}
+                      className={`mt-0.5 w-4 h-4 rounded flex items-center justify-center border-2 shrink-0 transition-all cursor-pointer ${termsAccepted ? 'bg-emerald-500 border-emerald-500' : `border-slate-300 bg-white group-hover:border-emerald-400 ${signUpErrors.terms ? 'border-red-400' : ''}`
+                        }`}
                     >
                       {termsAccepted && (
                         <svg viewBox="0 0 10 8" fill="none" className="w-2.5 h-2.5">
-                          <path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       )}
                     </div>

@@ -196,16 +196,6 @@ export default function BranchPage({ params }) {
                   ))}
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-slate-100">
-                  <div className="p-4 bg-slate-900 rounded-2xl">
-                    <div className="text-emerald-400 text-xs font-black uppercase tracking-widest mb-1">Status</div>
-                    <div className="text-white text-sm font-bold mb-3">{branchName}</div>
-                    <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                      <div className="w-[85%] h-full bg-emerald-500" />
-                    </div>
-                    <div className="text-[10px] text-slate-500 mt-2 font-bold uppercase">85% Resources Verified</div>
-                  </div>
-                </div>
               </div>
             </aside>
 
@@ -269,8 +259,8 @@ export default function BranchPage({ params }) {
                             <a
                               href={viewNotesUrl}
                               className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${dbId
-                                  ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-                                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                 }`}
                             >
                               <span className="flex items-center gap-1.5">
