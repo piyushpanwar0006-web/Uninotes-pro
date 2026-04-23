@@ -5,6 +5,8 @@ import BranchCatalog from '@/components/BranchCatalog';
 import HomeSearch from '@/components/HomeSearch';
 import { Search, Users, Star, BookOpen, CheckCircle2 } from 'lucide-react';
 
+import { WhyUninotes, Testimonials, FAQ, BlogPreview } from '@/components/HomeSections';
+
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
@@ -18,7 +20,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/50 text-emerald-700 text-xs font-bold mb-8 animate-fade-in">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Trusted by 1,000+ Students
+              Built for MBM Students
             </div>
 
             <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter mb-8 leading-[1.1] animate-fade-in stagger-1">
@@ -38,15 +40,15 @@ export default function Home() {
             <div className="mt-12 flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
               <div className="flex items-center gap-2">
                 {Star && <Star className="text-yellow-500 fill-yellow-500 w-4 h-4" />}
-                <span className="font-bold text-slate-900">4.8/5 Rating</span>
+                <span className="font-bold text-slate-900">Verified by Seniors & Toppers</span>
               </div>
               <div className="flex items-center gap-2">
                 {Users && <Users className="text-emerald-500 w-4 h-4" />}
-                <span className="font-bold text-slate-900">10k+ Resources</span>
+                <span className="font-bold text-slate-900">Notes shared by real students</span>
               </div>
               <div className="flex items-center gap-2">
                 {CheckCircle2 && <CheckCircle2 className="text-blue-500 w-4 h-4" />}
-                <span className="font-bold text-slate-900">Verified Material</span>
+                <span className="font-bold text-slate-900">All MBM Branches Covered</span>
               </div>
             </div>
           </div>
@@ -74,20 +76,26 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
               <div className="space-y-4">
-                <div className="text-5xl font-black text-white">10k+</div>
-                <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Academic Resources</div>
+                <div className="text-5xl font-black text-white">NOTES</div>
+                <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Made for MBM Exams</div>
               </div>
               <div className="space-y-4">
-                <div className="text-5xl font-black text-white text-gradient bg-gradient-to-r from-emerald-400 to-blue-400">50k+</div>
-                <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Active Students</div>
+                <div className="text-5xl font-black text-white text-gradient bg-gradient-to-r from-emerald-400 to-blue-400">FREE</div>
+                <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Easy to Search & Download</div>
               </div>
               <div className="space-y-4">
-                <div className="text-5xl font-black text-white">#1</div>
-                <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Study Platform for MBM</div>
+                <div className="text-5xl font-black text-white">MBM</div>
+                <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Focused on MBM Syllabus</div>
               </div>
             </div>
           </div>
         </section>
+
+        {/* New Added Sections */}
+        <WhyUninotes />
+        <Testimonials />
+        <FAQ />
+        <BlogPreview />
       </main>
 
       <Footer />

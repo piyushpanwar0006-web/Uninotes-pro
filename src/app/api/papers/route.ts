@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/admin';
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 const querySchema = z.object({
   subjectId: z.string().optional(),
@@ -53,7 +55,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     let query = adminClient
       .from('papers')
       .select(
-        `id, title, description, size_bytes, status, created_at,
+        `id, title, description, size_bytes, status, created_at, uploaded_by,
          ${subjectSelector},
          users ( full_name, avatar_url )`,
         { count: 'exact' }
