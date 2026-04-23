@@ -9,25 +9,25 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
       <Navbar />
-      
+
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gradient-to-b from-emerald-50/50 to-transparent -z-10 pointer-events-none" />
-          
+
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/50 text-emerald-700 text-xs font-bold mb-8 animate-fade-in">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Trusted by 50,000+ Students
+              Trusted by 1,000+ Students
             </div>
-            
+
             <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter mb-8 leading-[1.1] animate-fade-in stagger-1">
               Study Smarter, <br />
               <span className="text-gradient">Not Harder.</span>
             </h1>
-            
+
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-500 mb-12 font-medium leading-relaxed animate-fade-in stagger-2">
-              Access the most comprehensive collection of engineering notes, 
+              Access the most comprehensive collection of engineering notes,
               PYQs, and resource guides curated by the MBM community.
             </p>
 
@@ -63,7 +63,7 @@ export default function Home() {
                 Choose your engineering pathway to access comprehensive notes and practice materials.
               </p>
             </div>
-            
+
             <BranchCatalog limit={4} />
           </div>
         </section>
@@ -78,7 +78,7 @@ export default function Home() {
                 <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Academic Resources</div>
               </div>
               <div className="space-y-4">
-                <div className="text-5xl font-black text-white text-gradient bg-gradient-to-r from-emerald-400 to-blue-400">50k+</div>
+                <div className="text-5xl font-black text-white text-gradient bg-gradient-to-r from-emerald-400 to-blue-400">2k+</div>
                 <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Active Students</div>
               </div>
               <div className="space-y-4">
