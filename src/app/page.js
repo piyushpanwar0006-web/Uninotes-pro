@@ -78,7 +78,7 @@ export default function Home() {
                 <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Academic Resources</div>
               </div>
               <div className="space-y-4">
-                <div className="text-5xl font-black text-white text-gradient bg-gradient-to-r from-emerald-400 to-blue-400">2k+</div>
+                <div className="text-5xl font-black text-white text-gradient bg-gradient-to-r from-emerald-400 to-blue-400">50k+</div>
                 <div className="text-emerald-400 font-bold tracking-widest uppercase text-sm">Active Students</div>
               </div>
               <div className="space-y-4">
