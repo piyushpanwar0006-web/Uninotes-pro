@@ -66,7 +66,7 @@ export default function Home() {
               </p>
             </div>
 
-            <BranchCatalog limit={4} />
+            <BranchCatalog limit={8} />
           </div>
         </section>
 

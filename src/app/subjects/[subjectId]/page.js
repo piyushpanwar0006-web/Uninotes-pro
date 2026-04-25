@@ -221,7 +221,7 @@ export default function SubjectNotesPage() {
       // Fetch papers for this subject
       const papersRes = await fetch(
         `/api/papers?subjectId=${subjectId}&page=${pg}&limit=12`,
-        { credentials: 'include' }
+        { credentials: 'include', cache: 'no-store' }
       );
       const papersJson = await papersRes.json();
 

@@ -1,12 +1,12 @@
 'use client';
 import { useState } from 'react';
-import { 
-  BookOpen, 
-  Users, 
-  Zap, 
-  Clock, 
-  ChevronDown, 
-  MessageSquare, 
+import {
+  BookOpen,
+  Users,
+  Zap,
+  Clock,
+  ChevronDown,
+  MessageSquare,
   ArrowRight,
   ShieldCheck,
   Layout
@@ -69,17 +69,17 @@ export const WhyUninotes = () => {
 export const Testimonials = () => {
   const reviews = [
     {
-      name: "Rahul Sharma",
-      role: "3rd Year, CSE",
+      name: "Divyansh singh",
+      role: "2 Year, ECC",
       text: "Uninotes helped me find last-minute notes before exams. Very useful and simple to use without any clutter."
     },
     {
-      name: "Priya Verma",
-      role: "2nd Year, IT",
+      name: "Yuvranj Singh Sisodiya",
+      role: "2nd Year, PE",
       text: "The collection of PYQs is amazing. It saved me so much time searching through old WhatsApp groups."
     },
     {
-      name: "Amit Patel",
+      name: "Amit Sharma",
       role: "4th Year, EE",
       text: "Practical and reliable. The notes are well-organized and the interface is very student-friendly."
     }
@@ -148,15 +148,15 @@ export const FAQ = () => {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4">
-            Common <span className="text-emerald-500">Questions</span>
+            FAQ<span className="text-emerald-500 font-black">s</span>
           </h2>
           <p className="text-slate-500 font-medium">Everything you need to know about the platform.</p>
         </div>
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={`border rounded-2xl transition-all duration-300 ${openIndex === index ? 'border-emerald-500 shadow-lg shadow-emerald-500/5' : 'border-slate-100'}`}
             >
               <button

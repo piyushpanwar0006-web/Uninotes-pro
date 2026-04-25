@@ -324,8 +324,7 @@ export default function NotesPage() {
     setPageLoading(true);
     setPageError('');
     try {
-      // Add a timestamp query param and cache: 'no-store' to aggressively prevent browser caching
-      const res = await fetch(`/api/papers?page=${pg}&limit=${LIMIT}&_t=${Date.now()}`, {
+      const res = await fetch(`/api/papers?page=${pg}&limit=${LIMIT}`, {
         credentials: 'include',
         cache: 'no-store',
       });

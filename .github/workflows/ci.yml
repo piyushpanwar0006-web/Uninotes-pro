@@ -1,0 +1,69 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate:
+    name: Lint, Test, and Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Linter
+        run: npm run lint
+
+      - name: Security Check (Audit)
+        run: npm audit --production --audit-level=high
+
+      - name: Secret Leak Detection (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Type Checking
+        run: npm run type-check
+
+      - name: Run Tests with Coverage
+        run: npm run test:coverage
+        env:
+          # Dummy env vars for testing
+          NEXT_PUBLIC_SUPABASE_URL: "https://dummy.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role-key"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-token"
+          CRON_SECRET: "dummy-secret"
+          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+
+      - name: Run Build Check
+        run: npm run build
+        env:
+          # Dummy env vars for Next.js build (prevents build failures if env vars are referenced)
+          NEXT_PUBLIC_SUPABASE_URL: "https://dummy.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role-key"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-token"
+          CRON_SECRET: "dummy-secret"
+          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+          
+          # Disable Sentry source map upload during CI build check
+          NEXT_PUBLIC_SENTRY_DSN: ""
+          SENTRY_ORG: ""
+          SENTRY_PROJECT: ""
+          SENTRY_AUTH_TOKEN: ""

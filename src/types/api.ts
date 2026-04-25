@@ -22,16 +22,17 @@ export type ApiResponse<T> = ApiSuccess<T> | ApiError;
 
 import { NextResponse } from 'next/server';
 
-export function successResponse<T>(data: T, status = 200): NextResponse {
+export function successResponse<T>(data: T, status = 200, headers: Record<string, string> = {}): NextResponse {
   const body: ApiSuccess<T> = { success: true, data };
-  return NextResponse.json(body, { status });
+  return NextResponse.json(body, { status, headers });
 }
 
 export function errorResponse(
   error: string,
   status = 400,
-  code?: string
+  code?: string,
+  headers: Record<string, string> = {}
 ): NextResponse {
   const body: ApiError = { success: false, error, ...(code ? { code } : {}) };
-  return NextResponse.json(body, { status });
+  return NextResponse.json(body, { status, headers });
 }

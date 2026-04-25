@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
+import * as Sentry from "@sentry/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 

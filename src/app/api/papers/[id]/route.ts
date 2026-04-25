@@ -3,6 +3,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { successResponse, errorResponse } from '@/types/api';
 import { STORAGE_BUCKET } from '@/types/upload';
+import { checkRateLimit } from '@/lib/rateLimit';
+import { invalidatePapersCache } from '@/lib/cache';
+import { revalidatePath } from 'next/cache';
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 export const revalidate = 0;
@@ -36,6 +39,12 @@ export async function DELETE(
       return errorResponse('Unauthorized. Please sign in.', 401, 'UNAUTHORIZED');
     }
     userId = user.id;
+
+    // ── Step 1b: Rate Limiting ──────────────────────────────────────────────
+    const rateLimit = await checkRateLimit(userId, 'delete');
+    if (!rateLimit.success) {
+      return errorResponse('Too many delete requests. Please try again later.', 429, 'RATE_LIMIT_EXCEEDED');
+    }
   } catch (e) {
     console.error('[DELETE] Auth error:', e);
     return errorResponse('Authentication failed.', 401, 'AUTH_ERROR');
@@ -83,28 +92,12 @@ export async function DELETE(
     return errorResponse('You do not have permission to delete this note.', 403, 'FORBIDDEN');
   }
 
-  // ── Step 5: Delete from Storage FIRST (non-blocking on failure) ──────────
-  if (paper.storage_path) {
-    try {
-      const { error: storageErr } = await admin.storage
-        .from(STORAGE_BUCKET)
-        .remove([paper.storage_path]);
-
-      if (storageErr) {
-        // Log but continue — the storage file may already be gone
-        console.warn(`[DELETE] Storage removal warning for ${paper.storage_path}:`, storageErr.message);
-      } else {
-        console.log(`[DELETE] Storage file removed: ${paper.storage_path}`);
-      }
-    } catch (ex) {
-      console.warn('[DELETE] Storage exception (non-fatal):', ex);
-    }
-  }
-
-  // ── Step 6: Delete from Database ─────────────────────────────────────────
+  // ── Step 5: Soft Delete Database Record ──────────────────────────────────
+  // We do NOT delete from storage here to prevent orphaned records on DB failure.
+  // A background cron job will handle storage deletion for soft-deleted records.
   const { data: deletedRow, error: dbErr } = await admin
     .from('papers')
-    .delete()
+    .update({ deleted_at: new Date().toISOString() })
     .eq('id', paperId)
     .select()
     .maybeSingle();
@@ -128,6 +121,10 @@ export async function DELETE(
   }
 
   console.log(`[DELETE] Paper ${paperId} deleted by ${userId} (role: ${isAdmin ? 'admin' : 'user'})`);
+
+  await invalidatePapersCache();
+  revalidatePath('/notes');
+  revalidatePath('/subjects/[subjectId]', 'page');
 
   return successResponse({ message: 'Paper deleted successfully.', id: paperId });
 }

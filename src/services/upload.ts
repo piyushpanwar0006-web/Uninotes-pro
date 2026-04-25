@@ -7,6 +7,7 @@ import {
   STORAGE_BUCKET,
   type UploadResult,
 } from '@/types/upload';
+import { log } from '@/lib/logger';
 
 // ============================================================
 // Validation
@@ -17,7 +18,7 @@ export interface ValidationError {
   message: string;
 }
 
-export function validatePDF(file: File): ValidationError | null {
+export async function validatePDF(file: File): Promise<ValidationError | null> {
   if (!ALLOWED_MIME_TYPES.includes(file.type as (typeof ALLOWED_MIME_TYPES)[number])) {
     return {
       field: 'file',
@@ -35,6 +36,21 @@ export function validatePDF(file: File): ValidationError | null {
 
   if (file.size === 0) {
     return { field: 'file', message: 'File is empty.' };
+  }
+
+  // Magic byte validation for PDF (%PDF-)
+  try {
+    const header = await file.slice(0, 4).arrayBuffer();
+    const arr = new Uint8Array(header);
+    // 0x25='%', 0x50='P', 0x44='D', 0x46='F'
+    if (arr[0] !== 0x25 || arr[1] !== 0x50 || arr[2] !== 0x44 || arr[3] !== 0x46) {
+      return {
+        field: 'file',
+        message: 'File appears to be corrupt or spoofed. Not a genuine PDF.',
+      };
+    }
+  } catch (error) {
+    return { field: 'file', message: 'Could not read file for security validation.' };
   }
 
   return null;
@@ -57,6 +73,8 @@ export async function uploadToStorage(
   const fileId = uuidv4();
   const storagePath = `${userId}/${fileId}.pdf`;
 
+  log.debug('uploadToStorage: starting', { userId, storagePath, fileSizeBytes: file.size });
+
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
@@ -68,9 +86,11 @@ export async function uploadToStorage(
     });
 
   if (error) {
+    log.error('uploadToStorage: failed', { userId, storagePath, error: error.message });
     return { storagePath: '', error: error.message };
   }
 
+  log.info('uploadToStorage: success', { userId, storagePath });
   return { storagePath, error: null };
 }
 
@@ -87,15 +107,19 @@ export async function getSignedUrl(
   storagePath: string,
   expiresIn = SIGNED_URL_EXPIRES_IN
 ): Promise<{ signedUrl: string; expiresAt: string; error: string | null }> {
+  log.debug('getSignedUrl: generating', { storagePath, expiresIn });
+
   const { data, error } = await adminClient.storage
     .from(STORAGE_BUCKET)
     .createSignedUrl(storagePath, expiresIn);
 
   if (error || !data?.signedUrl) {
+    log.error('getSignedUrl: failed', { storagePath, error: error?.message });
     return { signedUrl: '', expiresAt: '', error: error?.message ?? 'Failed to generate URL' };
   }
 
   const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString();
+  log.debug('getSignedUrl: success', { storagePath, expiresAt });
   return { signedUrl: data.signedUrl, expiresAt, error: null };
 }
 
@@ -122,6 +146,8 @@ export async function saveMetadata({
   sizeBytes,
   description,
 }: SaveMetadataParams): Promise<{ paperId: string | null; error: string | null }> {
+  log.debug('saveMetadata: inserting paper record', { userId, subjectId, title, storagePath });
+
   const { data, error } = await supabase
     .from('papers')
     .insert({
@@ -137,9 +163,15 @@ export async function saveMetadata({
     .single();
 
   if (error || !data) {
+    log.error('saveMetadata: DB insert failed', {
+      userId,
+      storagePath,
+      error: error?.message,
+    });
     return { paperId: null, error: error?.message ?? 'Failed to save metadata' };
   }
 
+  log.info('saveMetadata: paper record created', { userId, paperId: data.id, storagePath });
   return { paperId: data.id, error: null };
 }
 
@@ -151,5 +183,11 @@ export async function deleteFromStorage(
   adminClient: SupabaseClient,
   storagePath: string
 ): Promise<void> {
-  await adminClient.storage.from(STORAGE_BUCKET).remove([storagePath]);
+  log.info('deleteFromStorage: removing file', { storagePath });
+  const { error } = await adminClient.storage.from(STORAGE_BUCKET).remove([storagePath]);
+  if (error) {
+    log.error('deleteFromStorage: failed', { storagePath, error: error.message });
+  } else {
+    log.info('deleteFromStorage: success', { storagePath });
+  }
 }
