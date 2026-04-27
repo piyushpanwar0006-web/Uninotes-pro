@@ -1,11 +1,15 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import GuestNudge from '@/components/GuestNudge';
 import AuthModal from '@/components/AuthModal';
 import { useAuth } from '@/lib/hooks/useAuth';
+import PaperSkeleton from '@/components/PaperSkeleton';
+import { Skeleton } from '@/components/ui/Skeleton';
 import {
   FileText,
   Download,
@@ -195,7 +199,6 @@ export default function SubjectNotesPage() {
   const subjectId = params?.subjectId;
   const { user, isLoading: authLoading } = useAuth();
 
-  // Track auth modal state for guest nudges (passed up from PaperCard)
   const [authModalTrigger, setAuthModalTrigger] = useState(null);
   const [showAuthFromCard, setShowAuthFromCard] = useState(false);
 
@@ -204,74 +207,56 @@ export default function SubjectNotesPage() {
     setShowAuthFromCard(true);
   };
 
-  const [subject, setSubject] = useState(null);
-  const [papers, setPapers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
-
-  const fetchData = useCallback(async (pg = 1) => {
-    if (!subjectId) return;
-    setLoading(true);
-    setError('');
-
-    try {
-      // Fetch papers for this subject
-      const papersRes = await fetch(
-        `/api/papers?subjectId=${subjectId}&page=${pg}&limit=12`,
-        { credentials: 'include', cache: 'no-store' }
+  // ── 1. Fetch Papers (Infinite) ─────────────────────────────
+  const {
+    data: papersData,
+    error: papersError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status: papersStatus,
+  } = useInfiniteQuery({
+    queryKey: ['papers', 'subject', subjectId],
+    queryFn: async ({ pageParam = 1 }) => {
+      const res = await fetch(
+        `/api/papers?subjectId=${subjectId}&page=${pageParam}&limit=12`,
+        { credentials: 'include' }
       );
-      const papersJson = await papersRes.json();
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || 'Failed to load papers.');
+      return json.data;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { page, totalPages } = lastPage.pagination;
+      return page < totalPages ? page + 1 : undefined;
+    },
+    enabled: !!subjectId,
+  });
 
-      if (!papersJson.success) {
-        setError(papersJson.error || 'Failed to load papers.');
-        setLoading(false);
-        return;
-      }
+  const papers = papersData ? papersData.pages.flatMap(p => p.papers ?? []) : [];
+  const total = papersData ? papersData.pages[0]?.pagination?.total ?? 0 : 0;
+  
+  // Try to extract subject from the first paper
+  const firstPaperSubject = papersData?.pages[0]?.papers?.[0]?.subjects;
 
-      const { papers: p, pagination } = papersJson.data;
-      setPapers(p ?? []);
-      setTotalPages(pagination?.totalPages ?? 1);
-      setTotal(pagination?.total ?? 0);
+  // ── 2. Fetch Subject Details (Parallel/Fallback) ─────────────
+  const { data: fallbackSubjectData, isLoading: subjectLoading } = useQuery({
+    queryKey: ['subjectDetails', subjectId],
+    queryFn: async () => {
+      const res = await fetch(`/api/subjects?subjectId=${subjectId}`, { credentials: 'include' });
+      const json = await res.json();
+      if (!json.success) throw new Error('Failed to load subject.');
+      return json.data;
+    },
+    // We can fetch in parallel, but if we already know the subject from papers cache, we can skip
+    enabled: !!subjectId && !firstPaperSubject,
+  });
 
-      // Extract subject info from the first paper if available
-      if (p && p.length > 0 && p[0].subjects) {
-        setSubject(p[0].subjects);
-      } else if (!subject) {
-        // Fallback: fetch subject info directly
-        try {
-          const subjRes = await fetch(`/api/subjects?subjectId=${subjectId}`, {
-            credentials: 'include',
-          });
-          const subjJson = await subjRes.json();
-          if (subjJson.success && subjJson.data?.length > 0) {
-            setSubject(subjJson.data[0]);
-          } else {
-            setSubject({ name: 'Subject Not Found', branch: 'Unknown' });
-          }
-        } catch (err) {
-          console.error("Failed to fetch subject details", err);
-          setSubject({ name: 'Subject', branch: 'Unknown' });
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      setError('Network error. Please check your connection.');
-    } finally {
-      setLoading(false);
-    }
-  }, [subjectId]);
+  const subject = firstPaperSubject || (fallbackSubjectData && fallbackSubjectData.length > 0 ? fallbackSubjectData[0] : null);
 
-  useEffect(() => {
-    fetchData(page);
-  }, [fetchData, page]);
-
-  const handlePage = (newPage) => {
-    setPage(newPage);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const loading = papersStatus === 'pending' || (subjectLoading && !subject);
+  const error = papersError ? papersError.message : '';
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
@@ -310,7 +295,7 @@ export default function SubjectNotesPage() {
               </div>
               <div>
                 <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-2">
-                  {subject?.name ?? 'Loading…'}
+                  {loading && !subject ? <Skeleton className="h-10 w-64 md:h-12 md:w-80" /> : subject?.name ?? 'Subject Details'}
                 </h1>
                 {subject && (
                   <p className="text-slate-400 font-medium text-base">
@@ -349,9 +334,10 @@ export default function SubjectNotesPage() {
 
           {/* States */}
           {loading && (
-            <div className="flex flex-col items-center justify-center py-32 gap-4 text-slate-400">
-              <Loader2 size={36} className="animate-spin text-emerald-500" />
-              <p className="font-bold text-sm">Loading papers…</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <PaperSkeleton key={i} />
+              ))}
             </div>
           )}
 
@@ -418,25 +404,19 @@ export default function SubjectNotesPage() {
                 ))}
               </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-12">
+              {/* Lazy Load More */}
+              {hasNextPage && (
+                <div className="flex justify-center mt-12">
                   <button
-                    onClick={() => handlePage(page - 1)}
-                    disabled={page === 1}
-                    className="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                    className="px-8 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-slate-900/20 flex items-center gap-2"
                   >
-                    Previous
-                  </button>
-                  <span className="text-sm font-bold text-slate-500 px-3">
-                    Page {page} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() => handlePage(page + 1)}
-                    disabled={page === totalPages}
-                    className="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                  >
-                    Next
+                    {isFetchingNextPage ? (
+                      <><Loader2 size={16} className="animate-spin" /> Loading…</>
+                    ) : (
+                      'Load More Papers'
+                    )}
                   </button>
                 </div>
               )}

@@ -88,15 +88,15 @@ async function handler(req: NextRequest): Promise<NextResponse> {
 
     const doInnerJoin = branch || semester || subject || (subjectId && !isUUID);
     const subjectSelector = doInnerJoin
-      ? `subjects!inner( id, branch, semester, name, code )`
-      : `subjects( id, branch, semester, name, code )`;
+      ? `subjects!inner( id, branch, semester, name )`
+      : `subjects( id, branch, semester, name )`;
 
     let query = adminClient
       .from('papers')
       .select(
-        `id, title, description, size_bytes, status, created_at, uploaded_by,
+        `id, title, description, size_bytes, created_at, uploaded_by,
          ${subjectSelector},
-         users ( full_name, avatar_url )`,
+         users ( full_name )`,
         { count: 'exact' }
       )
       .eq('status', 'ready')
@@ -166,9 +166,9 @@ async function handler(req: NextRequest): Promise<NextResponse> {
       }
     }
 
-    // Apply CDN-level cache header (60s public) — the Redis layer handles freshness.
+    // Apply CDN-level cache header (1 hour public) — the Redis layer handles freshness.
     // On cache hit, Netlify CDN serves the response without invoking the Lambda.
-    const cacheHdrs = publicCacheHeaders(60, 30) as Record<string, string>;
+    const cacheHdrs = publicCacheHeaders(3600, 86400) as Record<string, string>;
     const jsonResponse = NextResponse.json(responseBody);
     Object.entries(cacheHdrs).forEach(([k, v]) => jsonResponse.headers.set(k, v));
     return jsonResponse;

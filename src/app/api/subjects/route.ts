@@ -83,9 +83,9 @@ export async function GET(req: NextRequest) {
       return errorResponse('Database error fetching subjects', 500, 'DB_ERROR');
     }
 
-    // HTTP-level caching: CDN caches for 5 min, serves stale for 60s while revalidating.
+    // HTTP-level caching: CDN caches for 1 hour, serves stale for 24h while revalidating.
     const response = successResponse(data);
-    const cacheHdrs = publicCacheHeaders(300, 60) as Record<string, string>;
+    const cacheHdrs = publicCacheHeaders(3600, 86400) as Record<string, string>;
     Object.entries(cacheHdrs).forEach(([k, v]) => response.headers.set(k, v));
     return response;
   } catch (err) {

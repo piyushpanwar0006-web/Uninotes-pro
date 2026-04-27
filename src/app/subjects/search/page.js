@@ -16,6 +16,8 @@ import {
   HardDrive,
   User,
 } from 'lucide-react';
+import PaperSkeleton from '@/components/PaperSkeleton';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 function formatBytes(bytes) {
   if (!bytes) return '—';
@@ -98,7 +100,19 @@ function PaperCard({ paper }) {
 
 export default function SubjectSearchPageWrapper() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-slate-400">Loading…</div></div>}>
+    <Suspense fallback={
+      <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+        <Navbar />
+        <main className="flex-grow">
+          <section className="bg-slate-900 pt-16 pb-28 relative overflow-hidden" />
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-14 relative z-20 pb-24">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => <PaperSkeleton key={i} />)}
+            </div>
+          </section>
+        </main>
+      </div>
+    }>
       <SubjectSearchPage />
     </Suspense>
   );
@@ -243,9 +257,10 @@ function SubjectSearchPage() {
 
           {/* Loading */}
           {loading && (
-            <div className="flex flex-col items-center justify-center py-32 gap-4 text-slate-400">
-              <Loader2 size={36} className="animate-spin text-emerald-500" />
-              <p className="font-bold text-sm">Loading notes…</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <PaperSkeleton key={i} />
+              ))}
             </div>
           )}
 

@@ -22,12 +22,17 @@ export const dynamic = 'force-dynamic';
 
 // Zod schema for form-data fields
 const uploadSchema = z.object({
-  subjectId: z.string().uuid('subjectId must be a valid UUID'),
+  subjectId: z.string().uuid('subjectId must be a valid UUID').optional(),
+  branch: z.string().optional(),
+  semester: z.coerce.number().int().min(1).max(10).optional(),
+  subjectName: z.string().min(1, 'Subject name is required').optional(),
   title: z
     .string()
     .min(3, 'Title must be at least 3 characters')
     .max(200, 'Title must not exceed 200 characters'),
   description: z.string().max(1000).optional(),
+}).refine(data => data.subjectId || (data.branch && data.semester !== undefined && data.subjectName), {
+  message: 'Either subjectId or (branch, semester, subjectName) must be provided',
 });
 
 /**
@@ -62,6 +67,9 @@ export const POST = withLogging(
       const file = formData.get('file');
       const rawFields = {
         subjectId: formData.get('subjectId'),
+        branch: formData.get('branch'),
+        semester: formData.get('semester'),
+        subjectName: formData.get('subjectName'),
         title: formData.get('title'),
         description: formData.get('description'),
       };
@@ -78,7 +86,10 @@ export const POST = withLogging(
 
       // 3. Validate form fields with Zod
       const parsed = uploadSchema.safeParse({
-        subjectId: rawFields.subjectId,
+        subjectId: rawFields.subjectId || undefined,
+        branch: rawFields.branch || undefined,
+        semester: rawFields.semester || undefined,
+        subjectName: rawFields.subjectName || undefined,
         title: rawFields.title,
         description: rawFields.description || undefined,
       });
@@ -96,22 +107,52 @@ export const POST = withLogging(
         );
       }
 
-      const { subjectId, title, description } = parsed.data;
+      const { subjectId: explicitSubjectId, branch, semester, subjectName, title, description } = parsed.data;
+      const adminClient = createAdminClient();
+      let resolvedSubjectId = explicitSubjectId;
 
-      // 4. Validate the subject exists
-      const { data: subject, error: subjectError } = await supabase
-        .from('subjects')
-        .select('id')
-        .eq('id', subjectId)
-        .single();
+      // 4. Validate or resolve the subject
+      if (!resolvedSubjectId) {
+        // Resolve subject by upserting
+        const { data: subjectData, error: resolveError } = await adminClient
+          .from('subjects')
+          .upsert(
+            { branch, semester, name: subjectName },
+            { onConflict: 'branch,semester,name', ignoreDuplicates: false }
+          )
+          .select('id')
+          .single();
 
-      if (subjectError || !subject) {
-        log.warn('Upload: subject not found', { userId: user.id, endpoint, subjectId });
-        return errorResponse(
-          'Subject not found. Make sure subjectId is valid.',
-          404,
-          'SUBJECT_NOT_FOUND'
-        );
+        if (resolveError || !subjectData) {
+          log.warn('Upload: subject resolution failed', { userId: user.id, endpoint, branch, semester, subjectName });
+          return errorResponse(
+            'Failed to resolve subject. Check branch, semester, and name parameters.',
+            400,
+            'SUBJECT_RESOLUTION_ERROR'
+          );
+        }
+        resolvedSubjectId = subjectData.id;
+      } else {
+        // Validate explicit subjectId exists
+        const { data: subject, error: subjectError } = await supabase
+          .from('subjects')
+          .select('id')
+          .eq('id', resolvedSubjectId)
+          .single();
+
+        if (subjectError || !subject) {
+          log.warn('Upload: subject not found', { userId: user.id, endpoint, subjectId: resolvedSubjectId });
+          return errorResponse(
+            'Subject not found. Make sure subjectId is valid.',
+            404,
+            'SUBJECT_NOT_FOUND'
+          );
+        }
+      }
+
+      // 4.1 Type-safety guard
+      if (!resolvedSubjectId) {
+        return errorResponse('Failed to resolve subject ID.', 500, 'SUBJECT_RESOLUTION_ERROR');
       }
 
       // 5. Validate PDF (type + size)
@@ -130,13 +171,12 @@ export const POST = withLogging(
       log.info('Starting PDF upload to storage', {
         userId: user.id,
         endpoint,
-        subjectId,
+        subjectId: resolvedSubjectId,
         title,
         fileSizeBytes: file.size,
       });
 
       // 6. Upload to Supabase Storage (admin client bypasses RLS)
-      const adminClient = createAdminClient();
       const { storagePath: uploadedPath, error: storageError } =
         await uploadToStorage(adminClient, file, user.id);
 
@@ -171,7 +211,7 @@ export const POST = withLogging(
       // 7. Save metadata to the papers table
       const { paperId, error: dbError } = await saveMetadata({
         supabase,
-        subjectId,
+        subjectId: resolvedSubjectId,
         userId: user.id,
         title,
         storagePath: uploadedPath,

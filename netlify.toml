@@ -9,6 +9,7 @@
 # producing smaller Lambda bundles → faster cold starts.
 [functions]
   node_bundler = "nft"
+  region = "ap-south-1"
 
 [build.environment]
   # Disables Next.js telemetry pings that add latency during build

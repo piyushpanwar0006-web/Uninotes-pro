@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { publicCacheHeaders } from '@/lib/cache';
 export const dynamic = 'force-dynamic';
 
 /**
@@ -64,7 +65,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // Since in(...) doesn't guarantee order, we sort it back by the trending raw order
     enriched.sort((a: any, b: any) => (b.downloads_7d || 0) - (a.downloads_7d || 0));
 
-    return NextResponse.json({ success: true, data: enriched });
+    const jsonResponse = NextResponse.json({ success: true, data: enriched });
+    const cacheHdrs = publicCacheHeaders(3600, 86400) as Record<string, string>;
+    Object.entries(cacheHdrs).forEach(([k, v]) => jsonResponse.headers.set(k, v));
+    return jsonResponse;
   } catch (err) {
     console.error('[GET /api/papers/trending]', err);
     return NextResponse.json(

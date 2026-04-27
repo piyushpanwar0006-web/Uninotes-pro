@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import {
-  FileText, Clock, HardDrive, User, BookOpen,
-  AlertCircle, Loader2, Eye, Upload, Search, X,
-  ChevronRight, BookMarked, Trash2, CheckCircle2, WifiOff,
+import Link from 'next/link';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { 
+  Search, FileText, ChevronRight, BookOpen, Trash2, CheckCircle2, WifiOff,
+  AlertCircle, Loader2, Eye, Upload, X, Clock, HardDrive, User, BookMarked,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import PaperSkeleton from '@/components/PaperSkeleton';
 
 // ─────────────────────────────────────────────────────────────
 // Utilities
@@ -305,45 +307,47 @@ function PaperCard({ paper, onDelete, addToast }) {
 // Main Notes Page
 // ─────────────────────────────────────────────────────────────
 export default function NotesPage() {
-  const [papers, setPapers] = useState([]);
-  const [pageLoading, setPageLoading] = useState(true);
-  const [pageError, setPageError] = useState('');
   const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
 
   const { toasts, addToast, removeToast } = useToast();
   const supabase = createClient();
+  const queryClient = useQueryClient();
   const LIMIT = 12;
 
-  // ── Fetch papers ───────────────────────────────────────────
-  const fetchPapers = useCallback(async (pg = 1) => {
-    setPageLoading(true);
-    setPageError('');
-    try {
-      const res = await fetch(`/api/papers?page=${pg}&limit=${LIMIT}`, {
+  // ── Fetch papers with React Query ──────────────────────────
+  const {
+    data,
+    error: queryError,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ['papers'],
+    queryFn: async ({ pageParam = 1 }) => {
+      const res = await fetch(`/api/papers?page=${pageParam}&limit=${LIMIT}`, {
         credentials: 'include',
-        cache: 'no-store',
       });
       const json = await res.json();
       if (!json.success) {
-        setPageError(json.error || 'Failed to load notes.');
-        return;
+        throw new Error(json.error || 'Failed to load notes.');
       }
-      setPapers(json.data.papers ?? []);
-      setTotalPages(json.data.pagination?.totalPages ?? 1);
-      setTotal(json.data.pagination?.total ?? 0);
-    } catch {
-      setPageError('Network error. Please check your connection.');
-    } finally {
-      setPageLoading(false);
-    }
-  }, []);
+      return json.data;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { page, totalPages } = lastPage.pagination;
+      return page < totalPages ? page + 1 : undefined;
+    },
+  });
 
-  useEffect(() => { fetchPapers(page); }, [fetchPapers, page]);
+  const papers = data ? data.pages.flatMap((p) => p.papers ?? []) : [];
+  const total = data ? data.pages[0]?.pagination?.total ?? 0 : 0;
+  const pageLoading = status === 'pending';
+  const pageError = queryError ? queryError.message : '';
 
   // ── Fetch user session + role ──────────────────────────────
   useEffect(() => {
@@ -375,15 +379,21 @@ export default function NotesPage() {
 
   // ── Instantly remove deleted paper from state ──────────────
   const handlePaperDeleted = useCallback((deletedId) => {
-    setPapers(prev => prev.filter(p => p.id !== deletedId));
-    setTotal(prev => Math.max(0, prev - 1));
-  }, []);
-
-  // ── Pagination ─────────────────────────────────────────────
-  const handlePage = (newPage) => {
-    setPage(newPage);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+    queryClient.setQueryData(['papers'], (oldData) => {
+      if (!oldData) return oldData;
+      return {
+        ...oldData,
+        pages: oldData.pages.map(page => ({
+          ...page,
+          papers: page.papers.filter(p => p.id !== deletedId),
+          pagination: {
+            ...page.pagination,
+            total: Math.max(0, page.pagination.total - 1)
+          }
+        }))
+      };
+    });
+  }, [queryClient]);
 
   // ── Client-side search ─────────────────────────────────────
   const filtered = search.trim()
@@ -469,9 +479,10 @@ export default function NotesPage() {
 
           {/* Loading */}
           {pageLoading && (
-            <div className="flex flex-col items-center justify-center py-32 gap-4 text-slate-400">
-              <Loader2 size={36} className="animate-spin text-emerald-500" />
-              <p className="font-bold text-sm">Loading notes…</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(9)].map((_, i) => (
+                <PaperSkeleton key={i} />
+              ))}
             </div>
           )}
 
@@ -531,25 +542,19 @@ export default function NotesPage() {
                 ))}
               </div>
 
-              {/* Pagination */}
-              {!search && totalPages > 1 && (
-                <div className="flex items-center justify-center gap-3 mt-12">
+              {/* Lazy Load More */}
+              {!search && hasNextPage && (
+                <div className="flex justify-center mt-12">
                   <button
-                    onClick={() => handlePage(page - 1)}
-                    disabled={page === 1}
-                    className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                    className="px-8 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-slate-900/20 flex items-center gap-2"
                   >
-                    ← Previous
-                  </button>
-                  <span className="text-sm font-bold text-slate-500 px-2">
-                    Page {page} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() => handlePage(page + 1)}
-                    disabled={page === totalPages}
-                    className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                  >
-                    Next →
+                    {isFetchingNextPage ? (
+                      <><Loader2 size={16} className="animate-spin" /> Loading…</>
+                    ) : (
+                      'Load More Notes'
+                    )}
                   </button>
                 </div>
               )}

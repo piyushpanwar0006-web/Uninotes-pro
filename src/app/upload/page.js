@@ -112,32 +112,12 @@ function UploadPage() {
     setLoading(true);
 
     try {
-      // Step 1: Resolve or create the subject, get its ID
-      // Since subjects need a UUID from the DB, we call a helper endpoint
-      const subjectRes = await fetch('/api/subjects/resolve', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          branch: form.branch,
-          semester: semOptional ? (form.semester ? Number(form.semester) : 1) : Number(form.semester),
-          name: form.subjectName || form.title,
-        }),
-      });
-      const subjectJson = await subjectRes.json();
-
-      if (!subjectJson.success) {
-        setError(subjectJson.error || 'Failed to resolve subject. Are you logged in?');
-        setLoading(false);
-        return;
-      }
-
-      const subjectId = subjectJson.data.id;
-
-      // Step 2: Upload the PDF
+      // Construct form data with the new unified payload structure
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('subjectId', subjectId);
+      formData.append('branch', form.branch);
+      formData.append('semester', semOptional ? (form.semester ? String(form.semester) : '1') : String(form.semester));
+      formData.append('subjectName', form.subjectName || form.title);
       formData.append('title', form.title);
       if (form.description) formData.append('description', form.description);
 
