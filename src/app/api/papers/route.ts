@@ -5,6 +5,7 @@ import { withLogging } from '@/lib/withLogging';
 import { log } from '@/lib/logger';
 import { captureError } from '@/lib/sentry';
 import { redis } from '@/lib/rateLimit';
+import { publicCacheHeaders } from '@/lib/cache';
 
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
@@ -165,7 +166,12 @@ async function handler(req: NextRequest): Promise<NextResponse> {
       }
     }
 
-    return NextResponse.json(responseBody);
+    // Apply CDN-level cache header (60s public) — the Redis layer handles freshness.
+    // On cache hit, Netlify CDN serves the response without invoking the Lambda.
+    const cacheHdrs = publicCacheHeaders(60, 30) as Record<string, string>;
+    const jsonResponse = NextResponse.json(responseBody);
+    Object.entries(cacheHdrs).forEach(([k, v]) => jsonResponse.headers.set(k, v));
+    return jsonResponse;
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
     const stack = err instanceof Error ? err.stack : undefined;

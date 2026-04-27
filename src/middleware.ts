@@ -17,7 +17,7 @@ import { createServerClient } from '@supabase/ssr';
  */
 
 /** Page-level routes that require authentication. */
-const PROTECTED_PAGE_PATHS = ['/upload', '/dashboard', '/bookmark'];
+const PROTECTED_PAGE_PATHS = ['/upload', '/dashboard', '/bookmark', '/profile'];
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });

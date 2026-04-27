@@ -187,13 +187,14 @@ export default function Navbar() {
                         <p className="text-xs text-slate-400 font-medium truncate mt-0.5">{user.email}</p>
                       </div>
 
-                      <button
-                        onClick={() => { setShowDropdown(false); }}
+                      <Link
+                        href="/profile"
+                        onClick={() => setShowDropdown(false)}
                         className="w-full flex items-center gap-2.5 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
                       >
                         <User size={14} className="text-slate-400" />
                         My Profile
-                      </button>
+                      </Link>
 
                       <div className="border-t border-slate-100 mt-1 pt-1">
                         <button

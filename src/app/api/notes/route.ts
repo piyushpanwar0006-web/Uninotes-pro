@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
 import { withLogging } from '@/lib/withLogging';
 import { successResponse, errorResponse } from '@/types/api';
+import { PRIVATE_CACHE_HEADERS } from '@/lib/cache';
 import { log } from '@/lib/logger';
 import { captureError } from '@/lib/sentry';
 
@@ -92,7 +93,7 @@ export const GET = withLogging(
       page,
     });
 
-    return successResponse({
+    const resp = successResponse({
       notes: data,
       pagination: {
         page,
@@ -101,6 +102,10 @@ export const GET = withLogging(
         totalPages: Math.ceil((count ?? 0) / limit),
       },
     });
+    // Private: user-scoped data, safe to cache for 30s in browser only
+    const hdrs = PRIVATE_CACHE_HEADERS as Record<string, string>;
+    Object.entries(hdrs).forEach(([k, v]) => resp.headers.set(k, v));
+    return resp;
   }),
   '/api/notes'
 );

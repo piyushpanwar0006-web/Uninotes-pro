@@ -9,6 +9,34 @@ export const NO_CACHE_HEADERS = {
   'Surrogate-Control': 'no-store',
 };
 
+/**
+ * Returns Cache-Control headers for CDN-cacheable public API responses.
+ *
+ * @param ttlSeconds - How long the CDN/edge caches the response (s-maxage).
+ * @param swr        - stale-while-revalidate window in seconds (default 60s).
+ *                     The CDN serves the stale response instantly while
+ *                     fetching a fresh one in the background.
+ *
+ * Usage:
+ *   response.headers.set('Cache-Control', publicCacheHeaders(300).['Cache-Control'])
+ *   — or —
+ *   return NextResponse.json(data, { headers: publicCacheHeaders(300) });
+ */
+export function publicCacheHeaders(ttlSeconds: number, swr = 60): HeadersInit {
+  return {
+    'Cache-Control': `public, s-maxage=${ttlSeconds}, stale-while-revalidate=${swr}`,
+    'Vary': 'Accept-Encoding',
+  };
+}
+
+/**
+ * For authenticated, user-specific responses.
+ * Prevents CDN caching; allows a single browser revalidation cycle.
+ */
+export const PRIVATE_CACHE_HEADERS: HeadersInit = {
+  'Cache-Control': 'private, max-age=0, must-revalidate',
+};
+
 import { redis } from './rateLimit';
 
 /**
@@ -28,3 +56,4 @@ export async function invalidatePapersCache() {
     console.error('[Cache Invalidation Failed]', err);
   }
 }
+

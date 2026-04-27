@@ -3,6 +3,12 @@ import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { successResponse, errorResponse } from '@/types/api';
+import { publicCacheHeaders } from '@/lib/cache';
+import { cachedQuery } from '@/lib/queryCache';
+
+// Edge runtime removed: createAdminClient() uses process.env (SUPABASE_SERVICE_ROLE_KEY)
+// which is not available in Netlify's Edge runtime environment.
+// Redis + CDN caching below still gives sub-100ms on warm requests.
 export const dynamic = 'force-dynamic';
 
 const schema = z.object({
@@ -22,6 +28,8 @@ const querySchema = z.object({
 /**
  * GET /api/subjects
  * Retrieves subjects based on provided query parameters.
+ * Public — no auth required.
+ * Cached at the CDN layer for 5 minutes (subjects change very infrequently).
  */
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -54,13 +62,32 @@ export async function GET(req: NextRequest) {
     if (semester) query = query.eq('semester', semester);
     if (name) query = query.eq('name', name);
 
-    const { data, error } = await query;
-    if (error) {
-      console.error('[GET /api/subjects]', error);
+    // Redis-level caching (5 min TTL) — prevents hitting Supabase on every request.
+    // Falls through to live DB query if Redis is unavailable.
+    const cacheKey = `subjects:${subjectId ?? ''}:${branch ?? ''}:${semester ?? ''}:${name ?? ''}`;
+    const data = await cachedQuery(
+      cacheKey,
+      300,
+      async () => {
+        const { data: rows, error } = await query;
+        if (error) throw error;
+        return rows;
+      }
+    ).catch(async (err) => {
+      // If cache layer threw (e.g. DB error propagated), surface it
+      console.error('[GET /api/subjects] query failed', err);
+      return null;
+    });
+
+    if (data === null) {
       return errorResponse('Database error fetching subjects', 500, 'DB_ERROR');
     }
 
-    return successResponse(data);
+    // HTTP-level caching: CDN caches for 5 min, serves stale for 60s while revalidating.
+    const response = successResponse(data);
+    const cacheHdrs = publicCacheHeaders(300, 60) as Record<string, string>;
+    Object.entries(cacheHdrs).forEach(([k, v]) => response.headers.set(k, v));
+    return response;
   } catch (err) {
     console.error('[GET /api/subjects]', err);
     return errorResponse('Internal server error', 500, 'INTERNAL_ERROR');
@@ -79,7 +106,8 @@ export const POST = withAuth(async (req: NextRequest, { supabase }) => {
   const parsed = schema.safeParse(body);
 
   if (!parsed.success) {
-    const firstError = parsed.error.flatten().formErrors[0] ||
+    const firstError =
+      parsed.error.flatten().formErrors[0] ||
       Object.values(parsed.error.flatten().fieldErrors)[0]?.[0] ||
       'Validation error';
     return errorResponse(firstError, 400, 'VALIDATION_ERROR');
