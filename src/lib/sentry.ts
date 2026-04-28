@@ -19,7 +19,7 @@ export interface SentryContext {
  * Use this in catch blocks instead of bare Sentry.captureException().
  */
 export function captureError(error: unknown, ctx: SentryContext = {}) {
-  Sentry.withScope((scope) => {
+  Sentry.withScope((scope: Sentry.Scope) => {
     // Attach user identity so Sentry shows who was affected
     if (ctx.userId || ctx.userEmail) {
       scope.setUser({
@@ -45,7 +45,7 @@ export function captureError(error: unknown, ctx: SentryContext = {}) {
  * Useful for tracking partial failures (e.g. signed URL failed but file saved).
  */
 export function captureWarning(message: string, ctx: SentryContext = {}) {
-  Sentry.withScope((scope) => {
+  Sentry.withScope((scope: Sentry.Scope) => {
     if (ctx.userId) scope.setUser({ id: ctx.userId, email: ctx.userEmail });
     if (ctx.endpoint) scope.setTag('endpoint', ctx.endpoint);
     if (ctx.requestId) scope.setTag('requestId', ctx.requestId);
