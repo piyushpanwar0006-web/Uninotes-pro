@@ -12,6 +12,15 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['@supabase/ssr', 'winston'],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 // Wrap with Sentry so it instruments all server/edge/client code automatically

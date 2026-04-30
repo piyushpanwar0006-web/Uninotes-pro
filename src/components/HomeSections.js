@@ -11,6 +11,9 @@ import {
   ShieldCheck,
   Layout
 } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { blogs as blogData } from '@/lib/blogData';
 
 // --- Why Uninotes Section ---
 export const WhyUninotes = () => {
@@ -181,23 +184,8 @@ export const FAQ = () => {
 
 // --- Blog Preview Section ---
 export const BlogPreview = () => {
-  const blogs = [
-    {
-      title: "How to Prepare for Exams in 7 Days",
-      description: "A comprehensive guide on managing your time and focusing on high-weightage topics.",
-      date: "May 15, 2024"
-    },
-    {
-      title: "Best Study Techniques for College",
-      description: "Exploring active recall and spaced repetition to improve long-term memory retention.",
-      date: "May 12, 2024"
-    },
-    {
-      title: "Last-Minute Revision Tips",
-      description: "Quick hacks and mind-mapping techniques to breeze through your finals.",
-      date: "May 10, 2024"
-    }
-  ];
+  // Get the first 3 blogs
+  const recentBlogs = blogData.slice(0, 3);
 
   return (
     <section className="py-24 bg-slate-50/50">
@@ -209,29 +197,35 @@ export const BlogPreview = () => {
             </h2>
             <p className="text-slate-500 font-medium">Tips, tricks, and guides for college life.</p>
           </div>
-          <button className="flex items-center gap-2 text-emerald-600 font-bold hover:gap-3 transition-all duration-300">
+          <Link href="/blog" className="flex items-center gap-2 text-emerald-600 font-bold hover:gap-3 transition-all duration-300">
             View All Articles <ArrowRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {blogs.map((blog, index) => (
-            <div key={index} className="bg-white rounded-3xl overflow-hidden border border-slate-100 hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 group">
-              <div className="h-48 bg-emerald-100 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-blue-500/20" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <BookOpen className="w-12 h-12 text-emerald-500/40 group-hover:scale-110 transition-transform duration-500" />
+          {recentBlogs.map((blog) => (
+            <Link href={`/blog/${blog.slug}`} key={blog.id} className="bg-white rounded-3xl overflow-hidden border border-slate-100 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 group flex flex-col">
+              <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+                <Image
+                  src={blog.imageUrl}
+                  alt={blog.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 33vw"
+                />
+              </div>
+              <div className="p-8 flex flex-col flex-grow">
+                <div className="text-xs font-bold text-emerald-600 mb-4 uppercase tracking-wider flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  {blog.date}
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300 line-clamp-2">{blog.title}</h3>
+                <p className="text-slate-500 text-sm mb-6 leading-relaxed line-clamp-3 flex-grow">{blog.metaDescription}</p>
+                <div className="text-sm font-black text-slate-900 flex items-center gap-2 group-hover:gap-3 transition-all duration-300 mt-auto">
+                  Read More <ArrowRight className="w-4 h-4 text-emerald-500" />
                 </div>
               </div>
-              <div className="p-8">
-                <div className="text-xs font-bold text-emerald-600 mb-4 uppercase tracking-wider">{blog.date}</div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300">{blog.title}</h3>
-                <p className="text-slate-500 text-sm mb-6 leading-relaxed">{blog.description}</p>
-                <button className="text-sm font-black text-slate-900 flex items-center gap-2 hover:gap-3 transition-all duration-300">
-                  Read More <ArrowRight className="w-4 h-4 text-emerald-500" />
-                </button>
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
