@@ -2,14 +2,12 @@
 import { useState, useCallback } from 'react';
 import {
   X, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2,
-  Mail, Lock, User, Phone, Globe, ArrowLeft, ShieldCheck,
+  Mail, Lock, User, Globe, ArrowLeft, ShieldCheck,
   Bookmark, Upload, Sparkles,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
-/* ─────────────────────────────────────────────
-   Password strength helpers
-───────────────────────────────────────────── */
+/* ─── Password strength ─── */
 function getStrength(pwd) {
   let score = 0;
   if (pwd.length >= 8) score++;
@@ -17,110 +15,53 @@ function getStrength(pwd) {
   if (/[A-Z]/.test(pwd)) score++;
   if (/[0-9]/.test(pwd)) score++;
   if (/[^A-Za-z0-9]/.test(pwd)) score++;
-  return score; // 0-5
+  return score;
 }
-
 const STRENGTH_LABELS = ['', 'Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
-const STRENGTH_COLORS = [
-  '',
-  'bg-red-500',
-  'bg-orange-500',
-  'bg-amber-400',
-  'bg-emerald-400',
-  'bg-emerald-500',
-]; const STRENGTH_TEXT = [
-  '',
-  'text-red-500',
-  'text-orange-500',
-  'text-amber-500',
-  'text-emerald-500',
-  'text-emerald-600',
-];
+const STRENGTH_COLORS = ['', 'bg-red-500', 'bg-orange-500', 'bg-amber-400', 'bg-emerald-400', 'bg-emerald-500'];
+const STRENGTH_TEXT   = ['', 'text-red-500', 'text-orange-500', 'text-amber-500', 'text-emerald-500', 'text-emerald-600'];
 
 function PasswordStrengthBar({ password }) {
   const score = getStrength(password);
   if (!password) return null;
-
   return (
     <div className="mt-2 space-y-1.5">
       <div className="flex gap-1">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className={`h-1 flex-1 rounded-full transition-all duration-300 ${i <= score ? STRENGTH_COLORS[score] : 'bg-slate-200'
-              }`}
-          />
+        {[1,2,3,4,5].map(i => (
+          <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-300 ${i <= score ? STRENGTH_COLORS[score] : 'bg-slate-200'}`} />
         ))}
       </div>
       <p className={`text-xs font-semibold transition-colors ${STRENGTH_TEXT[score]}`}>
         {STRENGTH_LABELS[score]}
-        {score < 3 && score > 0 && (
-          <span className="text-slate-400 font-normal ml-1">— add uppercase, numbers &amp; symbols</span>
-        )}
+        {score < 3 && score > 0 && <span className="text-slate-400 font-normal ml-1">— add uppercase, numbers &amp; symbols</span>}
       </p>
     </div>
   );
 }
 
-/* ─────────────────────────────────────────────
-   Reusable Input Field
-───────────────────────────────────────────── */
+/* ─── Input Field ─── */
 function InputField({ label, icon: Icon, rightElement, error, ...props }) {
   return (
     <div>
-      <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">
-        {label}
-      </label>
+      <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">{label}</label>
       <div className="relative">
-        {Icon && (
-          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-            <Icon size={16} />
-          </span>
-        )}
+        {Icon && <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><Icon size={16} /></span>}
         <input
           {...props}
-          className={`w-full ${Icon ? 'pl-10' : 'pl-4'} ${rightElement ? 'pr-11' : 'pr-4'
-            } py-3 rounded-xl border text-slate-900 text-sm font-medium outline-none transition-all placeholder:text-slate-300
-            ${error
+          className={`w-full ${Icon ? 'pl-10' : 'pl-4'} ${rightElement ? 'pr-11' : 'pr-4'} py-3 rounded-xl border text-slate-900 text-sm font-medium outline-none transition-all placeholder:text-slate-300 ${
+            error
               ? 'border-red-300 focus:ring-2 focus:ring-red-300 bg-red-50/50'
               : 'border-slate-200 focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white hover:border-slate-300'
-            }`}
+          }`}
         />
-        {rightElement && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2">
-            {rightElement}
-          </span>
-        )}
+        {rightElement && <span className="absolute right-3 top-1/2 -translate-y-1/2">{rightElement}</span>}
       </div>
-      {error && (
-        <p className="mt-1 text-xs text-red-500 font-medium flex items-center gap-1">
-          <AlertCircle size={11} className="shrink-0" /> {error}
-        </p>
-      )}
+      {error && <p className="mt-1 text-xs text-red-500 font-medium flex items-center gap-1"><AlertCircle size={11} className="shrink-0" /> {error}</p>}
     </div>
   );
 }
 
-/* ─────────────────────────────────────────────
-   Social Auth Button
-───────────────────────────────────────────── */
-function SocialButton({ icon: Icon, label, onClick, disabled, iconColor }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-    >
-      <Icon size={16} className={iconColor} />
-      <span className="truncate">{label}</span>
-    </button>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Divider
-───────────────────────────────────────────── */
+/* ─── Divider ─── */
 function Divider({ text = 'OR CONTINUE WITH' }) {
   return (
     <div className="relative flex items-center gap-3 my-1">
@@ -131,37 +72,11 @@ function Divider({ text = 'OR CONTINUE WITH' }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   Contextual trigger banner configs
-───────────────────────────────────────────── */
+/* ─── Trigger Banner ─── */
 const TRIGGER_CONFIG = {
-  bookmark: {
-    icon: Bookmark,
-    iconBg: 'bg-violet-100',
-    iconColor: 'text-violet-600',
-    border: 'border-violet-200',
-    bg: 'bg-violet-50',
-    title: 'Save this note',
-    description: 'Sign in to bookmark papers and build your personal study collection.',
-  },
-  upload: {
-    icon: Upload,
-    iconBg: 'bg-emerald-100',
-    iconColor: 'text-emerald-600',
-    border: 'border-emerald-200',
-    bg: 'bg-emerald-50',
-    title: 'Upload notes',
-    description: 'Sign in to contribute notes and help your fellow students study smarter.',
-  },
-  generic: {
-    icon: Sparkles,
-    iconBg: 'bg-amber-100',
-    iconColor: 'text-amber-600',
-    border: 'border-amber-200',
-    bg: 'bg-amber-50',
-    title: 'Unlock more features',
-    description: 'Sign in to upload notes, bookmark papers, and access your dashboard.',
-  },
+  bookmark: { icon: Bookmark, iconBg: 'bg-violet-100', iconColor: 'text-violet-600', border: 'border-violet-200', bg: 'bg-violet-50', title: 'Save this note', description: 'Sign in to bookmark papers and build your personal study collection.' },
+  upload:   { icon: Upload,   iconBg: 'bg-emerald-100', iconColor: 'text-emerald-600', border: 'border-emerald-200', bg: 'bg-emerald-50', title: 'Upload notes', description: 'Sign in to contribute notes and help your fellow students study smarter.' },
+  generic:  { icon: Sparkles, iconBg: 'bg-amber-100', iconColor: 'text-amber-600', border: 'border-amber-200', bg: 'bg-amber-50', title: 'Unlock more features', description: 'Sign in to upload notes, bookmark papers, and access your dashboard.' },
 };
 
 function TriggerBanner({ trigger }) {
@@ -170,9 +85,7 @@ function TriggerBanner({ trigger }) {
   const Icon = cfg.icon;
   return (
     <div className={`flex items-start gap-3 p-3.5 rounded-xl border ${cfg.bg} ${cfg.border} mb-5`}>
-      <div className={`w-8 h-8 ${cfg.iconBg} rounded-lg flex items-center justify-center shrink-0 mt-0.5`}>
-        <Icon size={15} className={cfg.iconColor} />
-      </div>
+      <div className={`w-8 h-8 ${cfg.iconBg} rounded-lg flex items-center justify-center shrink-0 mt-0.5`}><Icon size={15} className={cfg.iconColor} /></div>
       <div>
         <p className="text-sm font-bold text-slate-800">{cfg.title}</p>
         <p className="text-xs text-slate-500 font-medium mt-0.5 leading-relaxed">{cfg.description}</p>
@@ -181,43 +94,31 @@ function TriggerBanner({ trigger }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   Main AuthModal
-───────────────────────────────────────────── */
-/**
- * @param {function} onClose - Close the modal
- * @param {'bookmark'|'upload'|'generic'|null} trigger - Contextual reason for opening
- * @param {string|null} next - Path to redirect to after successful sign-in
- */
+/* ─── Main AuthModal ─── */
 export default function AuthModal({ onClose, trigger = null, next = null }) {
   const supabase = createClient();
 
-  // View: 'signin' | 'signup' | 'forgot'
-  const [view, setView] = useState('signin');
-  const [loading, setLoading] = useState(null); // null | 'email' | 'google' | 'phone' | 'forgot'
+  const [view, setView] = useState('signin'); // 'signin' | 'signup' | 'forgot'
+  const [loading, setLoading] = useState(null);
   const [bannerError, setBannerError] = useState('');
   const [bannerSuccess, setBannerSuccess] = useState('');
 
-  /* ── Sign In state ── */
+  /* Sign In */
   const [signInForm, setSignInForm] = useState({ email: '', password: '' });
-  const [rememberMe, setRememberMe] = useState(false);
   const [showSignInPwd, setShowSignInPwd] = useState(false);
   const [signInErrors, setSignInErrors] = useState({});
 
-  /* ── Sign Up state ── */
-  const [signUpForm, setSignUpForm] = useState({
-    fullName: '', email: '', password: '', confirmPassword: '',
-  });
+  /* Sign Up */
+  const [signUpForm, setSignUpForm] = useState({ fullName: '', email: '', password: '', confirmPassword: '' });
   const [showSignUpPwd, setShowSignUpPwd] = useState(false);
   const [showConfirmPwd, setShowConfirmPwd] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [signUpErrors, setSignUpErrors] = useState({});
 
-  /* ── Forgot Password state ── */
+  /* Forgot Password */
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotError, setForgotError] = useState('');
 
-  /* ─────────── helpers ─────────── */
   const clearBanners = () => { setBannerError(''); setBannerSuccess(''); };
 
   const switchView = (v) => {
@@ -228,7 +129,7 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
     setForgotError('');
   };
 
-  /* ─────────── Sign In Validation ─────────── */
+  /* Validation */
   const validateSignIn = useCallback(() => {
     const errs = {};
     if (!signInForm.email) errs.email = 'Email is required';
@@ -238,11 +139,9 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
     return Object.keys(errs).length === 0;
   }, [signInForm]);
 
-  /* ─────────── Sign Up Validation ─────────── */
   const validateSignUp = useCallback(() => {
     const errs = {};
-    if (!signUpForm.fullName || signUpForm.fullName.trim().length < 2)
-      errs.fullName = 'Full name must be at least 2 characters';
+    if (!signUpForm.fullName || signUpForm.fullName.trim().length < 2) errs.fullName = 'Full name must be at least 2 characters';
     if (!signUpForm.email) errs.email = 'Email is required';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signUpForm.email)) errs.email = 'Enter a valid email address';
     if (!signUpForm.password) errs.password = 'Password is required';
@@ -255,7 +154,7 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
     return Object.keys(errs).length === 0;
   }, [signUpForm, termsAccepted]);
 
-  /* ─────────── Email Sign In ─────────── */
+  /* Handlers */
   const handleSignIn = async (e) => {
     e.preventDefault();
     if (!validateSignIn()) return;
@@ -268,16 +167,8 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
         body: JSON.stringify({ email: signInForm.email, password: signInForm.password }),
       });
       const json = await res.json();
-      if (!json.success) {
-        setBannerError(json.error || 'Invalid email or password.');
-        return;
-      }
-      // Redirect to the originally-requested page, or reload to refresh session
-      if (next) {
-        window.location.href = next;
-      } else {
-        window.location.reload();
-      }
+      if (!json.success) { setBannerError(json.error || 'Invalid email or password.'); return; }
+      if (next) { window.location.href = next; } else { window.location.reload(); }
     } catch {
       setBannerError('Network error. Please check your connection.');
     } finally {
@@ -285,7 +176,6 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
     }
   };
 
-  /* ─────────── Email Sign Up ─────────── */
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (!validateSignUp()) return;
@@ -295,17 +185,10 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: signUpForm.email,
-          password: signUpForm.password,
-          fullName: signUpForm.fullName.trim(),
-        }),
+        body: JSON.stringify({ email: signUpForm.email, password: signUpForm.password, fullName: signUpForm.fullName.trim() }),
       });
       const json = await res.json();
-      if (!json.success) {
-        setBannerError(json.error || 'Could not create account. Please try again.');
-        return;
-      }
+      if (!json.success) { setBannerError(json.error || 'Could not create account. Please try again.'); return; }
       setBannerSuccess('🎉 Account created! Check your email to confirm, then sign in.');
       switchView('signin');
     } catch {
@@ -315,44 +198,35 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
     }
   };
 
-  /* ─────────── Google OAuth ─────────── */
   const handleGoogle = async () => {
     setLoading('google');
     clearBanners();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}`,
-        queryParams: { access_type: 'offline', prompt: 'consent' },
-      },
-    });
-    if (error) { setBannerError('Could not connect to Google. Please try again.'); setLoading(null); }
-    // On success, Supabase redirects the page — no cleanup needed
-  };
-
-  /* ─────────── Phone / OTP ─────────── */
-  const handlePhone = async () => {
-    setLoading('phone');
-    clearBanners();
-    const phone = window.prompt('Enter your mobile number with country code (e.g. +919876543210):');
-    if (!phone) { setLoading(null); return; }
-    const { error } = await supabase.auth.signInWithOtp({ phone });
-    if (error) {
-      setBannerError('Could not send OTP. Check the number and try again.');
-    } else {
-      const otp = window.prompt('Enter the OTP sent to your phone:');
-      if (!otp) { setLoading(null); return; }
-      const { error: verifyErr } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' });
-      if (verifyErr) {
-        setBannerError('Invalid OTP. Please try again.');
-      } else {
-        window.location.reload();
+    try {
+      const res = await fetch('/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ next }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        if (res.status === 429) {
+          setBannerError('Too many sign-in attempts. Please wait a minute and try again.');
+        } else if (json.code === 'PROVIDER_NOT_ENABLED') {
+          setBannerError('Google sign-in is not configured yet. Please use email sign-in for now.');
+        } else {
+          setBannerError(json.error || 'Could not connect to Google. Please try again.');
+        }
+        setLoading(null);
+        return;
       }
+      // Redirect to Google's OAuth consent screen
+      window.location.href = json.data.url;
+    } catch {
+      setBannerError('Network error. Please check your connection.');
+      setLoading(null);
     }
-    setLoading(null);
   };
 
-  /* ─────────── Forgot Password ─────────── */
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     if (!forgotEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail)) {
@@ -365,18 +239,13 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
       redirectTo: `${window.location.origin}/auth/callback`,
     });
     setLoading(null);
-    if (error) {
-      setForgotError('Could not send reset email. Please try again.');
-    } else {
-      setBannerSuccess('✉️ Password reset email sent! Check your inbox.');
-      switchView('signin');
-    }
+    if (error) { setForgotError('Could not send reset email. Please try again.'); }
+    else { setBannerSuccess('✉️ Password reset email sent! Check your inbox.'); switchView('signin'); }
   };
 
   const isLoading = loading !== null;
   const pwdScore = getStrength(signUpForm.password);
 
-  /* ─────────── RENDER ─────────── */
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -387,10 +256,10 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
         className="bg-white rounded-3xl shadow-2xl w-full max-w-md relative overflow-hidden animate-scale-up"
         style={{ boxShadow: '0 25px 60px -10px rgba(16,185,129,0.18), 0 15px 35px -5px rgba(0,0,0,0.15)' }}
       >
-        {/* Top gradient accent */}
+        {/* Top accent */}
         <div className="h-1 bg-gradient-to-r from-emerald-400 via-teal-300 to-blue-400" />
 
-        {/* Close button */}
+        {/* Close */}
         <button
           aria-label="Close"
           onClick={onClose}
@@ -401,38 +270,30 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
 
         <div className="px-8 pb-8 pt-6">
 
-          {/* ── Logo ── */}
+          {/* Logo */}
           <div className="flex items-center gap-2.5 mb-5">
             <div className="w-9 h-9 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
               <span className="text-base font-black tracking-tighter">U</span>
             </div>
-            <span className="text-xl font-black tracking-tighter text-slate-900">
-              Uni<span className="text-emerald-500">notes</span>
-            </span>
+            <span className="text-xl font-black tracking-tighter text-slate-900">Uni<span className="text-emerald-500">notes</span></span>
           </div>
 
-          {/* ── Global Banners ── */}
+          {/* Banners */}
           {bannerSuccess && (
             <div className="flex items-start gap-2 p-3 bg-emerald-50 border border-emerald-200 rounded-xl mb-4 text-sm text-emerald-700 animate-fade-in">
-              <CheckCircle2 size={15} className="mt-0.5 shrink-0" />
-              <span>{bannerSuccess}</span>
+              <CheckCircle2 size={15} className="mt-0.5 shrink-0" /><span>{bannerSuccess}</span>
             </div>
           )}
           {bannerError && (
             <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-xl mb-4 text-sm text-red-600 animate-fade-in">
-              <AlertCircle size={15} className="mt-0.5 shrink-0" />
-              <span>{bannerError}</span>
+              <AlertCircle size={15} className="mt-0.5 shrink-0" /><span>{bannerError}</span>
             </div>
           )}
 
-          {/* ══════════════════════════════════
-              SIGN IN VIEW
-          ══════════════════════════════════ */}
+          {/* ── SIGN IN ── */}
           {view === 'signin' && (
             <>
-              {/* Contextual trigger banner */}
               <TriggerBanner trigger={trigger} />
-
               <div className="mb-6">
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">Welcome back</h1>
                 <p className="text-sm text-slate-500 font-medium mt-1">Sign in to your Uninotes account</p>
@@ -440,119 +301,59 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
 
               <form onSubmit={handleSignIn} className="space-y-4" noValidate>
                 <InputField
-                  label="Email Address"
-                  icon={Mail}
-                  type="email"
-                  id="signin-email"
-                  placeholder="you@example.com"
-                  value={signInForm.email}
+                  label="Email Address" icon={Mail} type="email" id="signin-email"
+                  placeholder="you@example.com" value={signInForm.email} autoComplete="email"
                   onChange={(e) => { setSignInForm(p => ({ ...p, email: e.target.value })); setSignInErrors(p => ({ ...p, email: '' })); clearBanners(); }}
                   error={signInErrors.email}
-                  autoComplete="email"
                 />
 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest">Password</label>
-                    <button
-                      type="button"
-                      onClick={() => switchView('forgot')}
-                      className="text-xs text-emerald-600 font-semibold hover:text-emerald-700 hover:underline transition-colors"
-                    >
+                    <button type="button" onClick={() => switchView('forgot')} className="text-xs text-emerald-600 font-semibold hover:text-emerald-700 hover:underline transition-colors">
                       Forgot password?
                     </button>
                   </div>
                   <InputField
-                    label=""
-                    icon={Lock}
-                    type={showSignInPwd ? 'text' : 'password'}
-                    id="signin-password"
-                    placeholder="••••••••"
-                    value={signInForm.password}
+                    label="" icon={Lock} type={showSignInPwd ? 'text' : 'password'} id="signin-password"
+                    placeholder="••••••••" value={signInForm.password} autoComplete="current-password"
                     onChange={(e) => { setSignInForm(p => ({ ...p, password: e.target.value })); setSignInErrors(p => ({ ...p, password: '' })); clearBanners(); }}
                     error={signInErrors.password}
-                    autoComplete="current-password"
                     rightElement={
-                      <button
-                        type="button"
-                        onClick={() => setShowSignInPwd(v => !v)}
-                        className="text-slate-400 hover:text-slate-600 transition-colors p-0.5"
-                        tabIndex={-1}
-                        aria-label={showSignInPwd ? 'Hide password' : 'Show password'}
-                      >
+                      <button type="button" onClick={() => setShowSignInPwd(v => !v)} className="text-slate-400 hover:text-slate-600 transition-colors p-0.5" tabIndex={-1} aria-label={showSignInPwd ? 'Hide' : 'Show'}>
                         {showSignInPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     }
                   />
                 </div>
 
-                {/* Remember me */}
-                <label className="flex items-center gap-2.5 cursor-pointer group select-none">
-                  <div
-                    onClick={() => setRememberMe(v => !v)}
-                    className={`w-4 h-4 rounded flex items-center justify-center border-2 transition-all cursor-pointer ${rememberMe ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-white group-hover:border-emerald-400'
-                      }`}
-                  >
-                    {rememberMe && (
-                      <svg viewBox="0 0 10 8" fill="none" className="w-2.5 h-2.5">
-                        <path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
-                  </div>
-                  <span className="text-xs font-semibold text-slate-600">Remember me for 30 days</span>
-                </label>
-
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  id="signin-submit"
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-bold hover:from-emerald-600 hover:to-emerald-700 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 mt-2"
-                >
-                  {loading === 'email' ? (
-                    <><Loader2 size={16} className="animate-spin" /> Signing in…</>
-                  ) : 'Sign in'}
+                <button type="submit" disabled={isLoading} id="signin-submit"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-bold hover:from-emerald-600 hover:to-emerald-700 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 mt-2">
+                  {loading === 'email' ? <><Loader2 size={16} className="animate-spin" /> Signing in…</> : 'Sign in'}
                 </button>
               </form>
 
               <Divider />
 
-              <div className="flex gap-3">
-                <SocialButton
-                  icon={Globe}
-                  label="Google"
-                  onClick={handleGoogle}
-                  disabled={isLoading}
-                  iconColor="text-[#4285F4]"
-                />
-                <SocialButton
-                  icon={Phone}
-                  label="Mobile"
-                  onClick={handlePhone}
-                  disabled={isLoading}
-                  iconColor="text-emerald-500"
-                />
-              </div>
+              <button type="button" onClick={handleGoogle} disabled={isLoading}
+                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all disabled:opacity-50 shadow-sm">
+                {loading === 'google' ? <Loader2 size={16} className="animate-spin text-slate-500" /> : <Globe size={16} className="text-[#4285F4]" />}
+                Continue with Google
+              </button>
 
               <p className="text-center text-xs text-slate-400 font-medium mt-5">
                 No account?{' '}
-                <button
-                  onClick={() => switchView('signup')}
-                  className="text-emerald-600 font-bold hover:text-emerald-700 hover:underline transition-colors"
-                >
+                <button onClick={() => switchView('signup')} className="text-emerald-600 font-bold hover:text-emerald-700 hover:underline transition-colors">
                   Create one free
                 </button>
               </p>
             </>
           )}
 
-          {/* ══════════════════════════════════
-              SIGN UP VIEW
-          ══════════════════════════════════ */}
+          {/* ── SIGN UP ── */}
           {view === 'signup' && (
             <>
-              {/* Contextual trigger banner */}
               <TriggerBanner trigger={trigger} />
-
               <div className="mb-6">
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">Begin your journey</h1>
                 <p className="text-sm text-slate-500 font-medium mt-1">Join thousands of MBM students learning smarter</p>
@@ -560,48 +361,26 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
 
               <form onSubmit={handleSignUp} className="space-y-4" noValidate>
                 <InputField
-                  label="Full Name"
-                  icon={User}
-                  type="text"
-                  id="signup-fullname"
-                  placeholder="Your full name"
-                  value={signUpForm.fullName}
+                  label="Full Name" icon={User} type="text" id="signup-fullname"
+                  placeholder="Your full name" value={signUpForm.fullName} autoComplete="name"
                   onChange={(e) => { setSignUpForm(p => ({ ...p, fullName: e.target.value })); setSignUpErrors(p => ({ ...p, fullName: '' })); clearBanners(); }}
                   error={signUpErrors.fullName}
-                  autoComplete="name"
                 />
-
                 <InputField
-                  label="Email Address"
-                  icon={Mail}
-                  type="email"
-                  id="signup-email"
-                  placeholder="you@example.com"
-                  value={signUpForm.email}
+                  label="Email Address" icon={Mail} type="email" id="signup-email"
+                  placeholder="you@example.com" value={signUpForm.email} autoComplete="email"
                   onChange={(e) => { setSignUpForm(p => ({ ...p, email: e.target.value })); setSignUpErrors(p => ({ ...p, email: '' })); clearBanners(); }}
                   error={signUpErrors.email}
-                  autoComplete="email"
                 />
 
                 <div>
                   <InputField
-                    label="Password"
-                    icon={Lock}
-                    type={showSignUpPwd ? 'text' : 'password'}
-                    id="signup-password"
-                    placeholder="Min 8 chars, number required"
-                    value={signUpForm.password}
+                    label="Password" icon={Lock} type={showSignUpPwd ? 'text' : 'password'} id="signup-password"
+                    placeholder="Min 8 chars, number required" value={signUpForm.password} autoComplete="new-password"
                     onChange={(e) => { setSignUpForm(p => ({ ...p, password: e.target.value })); setSignUpErrors(p => ({ ...p, password: '' })); clearBanners(); }}
                     error={signUpErrors.password}
-                    autoComplete="new-password"
                     rightElement={
-                      <button
-                        type="button"
-                        onClick={() => setShowSignUpPwd(v => !v)}
-                        className="text-slate-400 hover:text-slate-600 transition-colors p-0.5"
-                        tabIndex={-1}
-                        aria-label={showSignUpPwd ? 'Hide password' : 'Show password'}
-                      >
+                      <button type="button" onClick={() => setShowSignUpPwd(v => !v)} className="text-slate-400 hover:text-slate-600 transition-colors p-0.5" tabIndex={-1}>
                         {showSignUpPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     }
@@ -611,35 +390,21 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
 
                 <div>
                   <InputField
-                    label="Confirm Password"
-                    icon={ShieldCheck}
-                    type={showConfirmPwd ? 'text' : 'password'}
-                    id="signup-confirm-password"
-                    placeholder="Repeat your password"
-                    value={signUpForm.confirmPassword}
+                    label="Confirm Password" icon={ShieldCheck} type={showConfirmPwd ? 'text' : 'password'} id="signup-confirm-password"
+                    placeholder="Repeat your password" value={signUpForm.confirmPassword} autoComplete="new-password"
                     onChange={(e) => { setSignUpForm(p => ({ ...p, confirmPassword: e.target.value })); setSignUpErrors(p => ({ ...p, confirmPassword: '' })); clearBanners(); }}
                     error={signUpErrors.confirmPassword}
-                    autoComplete="new-password"
                     rightElement={
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPwd(v => !v)}
-                        className="text-slate-400 hover:text-slate-600 transition-colors p-0.5"
-                        tabIndex={-1}
-                        aria-label={showConfirmPwd ? 'Hide confirmation' : 'Show confirmation'}
-                      >
+                      <button type="button" onClick={() => setShowConfirmPwd(v => !v)} className="text-slate-400 hover:text-slate-600 transition-colors p-0.5" tabIndex={-1}>
                         {showConfirmPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     }
                   />
-                  {/* Inline match indicator */}
                   {signUpForm.confirmPassword && signUpForm.password && !signUpErrors.confirmPassword && (
-                    <p className={`mt-1 text-xs font-semibold flex items-center gap-1 ${signUpForm.password === signUpForm.confirmPassword ? 'text-emerald-500' : 'text-red-500'
-                      }`}>
+                    <p className={`mt-1 text-xs font-semibold flex items-center gap-1 ${signUpForm.password === signUpForm.confirmPassword ? 'text-emerald-500' : 'text-red-500'}`}>
                       {signUpForm.password === signUpForm.confirmPassword
                         ? <><CheckCircle2 size={11} /> Passwords match</>
-                        : <><AlertCircle size={11} /> Passwords don&apos;t match yet</>
-                      }
+                        : <><AlertCircle size={11} /> Passwords don&apos;t match yet</>}
                     </p>
                   )}
                 </div>
@@ -649,114 +414,63 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
                   <label className="flex items-start gap-2.5 cursor-pointer group select-none">
                     <div
                       onClick={() => { setTermsAccepted(v => !v); setSignUpErrors(p => ({ ...p, terms: '' })); }}
-                      className={`mt-0.5 w-4 h-4 rounded flex items-center justify-center border-2 shrink-0 transition-all cursor-pointer ${termsAccepted ? 'bg-emerald-500 border-emerald-500' : `border-slate-300 bg-white group-hover:border-emerald-400 ${signUpErrors.terms ? 'border-red-400' : ''}`
-                        }`}
+                      className={`mt-0.5 w-4 h-4 rounded flex items-center justify-center border-2 shrink-0 transition-all cursor-pointer ${termsAccepted ? 'bg-emerald-500 border-emerald-500' : `border-slate-300 bg-white group-hover:border-emerald-400 ${signUpErrors.terms ? 'border-red-400' : ''}`}`}
                     >
-                      {termsAccepted && (
-                        <svg viewBox="0 0 10 8" fill="none" className="w-2.5 h-2.5">
-                          <path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      )}
+                      {termsAccepted && <svg viewBox="0 0 10 8" fill="none" className="w-2.5 h-2.5"><path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>}
                     </div>
                     <span className="text-xs font-medium text-slate-600 leading-relaxed">
-                      I agree to the{' '}
-                      <a href="#" className="text-emerald-600 font-semibold hover:underline">Terms of Service</a>
-                      {' '}and{' '}
-                      <a href="#" className="text-emerald-600 font-semibold hover:underline">Privacy Policy</a>
+                      I agree to the <a href="#" className="text-emerald-600 font-semibold hover:underline">Terms of Service</a> and <a href="#" className="text-emerald-600 font-semibold hover:underline">Privacy Policy</a>
                     </span>
                   </label>
                   {signUpErrors.terms && (
-                    <p className="mt-1 text-xs text-red-500 font-medium flex items-center gap-1 ml-6.5">
+                    <p className="mt-1 text-xs text-red-500 font-medium flex items-center gap-1 ml-6">
                       <AlertCircle size={11} /> {signUpErrors.terms}
                     </p>
                   )}
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isLoading || pwdScore < 2}
-                  id="signup-submit"
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-bold hover:from-emerald-600 hover:to-emerald-700 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 mt-2"
-                >
-                  {loading === 'email' ? (
-                    <><Loader2 size={16} className="animate-spin" /> Creating account…</>
-                  ) : 'Create Account'}
+                <button type="submit" disabled={isLoading || pwdScore < 2} id="signup-submit"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-bold hover:from-emerald-600 hover:to-emerald-700 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 mt-2">
+                  {loading === 'email' ? <><Loader2 size={16} className="animate-spin" /> Creating account…</> : 'Create Account'}
                 </button>
               </form>
 
               <Divider />
 
-              <div className="flex gap-3">
-                <SocialButton
-                  icon={Globe}
-                  label="Google"
-                  onClick={handleGoogle}
-                  disabled={isLoading}
-                  iconColor="text-[#4285F4]"
-                />
-                <SocialButton
-                  icon={Phone}
-                  label="Mobile"
-                  onClick={handlePhone}
-                  disabled={isLoading}
-                  iconColor="text-emerald-500"
-                />
-              </div>
+              <button type="button" onClick={handleGoogle} disabled={isLoading}
+                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all disabled:opacity-50 shadow-sm">
+                {loading === 'google' ? <Loader2 size={16} className="animate-spin text-slate-500" /> : <Globe size={16} className="text-[#4285F4]" />}
+                Continue with Google
+              </button>
 
               <p className="text-center text-xs text-slate-400 font-medium mt-5">
                 Already have an account?{' '}
-                <button
-                  onClick={() => switchView('signin')}
-                  className="text-emerald-600 font-bold hover:text-emerald-700 hover:underline transition-colors"
-                >
-                  Sign in
-                </button>
+                <button onClick={() => switchView('signin')} className="text-emerald-600 font-bold hover:text-emerald-700 hover:underline transition-colors">Sign in</button>
               </p>
             </>
           )}
 
-          {/* ══════════════════════════════════
-              FORGOT PASSWORD VIEW
-          ══════════════════════════════════ */}
+          {/* ── FORGOT PASSWORD ── */}
           {view === 'forgot' && (
             <>
-              <button
-                onClick={() => switchView('signin')}
-                className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors mb-5 group"
-              >
+              <button onClick={() => switchView('signin')} className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors mb-5 group">
                 <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
                 Back to Sign In
               </button>
-
               <div className="mb-6">
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">Forgot password?</h1>
-                <p className="text-sm text-slate-500 font-medium mt-1">
-                  No worries — we&apos;ll send a reset link to your email.
-                </p>
+                <p className="text-sm text-slate-500 font-medium mt-1">No worries — we&apos;ll send a reset link to your email.</p>
               </div>
-
               <form onSubmit={handleForgotPassword} className="space-y-4" noValidate>
                 <InputField
-                  label="Email Address"
-                  icon={Mail}
-                  type="email"
-                  id="forgot-email"
-                  placeholder="you@example.com"
-                  value={forgotEmail}
+                  label="Email Address" icon={Mail} type="email" id="forgot-email"
+                  placeholder="you@example.com" value={forgotEmail} autoComplete="email"
                   onChange={(e) => { setForgotEmail(e.target.value); setForgotError(''); }}
                   error={forgotError}
-                  autoComplete="email"
                 />
-
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  id="forgot-submit"
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-bold hover:from-emerald-600 hover:to-emerald-700 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25"
-                >
-                  {loading === 'forgot' ? (
-                    <><Loader2 size={16} className="animate-spin" /> Sending…</>
-                  ) : 'Send Reset Link'}
+                <button type="submit" disabled={isLoading} id="forgot-submit"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-bold hover:from-emerald-600 hover:to-emerald-700 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25">
+                  {loading === 'forgot' ? <><Loader2 size={16} className="animate-spin" /> Sending…</> : 'Send Reset Link'}
                 </button>
               </form>
             </>

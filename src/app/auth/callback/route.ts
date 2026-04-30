@@ -4,30 +4,38 @@ import { createClient } from '@/lib/supabase/server';
 /**
  * GET /auth/callback
  *
- * Supabase redirects here after OAuth (Google, GitHub, etc.) or
- * Magic Link / email confirmation flows. The `code` query param is
- * exchanged for a session which is written into cookies before we
- * redirect the user to the intended destination.
+ * Supabase redirects here after OAuth (Google) or Magic Link / email
+ * confirmation. The `code` is exchanged for a session cookie.
+ *
+ * Security hardening:
+ * - `next` param is validated to only allow same-origin redirects (open-redirect prevention)
+ * - Error details are never exposed to the browser
  */
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const code = url.searchParams.get('code');
-  const next = url.searchParams.get('next') ?? '/';
+  const rawNext = url.searchParams.get('next') ?? '/';
+
+  // ── Open-redirect prevention: only allow relative paths ──────────────
+  // Reject anything that starts with '//' or has a scheme (http/https/etc.)
+  const isSafeRedirect = /^\/(?!\/)/.test(rawNext);
+  const safeNext = isSafeRedirect ? rawNext : '/';
 
   if (code) {
-    const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    try {
+      const supabase = await createClient();
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
 
-    if (!error) {
-      // Redirect to the page the user originally requested (or home)
-      return NextResponse.redirect(new URL(next, req.url));
+      if (!error) {
+        return NextResponse.redirect(new URL(safeNext, req.url));
+      }
+
+      console.error('[GET /auth/callback] exchangeCodeForSession error:', error.message);
+    } catch (err) {
+      console.error('[GET /auth/callback] Unexpected error:', err);
     }
-
-    console.error('[GET /auth/callback] exchangeCodeForSession error:', error.message);
   }
 
-  // Fallback — something went wrong, send the user home with an error hint
-  return NextResponse.redirect(
-    new URL('/?authError=callback_failed', req.url)
-  );
+  // Redirect to sign-in page with a generic error flag (no internal details)
+  return NextResponse.redirect(new URL('/?authError=true', req.url));
 }
