@@ -1,18 +1,88 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BranchCatalog from '@/components/BranchCatalog';
 import HomeSearch from '@/components/HomeSearch';
-import { Search, Users, Star, BookOpen, CheckCircle2 } from 'lucide-react';
+import AuthModal from '@/components/AuthModal';
+import { Users, Star, CheckCircle2, AlertCircle } from 'lucide-react';
 
 import { WhyUninotes, Testimonials, FAQ, BlogPreview } from '@/components/HomeSections';
 
+/* ─── Reads URL params and calls back to parent — must be inside Suspense ─── */
+function ParamHandler({ onLogin, onAuthError }) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    const login = searchParams.get('login');
+    const next  = searchParams.get('next');
+    const error = searchParams.get('authError');
+
+    if (login === '1') onLogin(next || null);
+    if (error === 'true') onAuthError('Google sign-in failed. Please try again or use email sign-in.');
+
+    // Clean params from URL without triggering a navigation
+    if (login || error) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('login');
+      url.searchParams.delete('next');
+      url.searchParams.delete('authError');
+      router.replace(url.pathname + (url.search !== '?' ? url.search : ''));
+    }
+  }, [searchParams, onLogin, onAuthError, router]);
+
+  return null;
+}
+
 export default function Home() {
   const [searchActive, setSearchActive] = useState(false);
+  const [showAuth, setShowAuth]         = useState(false);
+  const [authTrigger, setAuthTrigger]   = useState(null);
+  const [authNext, setAuthNext]         = useState(null);
+  const [authError, setAuthError]       = useState('');
+
+  const handleLogin = useCallback((next) => {
+    setAuthNext(next);
+    setAuthTrigger('generic');
+    setShowAuth(true);
+  }, []);
+
+  const handleAuthError = useCallback((msg) => setAuthError(msg), []);
+
+  const handleCloseAuth = useCallback(() => {
+    setShowAuth(false);
+    setAuthTrigger(null);
+    setAuthNext(null);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
-      <Navbar />
+      {/* Reads ?login=1 and ?authError=true from URL — must be in Suspense */}
+      <Suspense fallback={null}>
+        <ParamHandler onLogin={handleLogin} onAuthError={handleAuthError} />
+      </Suspense>
+
+      <Navbar onSignInClick={() => { setAuthTrigger('generic'); setShowAuth(true); }} />
+
+      {/* Google OAuth error banner */}
+      {authError && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 bg-red-600 text-white rounded-2xl shadow-xl text-sm font-semibold animate-fade-in max-w-sm">
+          <AlertCircle size={16} className="shrink-0" />
+          <span>{authError}</span>
+          <button onClick={() => setAuthError('')} className="ml-2 hover:opacity-70 font-black">✕</button>
+        </div>
+      )}
+
+      {/* Auth Modal — opened by ?login=1 or Navbar */}
+      {showAuth && (
+        <AuthModal
+          onClose={handleCloseAuth}
+          trigger={authTrigger}
+          next={authNext}
+        />
+      )}
 
       <main className="flex-grow">
         {/* Hero Section */}
