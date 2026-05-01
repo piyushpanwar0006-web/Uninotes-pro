@@ -52,6 +52,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
+-- Revoke execute from public to prevent direct API access (Supabase security advisory)
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM PUBLIC;
+
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

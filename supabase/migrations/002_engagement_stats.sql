@@ -51,4 +51,4 @@ BEGIN
     download_count DESC
   LIMIT max_limit;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
+$$ LANGUAGE plpgsql SECURITY INVOKER SET search_path = '';
