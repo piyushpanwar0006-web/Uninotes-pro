@@ -39,7 +39,7 @@ export default function Home() {
               <HomeSearch onActiveChange={setSearchActive} />
             </div>
 
-            <div className="mt-12 flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+            <div className={`mt-12 flex flex-wrap justify-center items-center gap-8 md:gap-12 grayscale hover:grayscale-0 transition-all duration-300 ${searchActive ? 'opacity-0 pointer-events-none' : 'opacity-60'}`}>
               <div className="flex items-center gap-2">
                 {Star && <Star className="text-yellow-500 fill-yellow-500 w-4 h-4" />}
                 <span className="font-bold text-slate-900">Verified by Seniors & Toppers</span>
