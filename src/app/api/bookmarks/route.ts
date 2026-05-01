@@ -88,24 +88,29 @@ export const GET = withAuth(async (req: NextRequest, { supabase, user }) => {
       return errorResponse('Failed to fetch bookmarks.', 500, 'DB_ERROR');
     }
 
-    // Since we only hold the UUID of the resource, we could optionally
-    // fetch their metadata or let the client do it.
-    // For a complex app, we should use a Postgres view or join with papers/notes.
-    // However, for brevity, we can join manually using adminClient if needed,
-    // or just return the IDs for now. To keep it fully functional:
-    // We'll join papers/notes manually here using a helper or raw data.
-    
-    // To cleanly resolve the resources, let's fetch paper details for 'paper' bookmarks.
+    // To cleanly resolve the resources, let's fetch details for both 'paper' and 'note' bookmarks.
     const paperIds = data.filter((b) => b.resource_type === 'paper').map((b) => b.resource_id);
-    let paperDetails: any[] = [];
+    const noteIds = data.filter((b) => b.resource_type === 'note').map((b) => b.resource_id);
     
+    let paperDetails: any[] = [];
+    let noteDetails: any[] = [];
+    
+    const adminClient = createAdminClient();
+
     if (paperIds.length > 0) {
-      const adminClient = createAdminClient();
       const { data: pData } = await adminClient
         .from('papers')
         .select(`id, title, description, size_bytes, subjects(branch, name)`)
         .in('id', paperIds);
       paperDetails = pData ?? [];
+    }
+
+    if (noteIds.length > 0) {
+      const { data: nData } = await adminClient
+        .from('notes')
+        .select(`id, title, description, size_bytes, subjects(branch, name)`)
+        .in('id', noteIds);
+      noteDetails = nData ?? [];
     }
     
     // Attach details back to the bookmarks
@@ -113,6 +118,8 @@ export const GET = withAuth(async (req: NextRequest, { supabase, user }) => {
       let detail = null;
       if (b.resource_type === 'paper') {
         detail = paperDetails.find((p) => p.id === b.resource_id) || null;
+      } else if (b.resource_type === 'note') {
+        detail = noteDetails.find((n) => n.id === b.resource_id) || null;
       }
       return { ...b, resource: detail };
     });

@@ -10,6 +10,7 @@ import AuthModal from '@/components/AuthModal';
 import { useAuth } from '@/lib/hooks/useAuth';
 import PaperSkeleton from '@/components/PaperSkeleton';
 import { Skeleton } from '@/components/ui/Skeleton';
+import EngagementActions from '@/components/ui/EngagementActions';
 import {
   FileText,
   Download,
@@ -167,27 +168,11 @@ function PaperCard({ paper, user, onAuthOpen }) {
             <><Eye size={13} /> View PDF</>
           )}
         </button>
-
-        {/* Bookmark — prompts login for guests, saves for logged-in users */}
-        <button
-          onClick={handleBookmark}
-          disabled={bookmarkLoading}
-          title={user ? (bookmarked ? 'Remove bookmark' : 'Bookmark') : 'Sign in to bookmark'}
-          className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold border transition-all disabled:opacity-50 ${
-            bookmarked
-              ? 'bg-violet-50 border-violet-200 text-violet-600 hover:bg-violet-100'
-              : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700'
-          }`}
-        >
-          {bookmarkLoading ? (
-            <Loader2 size={13} className="animate-spin" />
-          ) : bookmarked ? (
-            <BookmarkCheck size={13} />
-          ) : (
-            <Bookmark size={13} />
-          )}
-          {!user && <span className="hidden sm:inline">Save</span>}
-        </button>
+      </div>
+      
+      {/* Engagement Actions */}
+      <div className="mt-1">
+        <EngagementActions resourceId={paper.id} resourceType="paper" />
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import PaperSkeleton from '@/components/PaperSkeleton';
+import EngagementActions from '@/components/ui/EngagementActions';
 
 // ─────────────────────────────────────────────────────────────
 // Utilities
@@ -288,6 +289,11 @@ function PaperCard({ paper, onDelete, addToast }) {
             : <><Eye size={12} /> View PDF</>
           }
         </button>
+
+        {/* Engagement Actions */}
+        <div className="mt-1">
+          <EngagementActions resourceId={paper.id} resourceType="paper" />
+        </div>
       </div>
 
       {/* Delete Confirmation Modal */}
