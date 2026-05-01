@@ -29,12 +29,18 @@ Object.entries(branchData).forEach(([branchName, semesters]) => {
   });
 });
 
-export default function HomeSearch() {
+export default function HomeSearch({ onActiveChange }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
+
+  // Notify parent when the active state changes
+  const isDropdownActive = isFocused && query.trim().length > 0;
+  useEffect(() => {
+    onActiveChange?.(isDropdownActive);
+  }, [isDropdownActive, onActiveChange]);
 
   useEffect(() => {
     if (!query.trim()) {

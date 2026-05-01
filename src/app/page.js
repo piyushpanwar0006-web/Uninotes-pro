@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BranchCatalog from '@/components/BranchCatalog';
@@ -8,6 +9,7 @@ import { Search, Users, Star, BookOpen, CheckCircle2 } from 'lucide-react';
 import { WhyUninotes, Testimonials, FAQ, BlogPreview } from '@/components/HomeSections';
 
 export default function Home() {
+  const [searchActive, setSearchActive] = useState(false);
   return (
     <div className="min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
       <Navbar />
@@ -34,7 +36,7 @@ export default function Home() {
             </p>
 
             <div className="max-w-2xl mx-auto flex justify-center w-full">
-              <HomeSearch />
+              <HomeSearch onActiveChange={setSearchActive} />
             </div>
 
             <div className="mt-12 flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
