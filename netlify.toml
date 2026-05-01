@@ -5,13 +5,20 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# nft (Node File Tracing) traces only the files actually used at runtime,
-# producing smaller Lambda bundles → faster cold starts.
 [functions]
   node_bundler = "nft"
   region = "ap-south-1"
 
 [build.environment]
-  # Disables Next.js telemetry pings that add latency during build
   NEXT_TELEMETRY_DISABLED = "1"
   NODE_ENV = "production"
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

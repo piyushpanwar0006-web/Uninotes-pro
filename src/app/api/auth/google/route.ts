@@ -32,15 +32,23 @@ export async function POST(req: NextRequest) {
 
     // Validate the redirect origin matches our app (CSRF protection)
     const origin = req.headers.get('origin') ?? '';
+    // Use NEXT_PUBLIC_APP_URL (the env var name used in this project)
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? '';
     const allowedOrigins = [
-      process.env.NEXT_PUBLIC_SITE_URL ?? '',
+      appUrl,
       'http://localhost:3000',
       'http://localhost:3001',
     ].filter(Boolean);
 
-    if (!allowedOrigins.some(o => origin.startsWith(o))) {
-      console.warn('[POST /api/auth/google] Blocked request from unknown origin:', origin);
-      return errorResponse('Forbidden', 403, 'FORBIDDEN');
+    const originAllowed = allowedOrigins.some(o => origin.startsWith(o));
+    if (!originAllowed) {
+      // In development, log the origin mismatch but don't hard-block
+      // (allows testing from different ports without breaking dev)
+      if (process.env.NODE_ENV === 'production') {
+        console.warn('[POST /api/auth/google] Blocked request from unknown origin:', origin);
+        return errorResponse('Forbidden', 403, 'FORBIDDEN');
+      }
+      console.warn('[POST /api/auth/google] Dev: unrecognised origin (allowed in dev):', origin);
     }
 
     const body = await req.json().catch(() => ({}));
@@ -48,7 +56,10 @@ export async function POST(req: NextRequest) {
 
     // Open-redirect prevention
     const safeNext = /^\/(?!\/)/.test(rawNext) ? rawNext : '/';
-    const redirectTo = `${origin}/auth/callback?next=${encodeURIComponent(safeNext)}`;
+    // Use the actual request origin, fall back to configured app URL
+    const effectiveOrigin = origin || appUrl || 'http://localhost:3000';
+    const redirectTo = `${effectiveOrigin}/auth/callback?next=${encodeURIComponent(safeNext)}`;
+    console.info('[POST /api/auth/google] redirectTo:', redirectTo);
 
     const supabase = await createClient();
     const { data, error } = await supabase.auth.signInWithOAuth({
