@@ -7,7 +7,7 @@ import BranchCatalog from '@/components/BranchCatalog';
 import HomeSearch from '@/components/HomeSearch';
 import AuthModal from '@/components/AuthModal';
 import { Users, Star, CheckCircle2, AlertCircle } from 'lucide-react';
-import { WhyUninotes, Testimonials, FAQ, BlogPreview } from '@/components/HomeSections';
+import { WhyUninotes, Testimonials, FAQ, BlogPreview, ContactUs } from '@/components/HomeSections';
 
 function ParamHandler({ onLogin, onAuthError }) {
   const searchParams = useSearchParams();
@@ -147,6 +147,7 @@ export default function Home() {
         <Testimonials />
         <FAQ />
         <BlogPreview />
+        <ContactUs />
       </main>
 
       <Footer />

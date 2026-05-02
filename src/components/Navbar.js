@@ -135,7 +135,7 @@ export default function Navbar() {
 
             {/* Desktop Nav Links */}
             <div className="hidden md:flex items-center space-x-8">
-              {[['/', 'Home'], ['/branches', 'Branches'], ['/notes', 'Notes'], ['/prep', 'Test Prep']].map(([href, label]) => (
+              {[['/', 'Home'], ['/branches', 'Branches'], ['/notes', 'Notes'], ['/prep', 'Test Prep'], ['/about', 'About']].map(([href, label]) => (
                 <Link key={href} href={href}
                   className="text-sm font-semibold hover:text-emerald-500 transition-colors"
                   style={{ color: 'var(--text-secondary)' }}
@@ -228,7 +228,7 @@ export default function Navbar() {
           <div className="md:hidden flex items-center justify-between gap-3 pb-3 pt-3 mt-2 overflow-x-auto"
             style={{ borderTop: '1px solid var(--border-subtle)' }}
           >
-            {[['/', 'Home'], ['/branches', 'Branches'], ['/notes', 'Notes'], ['/prep', 'Test Prep']].map(([href, label]) => (
+            {[['/', 'Home'], ['/branches', 'Branches'], ['/notes', 'Notes'], ['/prep', 'Test Prep'], ['/about', 'About']].map(([href, label]) => (
               <Link key={href} href={href}
                 className="text-sm font-semibold hover:text-emerald-500 transition-colors whitespace-nowrap"
                 style={{ color: 'var(--text-secondary)' }}
