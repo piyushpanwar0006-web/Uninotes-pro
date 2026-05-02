@@ -59,6 +59,10 @@ function PaperCard({ paper, user, onAuthOpen }) {
   const handleView = async () => {
     setError('');
     setLoading(true);
+    
+    // Open window immediately to prevent popup blockers
+    const newWindow = window.open('', '_blank', 'noopener,noreferrer');
+    
     try {
       // No auth required — guests and logged-in users can both view PDFs
       const res = await fetch(`/api/papers/${paper.id}/signed-url`, {
@@ -69,12 +73,18 @@ function PaperCard({ paper, user, onAuthOpen }) {
       if (!json.success) {
         setError(json.error || 'Failed to get PDF link. Please try again.');
         setLoading(false);
+        if (newWindow) newWindow.close();
         return;
       }
 
-      window.open(json.data.signedUrl, '_blank', 'noopener,noreferrer');
+      if (newWindow) {
+        newWindow.location.href = json.data.signedUrl;
+      } else {
+        window.location.href = json.data.signedUrl;
+      }
     } catch {
       setError('Network error. Please try again.');
+      if (newWindow) newWindow.close();
     } finally {
       setLoading(false);
     }

@@ -58,7 +58,7 @@ export const GET = withLogging(
       )
       .eq('status', 'ready')
       .is('deleted_at', null)
-      .eq('subject_code', subjectCode);
+      .eq('subjects.code', subjectCode);
 
     // Sorting
     if (sortBy === 'latest') {

@@ -88,8 +88,8 @@ async function handler(req: NextRequest): Promise<NextResponse> {
 
     const doInnerJoin = branch || semester || subject || (subjectId && !isUUID);
     const subjectSelector = doInnerJoin
-      ? `subjects!inner( id, branch, semester, name )`
-      : `subjects( id, branch, semester, name )`;
+      ? `subjects!inner( id, branch, semester, name, code )`
+      : `subjects( id, branch, semester, name, code )`;
 
     let query = adminClient
       .from('papers')
