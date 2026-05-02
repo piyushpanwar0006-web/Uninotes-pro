@@ -18,19 +18,19 @@ export default function AchievementsTab() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-black text-slate-900">Achievements</h2>
-        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 ring-1 ring-emerald-200 px-2.5 py-1 rounded-full">
+        <h2 className="text-lg font-black" style={{ color: 'var(--text)' }}>Achievements</h2>
+        <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-secondary)' }}>
           {earned.length} / {BADGES.length} unlocked
         </span>
       </div>
 
       {/* Progress Bar */}
-      <div className="bg-white rounded-2xl border border-slate-200/70 shadow-sm p-5">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
+      <div className="rounded-2xl border shadow-sm p-5" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
+        <div className="flex items-center justify-between text-xs font-semibold mb-2" style={{ color: 'var(--muted)' }}>
           <span>Overall Progress</span>
           <span className="text-emerald-600 font-bold">{Math.round((earned.length / BADGES.length) * 100)}%</span>
         </div>
-        <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden">
+        <div className="h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg)' }}>
           <div
             className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all duration-700"
             style={{ width: `${(earned.length / BADGES.length) * 100}%` }}
@@ -40,7 +40,7 @@ export default function AchievementsTab() {
 
       {/* Earned */}
       <div>
-        <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Earned</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--muted)' }}>Earned</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
           {earned.map((b) => <BadgeCard key={b.title} badge={b} />)}
         </div>
@@ -48,7 +48,7 @@ export default function AchievementsTab() {
 
       {/* Locked */}
       <div>
-        <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Locked</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--muted)' }}>Locked</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
           {locked.map((b) => <BadgeCard key={b.title} badge={b} />)}
         </div>
@@ -63,17 +63,18 @@ function BadgeCard({ badge }) {
     <div
       className={`rounded-2xl border p-4 flex flex-col items-center gap-2 text-center transition-all duration-200 ${
         earned
-          ? 'bg-white border-slate-200/70 shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:border-emerald-200'
-          : 'bg-slate-50/60 border-slate-200/40 opacity-50 cursor-not-allowed'
+          ? 'shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:border-emerald-400'
+          : 'opacity-50 cursor-not-allowed'
       }`}
+      style={earned ? { backgroundColor: 'var(--surface)', borderColor: 'var(--border)' } : { backgroundColor: 'var(--bg)', borderColor: 'var(--border)' }}
     >
       <span className={`text-3xl ${!earned ? 'grayscale' : ''}`}>{emoji}</span>
       <div>
-        <p className={`text-xs font-black leading-tight ${earned ? 'text-slate-800' : 'text-slate-500'}`}>{title}</p>
-        <p className="text-xs text-slate-400 mt-0.5 leading-tight">{desc}</p>
+        <p className="text-xs font-black leading-tight" style={{ color: earned ? 'var(--text)' : 'var(--text-secondary)' }}>{title}</p>
+        <p className="text-xs mt-0.5 leading-tight" style={{ color: 'var(--muted)' }}>{desc}</p>
       </div>
       {!earned && (
-        <span className="text-[10px] font-bold text-slate-400 bg-slate-200 px-2 py-0.5 rounded-full">Locked</span>
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: 'var(--surface)', color: 'var(--muted)' }}>Locked</span>
       )}
     </div>
   );

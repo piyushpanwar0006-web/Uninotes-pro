@@ -100,15 +100,15 @@ function DeleteModal({ paper, onConfirm, onCancel, loading }) {
       style={{ background: 'rgba(9,17,34,0.7)', backdropFilter: 'blur(6px)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onCancel(); }}
     >
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 animate-scale-up">
-        <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-          <Trash2 size={24} className="text-red-500" />
+      <div className="rounded-3xl shadow-2xl w-full max-w-sm p-8 animate-scale-up" style={{ backgroundColor: 'var(--card)' }}>
+        <div className="w-14 h-14 bg-red-50 dark:bg-red-950/40 rounded-2xl flex items-center justify-center mx-auto mb-5">
+          <Trash2 size={24} className="text-red-500 dark:text-red-400" />
         </div>
-        <h2 className="text-xl font-black text-slate-900 text-center mb-2">Delete Note?</h2>
-        <p className="text-sm text-slate-500 text-center mb-2 font-medium">
+        <h2 className="text-xl font-black text-center mb-2" style={{ color: 'var(--text)' }}>Delete Note?</h2>
+        <p className="text-sm text-center mb-2 font-medium" style={{ color: 'var(--text-secondary)' }}>
           You are about to permanently delete:
         </p>
-        <p className="text-sm font-bold text-slate-800 text-center mb-6 bg-slate-50 rounded-xl px-4 py-2 line-clamp-2">
+        <p className="text-sm font-bold text-center mb-6 rounded-xl px-4 py-2 line-clamp-2" style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}>
           "{paper.title}"
         </p>
         <p className="text-xs text-red-500 text-center mb-6 font-medium">
@@ -118,7 +118,8 @@ function DeleteModal({ paper, onConfirm, onCancel, loading }) {
           <button
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 text-sm font-bold hover:bg-slate-50 transition-all disabled:opacity-50"
+            className="flex-1 py-3 rounded-xl border text-sm font-bold transition-all disabled:opacity-50"
+            style={{ borderColor: 'var(--border)', color: 'var(--text)', backgroundColor: 'var(--surface)' }}
           >
             Cancel
           </button>
@@ -211,7 +212,7 @@ function PaperCard({ paper, onDelete, addToast }) {
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 p-6 flex flex-col gap-4 group relative">
+      <div className="glass-card p-6 hover-lift flex flex-col gap-4 group relative">
 
         {/* Delete Button — admin sees on ALL notes, user sees only on their own */}
         {paper.canDelete && (
@@ -227,15 +228,15 @@ function PaperCard({ paper, onDelete, addToast }) {
 
         {/* Header */}
         <div className="flex items-start gap-4">
-          <div className="w-11 h-11 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
-            <FileText size={22} className="text-emerald-600" strokeWidth={1.5} />
+          <div className="w-11 h-11 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/50 transition-colors">
+            <FileText size={22} className="text-emerald-600 dark:text-emerald-400" strokeWidth={1.5} />
           </div>
           <div className="flex-grow min-w-0 pr-8">
-            <h3 className="font-black text-slate-900 text-[15px] leading-snug mb-1 line-clamp-2">
+            <h3 className="font-black text-[15px] leading-snug mb-1 line-clamp-2" style={{ color: 'var(--text)' }}>
               {paper.title}
             </h3>
             {paper.description && (
-              <p className="text-xs text-slate-500 font-medium line-clamp-2">{paper.description}</p>
+              <p className="text-xs font-medium line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{paper.description}</p>
             )}
           </div>
         </div>
@@ -244,24 +245,25 @@ function PaperCard({ paper, onDelete, addToast }) {
         {subject && (
           <a
             href={`/subjects/${subject.id}`}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-100 hover:bg-emerald-50 hover:border-emerald-200 transition-all self-start"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-all self-start"
+            style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)' }}
           >
-            <BookOpen size={11} className="text-emerald-600" />
-            <span className="text-[11px] font-black text-slate-600 tracking-wide">{subject.name}</span>
+            <BookOpen size={11} className="text-emerald-600 dark:text-emerald-400" />
+            <span className="text-[11px] font-black tracking-wide" style={{ color: 'var(--text-secondary)' }}>{subject.name}</span>
             {subject.semester && (
-              <span className="text-[10px] text-slate-400 font-bold">· Sem {subject.semester}</span>
+              <span className="text-[10px] font-bold" style={{ color: 'var(--muted)' }}>· Sem {subject.semester}</span>
             )}
           </a>
         )}
 
         {/* Meta */}
-        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 font-semibold">
+        <div className="flex flex-wrap items-center gap-3 text-xs font-semibold" style={{ color: 'var(--muted)' }}>
           <span className="flex items-center gap-1"><Clock size={11} />{formatDate(paper.created_at)}</span>
           <span className="flex items-center gap-1"><HardDrive size={11} />{formatBytes(paper.size_bytes)}</span>
           {uploader?.full_name && (
             <span className="flex items-center gap-1"><User size={11} />{uploader.full_name}</span>
           )}
-          <span className="ml-auto px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-wider">PDF</span>
+          <span className="ml-auto px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-wider">PDF</span>
         </div>
 
         {/* View error (only shown for view action failures) */}
@@ -411,7 +413,7 @@ export default function NotesPage() {
     : papersWithPermissions;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg)' }}>
       <Navbar />
 
       <main className="flex-grow">
@@ -456,10 +458,10 @@ export default function NotesPage() {
           {/* Search + Stats */}
           <div className="glass-card px-6 py-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-8">
             {!pageLoading && !pageError && (
-              <p className="text-sm font-bold text-slate-600 shrink-0">
+              <p className="text-sm font-bold shrink-0" style={{ color: 'var(--text-secondary)' }}>
                 {total} {total === 1 ? 'note' : 'notes'} available
                 {userRole === 'admin' && (
-                  <span className="ml-2 px-2 py-0.5 bg-red-50 text-red-600 rounded-full text-[10px] font-black uppercase tracking-wider">Admin</span>
+                  <span className="ml-2 px-2 py-0.5 bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400 rounded-full text-[10px] font-black uppercase tracking-wider">Admin</span>
                 )}
               </p>
             )}
@@ -470,7 +472,8 @@ export default function NotesPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by title, subject, or branch…"
-                className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-slate-900 text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
+                className="w-full pl-10 pr-10 py-2.5 rounded-xl border text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400"
+                style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
               />
               {search && (
                 <button
@@ -495,13 +498,13 @@ export default function NotesPage() {
           {/* Page-level Error */}
           {!pageLoading && pageError && (
             <div className="glass-card p-10 text-center">
-              <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-14 h-14 bg-red-50 dark:bg-red-950/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <WifiOff size={26} className="text-red-400" />
               </div>
-              <h2 className="text-xl font-black text-slate-900 mb-2">Could not load notes</h2>
-              <p className="text-slate-500 font-medium mb-6">{pageError}</p>
+              <h2 className="text-xl font-black mb-2" style={{ color: 'var(--text)' }}>Could not load notes</h2>
+              <p className="font-medium mb-6" style={{ color: 'var(--text-secondary)' }}>{pageError}</p>
               <button
-                onClick={() => fetchPapers(page)}
+                onClick={() => fetchNextPage()}
                 className="px-6 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 transition-all"
               >
                 Try Again
@@ -512,13 +515,13 @@ export default function NotesPage() {
           {/* Empty state */}
           {!pageLoading && !pageError && filtered.length === 0 && (
             <div className="glass-card p-14 text-center">
-              <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <FileText size={30} className="text-slate-400" strokeWidth={1.5} />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: 'var(--bg)' }}>
+                <FileText size={30} style={{ color: 'var(--muted)' }} strokeWidth={1.5} />
               </div>
-              <h2 className="text-2xl font-black text-slate-900 mb-3">
+              <h2 className="text-2xl font-black mb-3" style={{ color: 'var(--text)' }}>
                 {search ? 'No results found' : 'No notes uploaded yet'}
               </h2>
-              <p className="text-slate-500 font-medium max-w-sm mx-auto mb-8">
+              <p className="font-medium max-w-sm mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>
                 {search
                   ? `No notes matched "${search}". Try a different term.`
                   : 'Be the first to contribute! Upload your notes and help the community.'}

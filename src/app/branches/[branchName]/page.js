@@ -123,11 +123,11 @@ export default function BranchPage({ params }) {
   const getDbId = (sem, name) => subjectMappings[`${sem}-${name}`];
   if (!data) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-50">
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg)' }}>
         <Navbar />
         <main className="flex-grow flex flex-col items-center justify-center p-8">
-          <h1 className="text-4xl font-black text-slate-900 mb-4">Branch Not Found</h1>
-          <p className="text-slate-500 mb-8 font-medium">The branch you are looking for does not exist in our database.</p>
+          <h1 className="text-4xl font-black mb-4" style={{ color: 'var(--text)' }}>Branch Not Found</h1>
+          <p className="mb-8 font-medium" style={{ color: 'var(--text-secondary)' }}>The branch you are looking for does not exist in our database.</p>
           <a href="/" className="btn-premium-primary">Back to Home</a>
         </main>
         <Footer />
@@ -139,7 +139,7 @@ export default function BranchPage({ params }) {
 
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg)' }}>
       <Navbar />
 
       <main className="flex-grow">
@@ -180,7 +180,7 @@ export default function BranchPage({ params }) {
             {/* Sidebar Navigation */}
             <aside className="hidden lg:block w-72 shrink-0">
               <div className="glass-card p-6 sticky top-28">
-                <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+                <h2 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2" style={{ color: 'var(--text)' }}>
                   <Filter size={14} className="text-emerald-500" /> Jump to Semester
                 </h2>
                 <div className="space-y-2">
@@ -188,14 +188,14 @@ export default function BranchPage({ params }) {
                     <a
                       key={sem}
                       href={`#sem-${sem}`}
-                      className="flex items-center justify-between p-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition-all group"
+                      className="flex items-center justify-between p-3 rounded-xl text-sm font-bold hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-emerald-600 transition-all group"
+                      style={{ color: 'var(--text-secondary)' }}
                     >
                       Semester {sem}
                       <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                   ))}
                 </div>
-
               </div>
             </aside>
 
@@ -203,14 +203,14 @@ export default function BranchPage({ params }) {
             <div className="flex-grow space-y-20">
               {semesters.map((sem) => (
                 <div key={sem} id={`sem-${sem}`} className="scroll-mt-28">
-                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
-                    <h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs">
+                  <div className="flex items-center justify-between mb-8 pb-4" style={{ borderBottom: '1px solid var(--border)' }}>
+                    <h2 className="text-2xl font-black flex items-center gap-3" style={{ color: 'var(--text)' }}>
+                      <span className="w-8 h-8 rounded-lg flex items-center justify-center text-xs text-white" style={{ backgroundColor: 'var(--text)' }}>
                         {sem}
                       </span>
                       Semester {sem}
                     </h2>
-                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                    <span className="text-xs font-black uppercase tracking-widest" style={{ color: 'var(--muted)' }}>
                       {data[sem].length} Courses Available
                     </span>
                   </div>
@@ -227,30 +227,30 @@ export default function BranchPage({ params }) {
                       const uploadUrl = `/upload?branch=${encodeURIComponent(dataKey)}&semester=${sem}&subject=${encodeURIComponent(subject.name)}`;
 
                       return (
-                        <div key={idx} className="glass-card p-6 hover-lift border-slate-100 flex flex-col">
+                        <div key={idx} className="glass-card p-6 hover-lift flex flex-col">
                           <div className="flex items-start justify-between mb-4">
-                            <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
+                            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--bg)', color: 'var(--muted)' }}>
                               <FileText size={24} strokeWidth={1.5} />
                             </div>
                             <div className="flex items-center gap-2">
                               {dbId && !dbLoading && (
-                                <span className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded text-[10px] font-black uppercase tracking-wider">
+                                <span className="px-2 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-black uppercase tracking-wider">
                                   PDFs Available
                                 </span>
                               )}
-                              <span className="px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-black uppercase tracking-wider">
+                              <span className="px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-secondary)' }}>
                                 {subject.code || 'CODE'}
                               </span>
                             </div>
                           </div>
 
                           <a href={viewNotesUrl} className="group/title block mb-2">
-                            <h3 className="text-lg font-black text-slate-900 leading-snug group-hover/title:text-emerald-600 transition-colors">
+                            <h3 className="text-lg font-black leading-snug group-hover/title:text-emerald-600 transition-colors" style={{ color: 'var(--text)' }}>
                               {subject.name}
                             </h3>
                           </a>
 
-                          <p className="text-sm text-slate-400 font-medium mb-6 flex-grow">
+                          <p className="text-sm font-medium mb-6 flex-grow" style={{ color: 'var(--muted)' }}>
                             Access verified lecture materials and past papers for better preparation.
                           </p>
 
@@ -277,10 +277,9 @@ export default function BranchPage({ params }) {
                             {/* Upload Notes */}
                             <button
                               disabled={dbLoading}
-                              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-all disabled:opacity-60"
-                              onClick={() => {
-                                window.location.href = uploadUrl;
-                              }}
+                              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-white text-xs font-bold transition-all disabled:opacity-60"
+                              style={{ backgroundColor: 'var(--text)' }}
+                              onClick={() => { window.location.href = uploadUrl; }}
                             >
                               {dbLoading ? (
                                 <><Loader2 size={12} className="animate-spin" /> Loading…</>
@@ -292,7 +291,8 @@ export default function BranchPage({ params }) {
                             {/* PYQs & Prep */}
                             <a
                               href={viewNotesUrl}
-                              className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs font-bold hover:bg-slate-50 transition-all"
+                              className="flex items-center justify-between px-4 py-2.5 rounded-xl border text-xs font-bold transition-all hover:border-emerald-400 hover:text-emerald-600"
+                              style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text)' }}
                             >
                               PYQs &amp; Prep <ExternalLink size={14} />
                             </a>

@@ -5,7 +5,7 @@ import { LayoutGrid } from 'lucide-react';
 
 export default function BranchesPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg)' }}>
       <Navbar />
       
       <main className="flex-grow">

@@ -42,7 +42,7 @@ export default function ProfilePage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 rounded-full border-4 border-emerald-500/30 border-t-emerald-500 animate-spin" />
-          <p className="text-sm text-slate-400 font-medium">Loading profile…</p>
+          <p className="text-sm font-medium" style={{ color: 'var(--muted)' }}>Loading profile…</p>
         </div>
       </div>
     );
@@ -52,9 +52,9 @@ export default function ProfilePage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh] px-4">
         <div className="text-center space-y-3">
-          <div className="w-16 h-16 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-3xl">🔒</div>
-          <h2 className="text-xl font-black text-slate-800">Sign in required</h2>
-          <p className="text-slate-500 text-sm">Please sign in to access your profile.</p>
+          <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl" style={{ backgroundColor: 'var(--card)' }}>🔒</div>
+          <h2 className="text-xl font-black" style={{ color: 'var(--text)' }}>Sign in required</h2>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Please sign in to access your profile.</p>
         </div>
       </div>
     );

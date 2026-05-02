@@ -9,7 +9,7 @@ const SEMESTERS = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
 // ── Skeleton loader for the profile form fields ───────────────────────────────
 function FieldSkeleton() {
-  return <div className="h-10 bg-slate-100 rounded-xl animate-pulse w-full" />;
+  return <div className="h-10 rounded-xl animate-pulse w-full" style={{ backgroundColor: 'var(--card)' }} />;
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ export default function SettingsTab({ user }) {
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-black text-slate-900">Settings</h2>
+      <h2 className="text-lg font-black" style={{ color: 'var(--text)' }}>Settings</h2>
 
       {profileError && <ErrorBanner message={profileError} />}
 
@@ -155,8 +155,8 @@ export default function SettingsTab({ user }) {
               </button>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-700">Profile Photo</p>
-              <p className="text-xs text-slate-400 mt-0.5">JPG or PNG — coming soon</p>
+              <p className="text-sm font-bold" style={{ color: 'var(--text)' }}>Profile Photo</p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>JPG or PNG — coming soon</p>
             </div>
           </div>
 
@@ -200,26 +200,28 @@ export default function SettingsTab({ user }) {
                 />
                 {/* Branch */}
                 <div className="space-y-1.5">
-                  <label htmlFor="branch" className="text-xs font-bold text-slate-500 uppercase tracking-wide">Branch</label>
+                  <label htmlFor="branch" className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted)' }}>Branch</label>
                   <select
                     id="branch"
                     name="branch"
                     value={form.branch}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
+                    className="w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
+                    style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
                   >
                     {BRANCHES.map((b) => <option key={b}>{b}</option>)}
                   </select>
                 </div>
                 {/* Semester */}
                 <div className="space-y-1.5">
-                  <label htmlFor="semester" className="text-xs font-bold text-slate-500 uppercase tracking-wide">Semester</label>
+                  <label htmlFor="semester" className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted)' }}>Semester</label>
                   <select
                     id="semester"
                     name="semester"
                     value={form.semester}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
+                    className="w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
+                    style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
                   >
                     {SEMESTERS.map((s) => <option key={s}>{s}</option>)}
                   </select>
@@ -315,8 +317,8 @@ export default function SettingsTab({ user }) {
         </form>
 
         {/* Sign out all sessions */}
-        <div className="mt-6 pt-5 border-t border-slate-100">
-          <p className="text-xs text-slate-500 font-medium mb-3">
+        <div className="mt-6 pt-5 border-t" style={{ borderColor: 'var(--border)' }}>
+          <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)' }}>
             This will sign you out from all devices including this one.
           </p>
           <button
@@ -336,8 +338,8 @@ export default function SettingsTab({ user }) {
 
 function SectionCard({ title, icon, children }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/70 shadow-sm p-6 space-y-5">
-      <h3 className="text-sm font-black text-slate-800 flex items-center gap-2">
+    <div className="rounded-2xl border shadow-sm p-6 space-y-5" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
+      <h3 className="text-sm font-black flex items-center gap-2" style={{ color: 'var(--text)' }}>
         <span>{icon}</span> {title}
       </h3>
       {children}
@@ -348,7 +350,7 @@ function SectionCard({ title, icon, children }) {
 function SettingsField({ label, id, name, value, onChange, placeholder, readOnly = false, required = false, hint }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</label>
+      <label htmlFor={id} className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted)' }}>{label}</label>
       <input
         id={id}
         name={name}
@@ -360,11 +362,12 @@ function SettingsField({ label, id, name, value, onChange, placeholder, readOnly
         required={required}
         className={`w-full px-3.5 py-2.5 text-sm border rounded-xl transition-all ${
           readOnly
-            ? 'bg-slate-50 text-slate-400 border-slate-200 cursor-not-allowed'
-            : 'bg-white text-slate-700 border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400'
+            ? 'cursor-not-allowed'
+            : 'focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400'
         }`}
+        style={readOnly ? { backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--text-secondary)' } : { backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
       />
-      {hint && <p className="text-xs text-slate-400">{hint}</p>}
+      {hint && <p className="text-xs" style={{ color: 'var(--muted)' }}>{hint}</p>}
     </div>
   );
 }
@@ -372,7 +375,7 @@ function SettingsField({ label, id, name, value, onChange, placeholder, readOnly
 function PasswordField({ label, id, name, value, onChange, show, onToggle }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</label>
+      <label htmlFor={id} className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted)' }}>{label}</label>
       <div className="relative">
         <input
           id={id}
@@ -380,14 +383,16 @@ function PasswordField({ label, id, name, value, onChange, show, onToggle }) {
           type={show ? 'text' : 'password'}
           value={value}
           onChange={onChange}
-          className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-200 rounded-xl text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
+          className="w-full px-3.5 py-2.5 pr-10 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
+          style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
           autoComplete="new-password"
         />
         <button
           type="button"
           onClick={onToggle}
           aria-label={show ? 'Hide password' : 'Show password'}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+          style={{ color: 'var(--muted)' }}
         >
           {show ? <EyeOff size={15} /> : <Eye size={15} />}
         </button>
@@ -413,7 +418,7 @@ function PasswordStrength({ password }) {
     <div className="space-y-1">
       <div className="flex gap-1">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${i <= strength ? colors[strength] : 'bg-slate-200'}`} />
+          <div key={i} className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${i <= strength ? colors[strength] : ''}`} style={i > strength ? { backgroundColor: 'var(--border)' } : undefined} />
         ))}
       </div>
       <p className={`text-xs font-semibold ${textCls}`}>{labels[strength]}</p>

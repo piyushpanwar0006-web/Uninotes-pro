@@ -21,16 +21,17 @@ export default function DownloadsTab() {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-black text-slate-900">Download History</h2>
+        <h2 className="text-lg font-black" style={{ color: 'var(--text)' }}>Download History</h2>
         <div className="flex items-center gap-2">
           {!loading && (
-            <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ backgroundColor: 'var(--bg)', color: 'var(--muted)' }}>
               {total} {total === 1 ? 'download' : 'downloads'}
             </span>
           )}
           <button
             onClick={() => setSortAsc((v) => !v)}
-            className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-emerald-600 bg-white border border-slate-200 hover:border-emerald-300 px-3 py-1.5 rounded-xl transition-all duration-200"
+            className="flex items-center gap-1.5 text-xs font-bold hover:text-emerald-600 hover:border-emerald-300 px-3 py-1.5 rounded-xl transition-all duration-200 border"
+            style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
             aria-label="Toggle sort order"
           >
             <ArrowUpDown size={13} />
@@ -52,24 +53,24 @@ export default function DownloadsTab() {
       ) : (
         <>
           {/* Desktop Table */}
-          <div className="hidden sm:block bg-white rounded-2xl border border-slate-200/70 shadow-sm overflow-hidden">
+          <div className="hidden sm:block rounded-2xl border shadow-sm overflow-hidden" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-100">
+                <tr className="border-b" style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)' }}>
                   <Th>Title</Th>
                   <Th>Subject</Th>
                   <Th>Date</Th>
                   <Th>Action</Th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y" style={{ divideColor: 'var(--border)' }}>
                 {downloads.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-800 max-w-[240px] truncate">
+                  <tr key={item.id} className="transition-colors hover-lift">
+                    <td className="px-6 py-4 font-semibold max-w-[240px] truncate" style={{ color: 'var(--text)' }}>
                       {item.title}
                     </td>
-                    <td className="px-4 py-4 text-slate-500">{item.subject}</td>
-                    <td className="px-4 py-4 text-slate-400 text-xs">{fmtDate(item.downloaded_at)}</td>
+                    <td className="px-4 py-4" style={{ color: 'var(--text-secondary)' }}>{item.subject}</td>
+                    <td className="px-4 py-4 text-xs" style={{ color: 'var(--muted)' }}>{fmtDate(item.downloaded_at)}</td>
                     <td className="px-4 py-4">
                       <DownloadButton paperId={item.paper_id} title={item.title} />
                     </td>
@@ -82,10 +83,10 @@ export default function DownloadsTab() {
           {/* Mobile Cards */}
           <div className="sm:hidden space-y-3">
             {downloads.map((item) => (
-              <div key={item.id} className="bg-white rounded-2xl border border-slate-200/70 shadow-sm p-4 flex items-start justify-between gap-3">
+              <div key={item.id} className="rounded-2xl border shadow-sm p-4 flex items-start justify-between gap-3" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-slate-800 truncate">{item.title}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-sm font-bold truncate" style={{ color: 'var(--text)' }}>{item.title}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
                     {item.subject} • {fmtDate(item.downloaded_at)}
                   </p>
                 </div>
@@ -101,7 +102,7 @@ export default function DownloadsTab() {
 
 function Th({ children }) {
   return (
-    <th className="text-left text-xs font-bold text-slate-400 uppercase tracking-wider px-4 py-3.5 first:px-6">
+    <th className="text-left text-xs font-bold uppercase tracking-wider px-4 py-3.5 first:px-6" style={{ color: 'var(--muted)' }}>
       {children}
     </th>
   );
@@ -117,8 +118,8 @@ function DownloadButton({ paperId, title, compact = false }) {
       aria-label={`Re-download ${title}`}
       className={
         compact
-          ? 'shrink-0 p-2 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors flex items-center justify-center'
-          : 'flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl transition-colors'
+          ? 'shrink-0 p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 transition-colors flex items-center justify-center'
+          : 'flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 px-3 py-1.5 rounded-xl transition-colors'
       }
     >
       <Download size={compact ? 15 : 13} />

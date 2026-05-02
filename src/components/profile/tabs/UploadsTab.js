@@ -6,9 +6,9 @@ import { TableSkeleton, EmptyState, ErrorBanner } from '@/components/profile/Tab
 
 // ── Status badge config ──────────────────────────────────────────────────────
 const STATUS_CONFIG = {
-  ready:      { label: 'Approved', css: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200' },
-  processing: { label: 'Pending',  css: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'   },
-  failed:     { label: 'Rejected', css: 'bg-red-50 text-red-600 ring-1 ring-red-200'          },
+  ready:      { label: 'Approved', css: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:ring-emerald-900/50' },
+  processing: { label: 'Pending',  css: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:ring-amber-900/50'   },
+  failed:     { label: 'Rejected', css: 'bg-red-50 text-red-600 ring-1 ring-red-200 dark:bg-red-950/40 dark:text-red-400 dark:ring-red-900/50'          },
 };
 
 const ALL_STATUSES = ['All Status', 'Approved', 'Pending', 'Rejected'];
@@ -16,7 +16,7 @@ const ALL_SEMS     = ['All Semesters', '1', '2', '3', '4', '5', '6', '7', '8'];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function statusLabel(s) { return STATUS_CONFIG[s]?.label ?? s; }
-function statusCss(s)   { return STATUS_CONFIG[s]?.css   ?? 'bg-slate-100 text-slate-600'; }
+function statusCss(s)   { return STATUS_CONFIG[s]?.css   ?? 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'; }
 
 function fmtDate(iso) {
   return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -66,9 +66,9 @@ export default function UploadsTab() {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-black text-slate-900">My Uploads</h2>
+        <h2 className="text-lg font-black" style={{ color: 'var(--text)' }}>My Uploads</h2>
         {!loading && (
-          <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ backgroundColor: 'var(--bg)', color: 'var(--muted)' }}>
             {filtered.length} {filtered.length === 1 ? 'note' : 'notes'}
           </span>
         )}
@@ -77,7 +77,7 @@ export default function UploadsTab() {
       {error && <ErrorBanner message={error} />}
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-slate-200/70 shadow-sm p-4 flex flex-wrap gap-3">
+      <div className="rounded-2xl border shadow-sm p-4 flex flex-wrap gap-3" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
         <FilterSelect label="Subject"  value={subjectFilter} options={allSubjects}  onChange={setSubjectFilter} />
         <FilterSelect label="Semester" value={semFilter}     options={ALL_SEMS}      onChange={setSemFilter} />
         <FilterSelect label="Status"   value={statusFilter}  options={ALL_STATUSES}  onChange={setStatusFilter} />
@@ -88,10 +88,10 @@ export default function UploadsTab() {
         <TableSkeleton cols={5} rows={4} />
       ) : (
         <>
-          <div className="hidden sm:block bg-white rounded-2xl border border-slate-200/70 shadow-sm overflow-hidden">
+          <div className="hidden sm:block rounded-2xl border shadow-sm overflow-hidden" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-100">
+                <tr className="border-b" style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)' }}>
                   <Th>Title</Th>
                   <Th>Subject</Th>
                   <Th>Downloads</Th>
@@ -99,24 +99,24 @@ export default function UploadsTab() {
                   <Th>Actions</Th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y" style={{ divideColor: 'var(--border)' }}>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-14 text-slate-400 text-sm font-medium">
+                    <td colSpan={5} className="text-center py-14 text-sm font-medium" style={{ color: 'var(--muted)' }}>
                       {uploads.length === 0 ? 'You haven\'t uploaded any notes yet.' : 'No uploads match the selected filters.'}
                     </td>
                   </tr>
                 ) : (
                   filtered.map((u) => (
-                    <tr key={u.id} className="hover:bg-slate-50/60 transition-colors">
+                    <tr key={u.id} className="transition-colors hover-lift">
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-slate-800 max-w-[220px] truncate">{u.title}</div>
-                        <div className="text-xs text-slate-400 mt-0.5">{fmtDate(u.created_at)}</div>
+                        <div className="font-semibold max-w-[220px] truncate" style={{ color: 'var(--text)' }}>{u.title}</div>
+                        <div className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>{fmtDate(u.created_at)}</div>
                       </td>
-                      <td className="px-4 py-4 text-slate-500 text-sm">
+                      <td className="px-4 py-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
                         {u.subjects?.name ?? '—'}
                       </td>
-                      <td className="px-4 py-4 text-slate-500 font-medium text-sm">
+                      <td className="px-4 py-4 font-medium text-sm" style={{ color: 'var(--text-secondary)' }}>
                         {(u.download_count ?? 0).toLocaleString()}
                       </td>
                       <td className="px-4 py-4">
@@ -146,18 +146,18 @@ export default function UploadsTab() {
               />
             ) : (
               filtered.map((u) => (
-                <div key={u.id} className="bg-white rounded-2xl border border-slate-200/70 shadow-sm p-4 space-y-3">
+                <div key={u.id} className="rounded-2xl border shadow-sm p-4 space-y-3" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-sm font-bold text-slate-800 leading-snug">{u.title}</p>
+                    <p className="text-sm font-bold leading-snug" style={{ color: 'var(--text)' }}>{u.title}</p>
                     <StatusBadge status={u.status} />
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-slate-500 flex-wrap">
+                  <div className="flex items-center gap-3 text-xs flex-wrap" style={{ color: 'var(--text-secondary)' }}>
                     <span>{u.subjects?.name ?? '—'}</span>
                     {u.subjects?.semester && <span>• Sem {u.subjects.semester}</span>}
                     <span>• {(u.download_count ?? 0)} downloads</span>
                     <span>• {fmtDate(u.created_at)}</span>
                   </div>
-                  <div className="pt-1 border-t border-slate-100">
+                  <div className="pt-1 border-t" style={{ borderColor: 'var(--border)' }}>
                     <ActionButtons
                       paperId={u.id}
                       deleting={deleting === u.id}
@@ -178,7 +178,7 @@ export default function UploadsTab() {
 
 function Th({ children }) {
   return (
-    <th className="text-left text-xs font-bold text-slate-400 uppercase tracking-wider px-4 py-3.5 first:px-6">
+    <th className="text-left text-xs font-bold uppercase tracking-wider px-4 py-3.5 first:px-6" style={{ color: 'var(--muted)' }}>
       {children}
     </th>
   );
@@ -191,11 +191,12 @@ function FilterSelect({ label, value, options, onChange }) {
         aria-label={label}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold px-3 py-2 pr-7 rounded-xl cursor-pointer hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all"
+        className="appearance-none border text-xs font-semibold px-3 py-2 pr-7 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all hover:border-emerald-400"
+        style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
       >
         {options.map((o) => <option key={o}>{o}</option>)}
       </select>
-      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--muted)' }} />
     </div>
   );
 }
@@ -215,7 +216,8 @@ function ActionButtons({ paperId, deleting, onDelete }) {
         aria-label="Edit upload"
         disabled
         title="Edit coming soon"
-        className="p-1.5 rounded-lg text-slate-300 cursor-not-allowed"
+        className="p-1.5 rounded-lg cursor-not-allowed"
+        style={{ color: 'var(--muted)' }}
       >
         <Edit2 size={14} />
       </button>
@@ -223,7 +225,8 @@ function ActionButtons({ paperId, deleting, onDelete }) {
         aria-label="Delete upload"
         disabled={deleting}
         onClick={() => onDelete(paperId)}
-        className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="p-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{ color: 'var(--text-secondary)' }}
       >
         {deleting ? (
           <span className="w-3.5 h-3.5 border-2 border-red-400/40 border-t-red-500 rounded-full animate-spin block" />

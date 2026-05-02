@@ -43,16 +43,17 @@ function PasswordStrengthBar({ password }) {
 function InputField({ label, icon: Icon, rightElement, error, ...props }) {
   return (
     <div>
-      <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">{label}</label>
+      {label && <label className="block text-xs font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--muted)' }}>{label}</label>}
       <div className="relative">
-        {Icon && <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><Icon size={16} /></span>}
+        {Icon && <span className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--muted)' }}><Icon size={16} /></span>}
         <input
           {...props}
-          className={`w-full ${Icon ? 'pl-10' : 'pl-4'} ${rightElement ? 'pr-11' : 'pr-4'} py-3 rounded-xl border text-slate-900 text-sm font-medium outline-none transition-all placeholder:text-slate-300 ${
+          className={`w-full ${Icon ? 'pl-10' : 'pl-4'} ${rightElement ? 'pr-11' : 'pr-4'} py-3 rounded-xl border text-sm font-medium outline-none transition-all ${
             error
-              ? 'border-red-300 focus:ring-2 focus:ring-red-300 bg-red-50/50'
-              : 'border-slate-200 focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white hover:border-slate-300'
+              ? 'border-red-300 focus:ring-2 focus:ring-red-300 bg-red-50/50 dark:bg-red-950/20'
+              : 'border-[var(--border)] focus:ring-2 focus:ring-emerald-400 focus:border-transparent hover:border-emerald-300'
           }`}
+          style={{ backgroundColor: 'var(--card)', color: 'var(--text)' }}
         />
         {rightElement && <span className="absolute right-3 top-1/2 -translate-y-1/2">{rightElement}</span>}
       </div>
@@ -65,9 +66,9 @@ function InputField({ label, icon: Icon, rightElement, error, ...props }) {
 function Divider({ text = 'OR CONTINUE WITH' }) {
   return (
     <div className="relative flex items-center gap-3 my-1">
-      <div className="flex-1 h-px bg-slate-100" />
-      <span className="text-[10px] font-black text-slate-400 tracking-widest whitespace-nowrap">{text}</span>
-      <div className="flex-1 h-px bg-slate-100" />
+      <div className="flex-1 h-px" style={{ backgroundColor: 'var(--border)' }} />
+      <span className="text-[10px] font-black tracking-widest whitespace-nowrap" style={{ color: 'var(--muted)' }}>{text}</span>
+      <div className="flex-1 h-px" style={{ backgroundColor: 'var(--border)' }} />
     </div>
   );
 }
@@ -249,12 +250,12 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: 'rgba(9,17,34,0.65)', backdropFilter: 'blur(8px)' }}
+      style={{ background: 'rgba(9,17,34,0.72)', backdropFilter: 'blur(8px)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-md relative overflow-hidden animate-scale-up"
-        style={{ boxShadow: '0 25px 60px -10px rgba(16,185,129,0.18), 0 15px 35px -5px rgba(0,0,0,0.15)' }}
+        className="rounded-3xl shadow-2xl w-full max-w-md relative overflow-hidden animate-scale-up"
+        style={{ backgroundColor: 'var(--surface)', boxShadow: '0 25px 60px -10px rgba(16,185,129,0.18), 0 15px 35px -5px rgba(0,0,0,0.25)' }}
       >
         {/* Top accent */}
         <div className="h-1 bg-gradient-to-r from-emerald-400 via-teal-300 to-blue-400" />
@@ -263,7 +264,8 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
         <button
           aria-label="Close"
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-all"
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-xl transition-all hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
+          style={{ color: 'var(--muted)' }}
         >
           <X size={18} />
         </button>
@@ -275,17 +277,17 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
             <div className="w-9 h-9 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
               <span className="text-base font-black tracking-tighter">U</span>
             </div>
-            <span className="text-xl font-black tracking-tighter text-slate-900">Uni<span className="text-emerald-500">notes</span></span>
+            <span className="text-xl font-black tracking-tighter" style={{ color: 'var(--text)' }}>Uni<span className="text-emerald-500">notes</span></span>
           </div>
 
           {/* Banners */}
           {bannerSuccess && (
-            <div className="flex items-start gap-2 p-3 bg-emerald-50 border border-emerald-200 rounded-xl mb-4 text-sm text-emerald-700 animate-fade-in">
+            <div className="flex items-start gap-2 p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl mb-4 text-sm text-emerald-700 dark:text-emerald-400 animate-fade-in">
               <CheckCircle2 size={15} className="mt-0.5 shrink-0" /><span>{bannerSuccess}</span>
             </div>
           )}
           {bannerError && (
-            <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-xl mb-4 text-sm text-red-600 animate-fade-in">
+            <div className="flex items-start gap-2 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-xl mb-4 text-sm text-red-600 animate-fade-in">
               <AlertCircle size={15} className="mt-0.5 shrink-0" /><span>{bannerError}</span>
             </div>
           )}
@@ -295,8 +297,8 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
             <>
               <TriggerBanner trigger={trigger} />
               <div className="mb-6">
-                <h1 className="text-2xl font-black text-slate-900 tracking-tight">Welcome back</h1>
-                <p className="text-sm text-slate-500 font-medium mt-1">Sign in to your Uninotes account</p>
+                <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>Welcome back</h1>
+                <p className="text-sm font-medium mt-1" style={{ color: 'var(--text-secondary)' }}>Sign in to your Uninotes account</p>
               </div>
 
               <form onSubmit={handleSignIn} className="space-y-4" noValidate>
@@ -336,12 +338,14 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
               <Divider />
 
               <button type="button" onClick={handleGoogle} disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all disabled:opacity-50 shadow-sm">
-                {loading === 'google' ? <Loader2 size={16} className="animate-spin text-slate-500" /> : <Globe size={16} className="text-[#4285F4]" />}
+                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border text-sm font-semibold hover:border-emerald-400 active:scale-[0.98] transition-all disabled:opacity-50 shadow-sm"
+                style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--text)' }}
+              >
+                {loading === 'google' ? <Loader2 size={16} className="animate-spin" style={{ color: 'var(--muted)' }} /> : <Globe size={16} className="text-[#4285F4]" />}
                 Continue with Google
               </button>
 
-              <p className="text-center text-xs text-slate-400 font-medium mt-5">
+              <p className="text-center text-xs font-medium mt-5" style={{ color: 'var(--muted)' }}>
                 No account?{' '}
                 <button onClick={() => switchView('signup')} className="text-emerald-600 font-bold hover:text-emerald-700 hover:underline transition-colors">
                   Create one free
@@ -355,8 +359,8 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
             <>
               <TriggerBanner trigger={trigger} />
               <div className="mb-6">
-                <h1 className="text-2xl font-black text-slate-900 tracking-tight">Begin your journey</h1>
-                <p className="text-sm text-slate-500 font-medium mt-1">Join thousands of MBM students learning smarter</p>
+                <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>Begin your journey</h1>
+                <p className="text-sm font-medium mt-1" style={{ color: 'var(--text-secondary)' }}>Join thousands of MBM students learning smarter</p>
               </div>
 
               <form onSubmit={handleSignUp} className="space-y-4" noValidate>
@@ -438,12 +442,14 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
               <Divider />
 
               <button type="button" onClick={handleGoogle} disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all disabled:opacity-50 shadow-sm">
-                {loading === 'google' ? <Loader2 size={16} className="animate-spin text-slate-500" /> : <Globe size={16} className="text-[#4285F4]" />}
+                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border text-sm font-semibold hover:border-emerald-400 active:scale-[0.98] transition-all disabled:opacity-50 shadow-sm"
+                style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--text)' }}
+              >
+                {loading === 'google' ? <Loader2 size={16} className="animate-spin" style={{ color: 'var(--muted)' }} /> : <Globe size={16} className="text-[#4285F4]" />}
                 Continue with Google
               </button>
 
-              <p className="text-center text-xs text-slate-400 font-medium mt-5">
+              <p className="text-center text-xs font-medium mt-5" style={{ color: 'var(--muted)' }}>
                 Already have an account?{' '}
                 <button onClick={() => switchView('signin')} className="text-emerald-600 font-bold hover:text-emerald-700 hover:underline transition-colors">Sign in</button>
               </p>
@@ -458,8 +464,8 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
                 Back to Sign In
               </button>
               <div className="mb-6">
-                <h1 className="text-2xl font-black text-slate-900 tracking-tight">Forgot password?</h1>
-                <p className="text-sm text-slate-500 font-medium mt-1">No worries — we&apos;ll send a reset link to your email.</p>
+                <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>Forgot password?</h1>
+                <p className="text-sm font-medium mt-1" style={{ color: 'var(--text-secondary)' }}>No worries — we&apos;ll send a reset link to your email.</p>
               </div>
               <form onSubmit={handleForgotPassword} className="space-y-4" noValidate>
                 <InputField

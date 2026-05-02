@@ -149,7 +149,7 @@ function UploadPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg)' }}>
       <Navbar />
 
       <main className="flex-grow">
@@ -177,8 +177,8 @@ function UploadPage() {
               <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 size={32} className="text-emerald-600" />
               </div>
-              <h2 className="text-2xl font-black text-slate-900 mb-2">Upload Successful!</h2>
-              <p className="text-slate-500 mb-6">Your file is now available to the community.</p>
+              <h2 className="text-2xl font-black mb-2" style={{ color: 'var(--text)' }}>Upload Successful!</h2>
+              <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>Your file is now available to the community.</p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <a
                   href={success.signedUrl}
@@ -190,7 +190,8 @@ function UploadPage() {
                 </a>
                 <button
                   onClick={() => setSuccess(null)}
-                  className="px-6 py-3 rounded-xl border border-slate-200 text-slate-700 text-sm font-bold hover:bg-slate-50 transition-all"
+                  className="px-6 py-3 rounded-xl border text-sm font-bold transition-all hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-emerald-600"
+                  style={{ borderColor: 'var(--border)', color: 'var(--text)' }}
                 >
                   Upload Another
                 </button>
@@ -213,12 +214,13 @@ function UploadPage() {
                   onDragLeave={() => setDragOver(false)}
                   onDrop={handleDrop}
                   onClick={() => !file && fileRef.current?.click()}
-                  className={`relative border-2 border-dashed rounded-2xl p-10 text-center transition-all cursor-pointer ${dragOver
-                    ? 'border-emerald-400 bg-emerald-50'
+                    className={`relative border-2 border-dashed rounded-2xl p-10 text-center transition-all cursor-pointer ${dragOver
+                    ? 'border-emerald-400 bg-emerald-50 dark:bg-emerald-950/30'
                     : file
-                      ? 'border-emerald-400 bg-emerald-50/50 cursor-default'
-                      : 'border-slate-200 hover:border-emerald-300 hover:bg-slate-50'
+                      ? 'border-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/10 cursor-default'
+                      : 'hover:border-emerald-400'
                     }`}
+                  style={!dragOver && !file ? { borderColor: 'var(--border)' } : undefined}
                 >
                   <input
                     ref={fileRef}
@@ -234,8 +236,8 @@ function UploadPage() {
                         <FileText size={24} className="text-emerald-600" />
                       </div>
                       <div className="text-left">
-                        <p className="font-bold text-slate-900 truncate max-w-[280px]">{file.name}</p>
-                        <p className="text-sm text-slate-500">{(file.size / 1024 / 1024).toFixed(2)} MB · PDF</p>
+                        <p className="font-bold truncate max-w-[280px]" style={{ color: 'var(--text)' }}>{file.name}</p>
+                        <p className="text-sm" style={{ color: 'var(--muted)' }}>{(file.size / 1024 / 1024).toFixed(2)} MB · PDF</p>
                       </div>
                       <button
                         type="button"
@@ -247,11 +249,11 @@ function UploadPage() {
                     </div>
                   ) : (
                     <>
-                      <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Upload size={26} className="text-slate-400" />
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'var(--bg)' }}>
+                        <Upload size={26} style={{ color: 'var(--muted)' }} />
                       </div>
-                      <p className="font-bold text-slate-700 mb-1">Drop your PDF here, or click to browse</p>
-                      <p className="text-sm text-slate-400">PDF only · Max {MAX_MB}MB</p>
+                      <p className="font-bold mb-1" style={{ color: 'var(--text)' }}>Drop your PDF here, or click to browse</p>
+                      <p className="text-sm" style={{ color: 'var(--muted)' }}>PDF only · Max {MAX_MB}MB</p>
                     </>
                   )}
                 </div>
@@ -259,7 +261,7 @@ function UploadPage() {
                 {/* Branch + Semester */}
                 <div className={`grid grid-cols-1 ${isSemesterOptional(form.branch) ? '' : 'sm:grid-cols-2'} gap-4`}>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
                       Branch *
                     </label>
                     <select
@@ -267,7 +269,8 @@ function UploadPage() {
                       value={form.branch}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
+                      className="w-full px-4 py-3 rounded-xl border text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400"
+                      style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
                     >
                       <option value="">Select branch…</option>
                       {BRANCHES.map((b) => (
@@ -277,7 +280,7 @@ function UploadPage() {
                   </div>
                   {!isSemesterOptional(form.branch) && (
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
                         Semester *
                       </label>
                       <select
@@ -285,7 +288,8 @@ function UploadPage() {
                         value={form.semester}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
+                        className="w-full px-4 py-3 rounded-xl border text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400"
+                        style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
                       >
                         <option value="">Select semester…</option>
                         {SEMESTERS.map((s) => (
@@ -298,25 +302,26 @@ function UploadPage() {
 
                 {/* Subject */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
                     Subject Name
                   </label>
                   <div className="relative">
-                    <BookOpen size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <BookOpen size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: 'var(--muted)' }} />
                     <input
                       type="text"
                       name="subjectName"
                       value={form.subjectName}
                       onChange={handleChange}
                       placeholder="e.g. Data Structures and Algorithms"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400"
+                      style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
                     />
                   </div>
                 </div>
 
                 {/* Title */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
                     Paper / Notes Title *
                   </label>
                   <input
@@ -326,14 +331,15 @@ function UploadPage() {
                     onChange={handleChange}
                     placeholder="e.g. End Semester 2023 Question Paper"
                     required
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400"
+                    className="w-full px-4 py-3 rounded-xl border text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400"
+                    style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
                   />
                 </div>
 
                 {/* Description */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                    Description <span className="normal-case font-normal text-slate-400">(optional)</span>
+                  <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
+                    Description <span className="normal-case font-normal">(optional)</span>
                   </label>
                   <textarea
                     name="description"
@@ -341,7 +347,8 @@ function UploadPage() {
                     onChange={handleChange}
                     rows={3}
                     placeholder="Any extra context about this file…"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400 resize-none"
+                    className="w-full px-4 py-3 rounded-xl border text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-400 resize-none"
+                    style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
                   />
                 </div>
 
@@ -357,7 +364,7 @@ function UploadPage() {
                   )}
                 </button>
 
-                <p className="text-center text-xs text-slate-400">
+                <p className="text-center text-xs" style={{ color: 'var(--muted)' }}>
                   You must be <button type="button" className="text-emerald-600 font-bold hover:underline" onClick={() => document.querySelector('[data-signin]')?.click()}>signed in</button> to upload.
                 </p>
               </form>

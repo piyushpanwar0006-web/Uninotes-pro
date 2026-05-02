@@ -4,136 +4,177 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS — Light Mode (default)
+═══════════════════════════════════════════════ */
 :root {
+  /* Core surfaces */
+  --bg:            #f8fafc;
+  --surface:       #ffffff;
+  --card:          #ffffff;
+  --border:        #e2e8f0;
+  --border-subtle: rgba(226, 232, 240, 0.6);
+
+  /* Text hierarchy */
+  --text:          #0f172a;
+  --text-secondary:#475569;
+  --muted:         #94a3b8;
+
+  /* Brand */
+  --primary:       #10b981;
+  --primary-dark:  #059669;
+  --primary-glow:  rgba(16, 185, 129, 0.2);
+
+  /* Legacy rgb vars kept for compatibility */
   --foreground-rgb: 15, 23, 42;
   --background-start-rgb: 248, 250, 252;
   --background-end-rgb: 241, 245, 249;
 
-  --primary: 16, 185, 129;
-  --primary-dark: 5, 150, 105;
+  /* Accent */
   --accent: 59, 130, 246;
 }
 
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS — Dark Mode
+═══════════════════════════════════════════════ */
+.dark {
+  --bg:            #0b1120;
+  --surface:       #111827;
+  --card:          #1a2235;
+  --border:        #1e2d45;
+  --border-subtle: rgba(30, 45, 69, 0.7);
+
+  --text:          #e2e8f0;
+  --text-secondary:#94a3b8;
+  --muted:         #64748b;
+
+  --primary:       #34d399;
+  --primary-dark:  #10b981;
+  --primary-glow:  rgba(52, 211, 153, 0.25);
+
+  --foreground-rgb: 226, 232, 240;
+  --background-start-rgb: 11, 17, 32;
+  --background-end-rgb: 17, 24, 39;
+}
+
+/* ═══════════════════════════════════════════════
+   GLOBAL TRANSITIONS — smooth theme switching
+═══════════════════════════════════════════════ */
+*, *::before, *::after {
+  transition:
+    background-color 0.25s ease,
+    border-color     0.25s ease,
+    color            0.15s ease,
+    box-shadow       0.25s ease;
+}
+
+/* Disable transition for elements that should snap instantly */
+.no-theme-transition,
+.no-theme-transition * {
+  transition: none !important;
+}
+
+/* ═══════════════════════════════════════════════
+   BASE STYLES
+═══════════════════════════════════════════════ */
 @layer base {
   body {
-    color: rgb(var(--foreground-rgb));
-    background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    color: var(--text);
+    background-color: var(--bg);
     font-family: 'Inter', sans-serif;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
     @apply font-bold tracking-tight;
   }
 }
 
+/* ═══════════════════════════════════════════════
+   COMPONENT CLASSES (light + dark)
+═══════════════════════════════════════════════ */
 @layer components {
-.btn-premium {
-  @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2;
-}
 
-.btn-premium-primary {
-  @apply btn-premium bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 hover:shadow-emerald-600/30;
-}
-
-.btn-premium-secondary {
-    @apply btn-premium bg-white text-slate-900 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300;
+  /* Buttons */
+  .btn-premium {
+    @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2;
   }
 
+  .btn-premium-primary {
+    @apply btn-premium bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 hover:shadow-emerald-600/30;
+  }
+
+  .btn-premium-secondary {
+    @apply btn-premium border shadow-sm;
+    background-color: var(--surface);
+    color:            var(--text);
+    border-color:     var(--border);
+  }
+  .btn-premium-secondary:hover {
+    background-color: var(--card);
+    border-color:     var(--primary);
+  }
+
+  /* Cards */
   .glass-card {
-    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-xl shadow-slate-200/50 rounded-2xl transition-all duration-500;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    @apply backdrop-blur-md shadow-xl rounded-2xl transition-all duration-500;
   }
 
+  /* Navbar */
   .glass-nav {
-    @apply bg-white/80 backdrop-blur-lg border-b border-slate-200/50 sticky top-0 z-50;
+    background-color: color-mix(in srgb, var(--surface) 85%, transparent);
+    border-bottom: 1px solid var(--border-subtle);
+    @apply backdrop-blur-lg sticky top-0 z-50;
   }
 
+  /* Text gradient — adapts in dark mode */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-600;
+    @apply bg-clip-text text-transparent bg-gradient-to-r;
+    background-image: linear-gradient(to right, var(--text), #475569, #10b981);
+  }
+  .dark .text-gradient {
+    background-image: linear-gradient(to right, #e2e8f0, #94a3b8, #34d399);
   }
 }
 
+/* ═══════════════════════════════════════════════
+   UTILITY OVERRIDES
+═══════════════════════════════════════════════ */
 .hover-lift {
-  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-300/60;
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl;
 }
 
+/* ═══════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════ */
 @keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes scale-up {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.8s ease-out forwards;
-}
-
-.animate-slide-in {
-  animation: slide-in-right 0.6s ease-out forwards;
-}
-
-.animate-scale-up {
-  animation: scale-up 0.5s ease-out forwards;
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 @keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.animate-slide-up {
-  animation: slide-up 0.4s ease-out forwards;
-}
+.animate-fade-in   { animation: fade-in      0.8s ease-out forwards; }
+.animate-slide-in  { animation: slide-in-right 0.6s ease-out forwards; }
+.animate-scale-up  { animation: scale-up      0.5s ease-out forwards; }
+.animate-slide-up  { animation: slide-up      0.4s ease-out forwards; }
 
-.stagger-1 {
-  animation-delay: 0.1s;
-}
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
 
-.stagger-2 {
-  animation-delay: 0.2s;
-}
-
-.stagger-3 {
-  animation-delay: 0.3s;
-}

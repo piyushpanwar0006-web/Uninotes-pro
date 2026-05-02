@@ -25,7 +25,7 @@ const ACTION_DOT = {
 
 // ── Skeleton loader ─────────────────────────────────────────────────────────
 function Skeleton({ className = '' }) {
-  return <div className={`animate-pulse bg-slate-100 rounded-xl ${className}`} />;
+  return <div className={`animate-pulse rounded-xl ${className}`} style={{ backgroundColor: 'var(--card)' }} />;
 }
 
 export default function OverviewTab({ user }) {
@@ -150,7 +150,8 @@ export default function OverviewTab({ user }) {
         {STAT_CARDS.map(({ label, value, icon: Icon, color, ring }) => (
           <div
             key={label}
-            className="bg-white rounded-2xl border border-slate-200/70 shadow-sm p-5 flex flex-col gap-3 hover:-translate-y-0.5 transition-transform duration-200"
+            className="rounded-2xl border shadow-sm p-5 flex flex-col gap-3 hover:-translate-y-0.5 transition-transform duration-200"
+            style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}
           >
             <div className={`w-10 h-10 rounded-xl ${color} ring-2 ${ring} flex items-center justify-center`}>
               <Icon size={18} />
@@ -159,17 +160,17 @@ export default function OverviewTab({ user }) {
               {value === null ? (
                 <Skeleton className="h-7 w-10 mb-1" />
               ) : (
-                <p className="text-2xl font-black text-slate-900">{value.toLocaleString()}</p>
+                <p className="text-2xl font-black" style={{ color: 'var(--text)' }}>{value.toLocaleString()}</p>
               )}
-              <p className="text-xs text-slate-400 font-medium mt-0.5">{label}</p>
+              <p className="text-xs font-medium mt-0.5" style={{ color: 'var(--text-secondary)' }}>{label}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* ── Recent Activity ────────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-slate-200/70 shadow-sm p-6">
-        <h3 className="text-sm font-black text-slate-800 mb-4">Recent Activity</h3>
+      <div className="rounded-2xl border shadow-sm p-6" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
+        <h3 className="text-sm font-black mb-4" style={{ color: 'var(--text)' }}>Recent Activity</h3>
 
         {activity === null ? (
           // Loading skeleton
@@ -187,22 +188,22 @@ export default function OverviewTab({ user }) {
         ) : activity.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-2xl mb-2">🌱</p>
-            <p className="text-sm font-semibold text-slate-500">No activity yet.</p>
-            <p className="text-xs text-slate-400 mt-1">Upload or download a note to get started!</p>
+            <p className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>No activity yet.</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Upload or download a note to get started!</p>
           </div>
         ) : (
           <div className="space-y-3">
             {activity.map((item, i) => (
               <div key={i} className="flex items-start gap-3">
                 <span
-                  className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${ACTION_DOT[item.action] ?? 'bg-slate-400'}`}
+                  className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${ACTION_DOT[item.action] ?? 'bg-slate-400 dark:bg-slate-500'}`}
                 />
                 <div className="min-w-0">
-                  <p className="text-sm text-slate-700 font-semibold leading-snug truncate">
-                    <span className="text-slate-400 font-medium">{item.action} • </span>
+                  <p className="text-sm font-semibold leading-snug truncate" style={{ color: 'var(--text)' }}>
+                    <span className="font-medium" style={{ color: 'var(--text-secondary)' }}>{item.action} • </span>
                     {item.title}
                   </p>
-                  <p className="text-xs text-slate-400">{relativeTime(item.time)}</p>
+                  <p className="text-xs" style={{ color: 'var(--muted)' }}>{relativeTime(item.time)}</p>
                 </div>
               </div>
             ))}
