@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Bookmark, Star } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 
 interface EngagementActionsProps {
@@ -17,6 +18,7 @@ interface EngagementActionsProps {
 }
 
 export default function EngagementActions({ resourceId, resourceType = 'note', initialStats }: EngagementActionsProps) {
+  const queryClient = useQueryClient();
   const [stats, setStats] = useState(
     initialStats || {
       avg_rating: 0,
@@ -83,6 +85,8 @@ export default function EngagementActions({ resourceId, resourceType = 'note', i
           ...prev,
           isBookmarked: data.data.isBookmarked,
         }));
+        // Invalidate profile queries so the profile tab refetches bookmarks
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
       }
     } catch (error) {
       console.error(error);
