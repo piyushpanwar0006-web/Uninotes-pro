@@ -11,7 +11,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download DSA notes PDF?</h3>
-        <p class="text-emerald-700">You can easily download comprehensive and structured DSA notes PDFs, previous year questions, and coding study material from UniNotes. Our platform offers free, syllabus-aligned resources tailored for both university exams and technical interviews.</p>
+        <p class="text-emerald-700">You can easily download comprehensive and structured DSA notes PDFs, previous year questions, and coding study material from UniNote. Our platform offers free, syllabus-aligned resources tailored for both university exams and technical interviews.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What is Data Structures and Algorithms (DSA)?</h2>
@@ -44,12 +44,12 @@ export const blogs = [
         <li>Sorting and Searching Algorithms</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Master DSA with UniNotes</h2>
-      <p class="mb-4">Don't let complex algorithms ruin your semester. <strong>UniNotes</strong> provides verified, high-quality DSA study resources for engineering students. Stop scrolling through random forums and grab your <strong>free notes download</strong> in seconds.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Master DSA with UniNote</h2>
+      <p class="mb-4">Don't let complex algorithms ruin your semester. <strong>UniNote</strong> provides verified, high-quality DSA study resources for engineering students. Stop scrolling through random forums and grab your <strong>free notes download</strong> in seconds.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -81,7 +81,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -109,7 +109,7 @@ export const blogs = [
     id: 2,
     slug: 'operating-system-notes-pdf',
     title: 'Operating System Notes PDF: Free Download & PYQs Guide',
-    metaDescription: 'Need help with deadlocks and memory management? Access your complete Operating System notes PDF free download and study material on UniNotes today!',
+    metaDescription: 'Need help with deadlocks and memory management? Access your complete Operating System notes PDF free download and study material on UniNote today!',
     date: 'May 1, 2026',
     imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800',
     content: `
@@ -117,7 +117,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download Operating System notes PDF?</h3>
-        <p class="text-emerald-700">You can download comprehensive, syllabus-aligned Operating System notes PDFs, PYQs, and study guides for free on UniNotes. Our platform organizes complex OS concepts into easily digestible formats for quick revision.</p>
+        <p class="text-emerald-700">You can download comprehensive, syllabus-aligned Operating System notes PDFs, PYQs, and study guides for free on UniNote. Our platform organizes complex OS concepts into easily digestible formats for quick revision.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What is an Operating System (OS)?</h2>
@@ -150,12 +150,12 @@ export const blogs = [
         <li>File Systems & Disk Scheduling</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Ace OS with UniNotes</h2>
-      <p class="mb-4">Why struggle with heavy textbooks when <strong>UniNotes</strong> has done the work for you? We offer the best OS study resources curated by top students. Grab your <strong>semester notes pdf</strong> today.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Ace OS with UniNote</h2>
+      <p class="mb-4">Why struggle with heavy textbooks when <strong>UniNote</strong> has done the work for you? We offer the best OS study resources curated by top students. Grab your <strong>semester notes pdf</strong> today.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -187,7 +187,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -203,19 +203,19 @@ export const blogs = [
         </div>
         <div>
           <h4 class="font-bold">Is there a cost for the PYQs?</h4>
-          <p class="text-slate-600">No, all <strong>previous year questions</strong> and notes on UniNotes are completely free.</p>
+          <p class="text-slate-600">No, all <strong>previous year questions</strong> and notes on UniNote are completely free.</p>
         </div>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">Conclusion</h2>
-      <p class="mb-4">Don't let OS theory overwhelm you. By utilizing a clear <strong>Operating System notes PDF</strong> and practicing <strong>previous year questions</strong>, you can secure top marks easily. Get organized and start learning with UniNotes!</p>
+      <p class="mb-4">Don't let OS theory overwhelm you. By utilizing a clear <strong>Operating System notes PDF</strong> and practicing <strong>previous year questions</strong>, you can secure top marks easily. Get organized and start learning with UniNote!</p>
     `
   },
   {
     id: 3,
     slug: 'surveying-notes-pdf-free-download',
     title: 'Surveying Notes PDF Free Download: Civil Engineering Guide',
-    metaDescription: 'Looking for accurate civil engineering study material? Get your Surveying notes PDF free download and master leveling, contouring, and PYQs with UniNotes.',
+    metaDescription: 'Looking for accurate civil engineering study material? Get your Surveying notes PDF free download and master leveling, contouring, and PYQs with UniNote.',
     date: 'May 1, 2026',
     imageUrl: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=800',
     content: `
@@ -223,7 +223,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download Surveying notes PDF?</h3>
-        <p class="text-emerald-700">You can download high-quality, fully solved Surveying notes PDFs and previous year questions (PYQs) directly from UniNotes. We provide free Civil Engineering study material designed to help you score higher.</p>
+        <p class="text-emerald-700">You can download high-quality, fully solved Surveying notes PDFs and previous year questions (PYQs) directly from UniNote. We provide free Civil Engineering study material designed to help you score higher.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What is Surveying?</h2>
@@ -256,12 +256,12 @@ export const blogs = [
         <li>Curve Setting</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Elevate Your Civil Prep with UniNotes</h2>
-      <p class="mb-4">Stop relying on incomplete library books. <strong>UniNotes</strong> provides verified Civil Engineering resources. Find exactly what you need with our organized <strong>semester notes pdf</strong> repository.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Elevate Your Civil Prep with UniNote</h2>
+      <p class="mb-4">Stop relying on incomplete library books. <strong>UniNote</strong> provides verified Civil Engineering resources. Find exactly what you need with our organized <strong>semester notes pdf</strong> repository.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -293,7 +293,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -309,7 +309,7 @@ export const blogs = [
         </div>
         <div>
           <h4 class="font-bold">How do I access the PYQs?</h4>
-          <p class="text-slate-600">All <strong>previous year questions</strong> are easily accessible and free to download on the UniNotes platform.</p>
+          <p class="text-slate-600">All <strong>previous year questions</strong> are easily accessible and free to download on the UniNote platform.</p>
         </div>
       </div>
 
@@ -321,7 +321,7 @@ export const blogs = [
     id: 4,
     slug: 'engineering-mathematics-notes-pdf',
     title: 'Engineering Mathematics Notes PDF: Free Download & PYQs',
-    metaDescription: 'Fear engineering math? Get your Engineering Mathematics notes PDF free download. Master calculus, differential equations, and PYQs with UniNotes today!',
+    metaDescription: 'Fear engineering math? Get your Engineering Mathematics notes PDF free download. Master calculus, differential equations, and PYQs with UniNote today!',
     date: 'May 1, 2026',
     imageUrl: 'https://images.unsplash.com/photo-1596496050827-8299e0220de1?auto=format&fit=crop&q=80&w=800',
     content: `
@@ -329,7 +329,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download Engineering Mathematics notes PDF?</h3>
-        <p class="text-emerald-700">You can download comprehensive Engineering Mathematics notes PDFs, formula sheets, and previous year questions (PYQs) on UniNotes. Our platform provides free, step-by-step mathematical study materials for all engineering branches.</p>
+        <p class="text-emerald-700">You can download comprehensive Engineering Mathematics notes PDFs, formula sheets, and previous year questions (PYQs) on UniNote. Our platform provides free, step-by-step mathematical study materials for all engineering branches.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What is Engineering Mathematics?</h2>
@@ -362,12 +362,12 @@ export const blogs = [
         <li>Complex Variables & Probability</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Pass Math Easily with UniNotes</h2>
-      <p class="mb-4">Don't let a backlog in math slow down your degree. <strong>UniNotes</strong> offers premium-quality mathematics resources, carefully crafted to help you understand and pass.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Pass Math Easily with UniNote</h2>
+      <p class="mb-4">Don't let a backlog in math slow down your degree. <strong>UniNote</strong> offers premium-quality mathematics resources, carefully crafted to help you understand and pass.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -399,7 +399,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -420,14 +420,14 @@ export const blogs = [
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">Conclusion</h2>
-      <p class="mb-4">You can overcome your fear of math. Equip yourself with an <strong>Engineering Mathematics notes PDF</strong> and start grinding through those <strong>previous year questions</strong>. With UniNotes, you have everything you need to clear your papers!</p>
+      <p class="mb-4">You can overcome your fear of math. Equip yourself with an <strong>Engineering Mathematics notes PDF</strong> and start grinding through those <strong>previous year questions</strong>. With UniNote, you have everything you need to clear your papers!</p>
     `
   },
   {
     id: 5,
     slug: 'best-pyqs-for-btech-students',
     title: 'Best PYQs for B.Tech Students: Free Download Guide',
-    metaDescription: 'Want to score a higher CGPA? Discover why the best PYQs for B.Tech students are your secret weapon. Get free PYQ downloads and study material on UniNotes!',
+    metaDescription: 'Want to score a higher CGPA? Discover why the best PYQs for B.Tech students are your secret weapon. Get free PYQ downloads and study material on UniNote!',
     date: 'May 1, 2026',
     imageUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800',
     content: `
@@ -435,7 +435,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download the best PYQs for B.Tech students?</h3>
-        <p class="text-emerald-700">You can download year-wise and subject-wise previous year questions (PYQs), alongside top-tier semester notes PDFs, directly from UniNotes. We provide a massive, free repository of engineering exam papers to boost your preparation.</p>
+        <p class="text-emerald-700">You can download year-wise and subject-wise previous year questions (PYQs), alongside top-tier semester notes PDFs, directly from UniNote. We provide a massive, free repository of engineering exam papers to boost your preparation.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What Are PYQs?</h2>
@@ -459,7 +459,7 @@ export const blogs = [
       </ol>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">Common PYQ Subjects Covered</h2>
-      <p class="mb-2">UniNotes provides previous exam papers for all major subjects, including:</p>
+      <p class="mb-2">UniNote provides previous exam papers for all major subjects, including:</p>
       <ul class="list-disc pl-6 mb-6 space-y-2">
         <li>Data Structures and Algorithms</li>
         <li>Engineering Mathematics (M1, M2, M3)</li>
@@ -468,12 +468,12 @@ export const blogs = [
         <li>Thermodynamics</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Get Your PYQs on UniNotes</h2>
-      <p class="mb-4">Stop asking seniors for blurry photos of old exam papers. <strong>UniNotes</strong> gives you instant, organized access to thousands of past papers and study materials.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Get Your PYQs on UniNote</h2>
+      <p class="mb-4">Stop asking seniors for blurry photos of old exam papers. <strong>UniNote</strong> gives you instant, organized access to thousands of past papers and study materials.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -505,7 +505,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -521,19 +521,19 @@ export const blogs = [
         </div>
         <div>
           <h4 class="font-bold">Is downloading PYQs really free?</h4>
-          <p class="text-slate-600">Absolutely. UniNotes is dedicated to providing free educational resources for all students.</p>
+          <p class="text-slate-600">Absolutely. UniNote is dedicated to providing free educational resources for all students.</p>
         </div>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">Conclusion</h2>
-      <p class="mb-4">If you want to secure top grades with half the effort, the <strong>best PYQs for B.Tech students</strong> are your answer. Pair them with a solid <strong>notes pdf</strong> from UniNotes, and you will be completely unstoppable this semester.</p>
+      <p class="mb-4">If you want to secure top grades with half the effort, the <strong>best PYQs for B.Tech students</strong> are your answer. Pair them with a solid <strong>notes pdf</strong> from UniNote, and you will be completely unstoppable this semester.</p>
     `
   },
   {
     id: 6,
     slug: 'surface-mining-notes-pdf',
     title: 'Surface Mining Notes PDF: Mining Engineering Guide & PYQs',
-    metaDescription: 'Looking for complete Mining Engineering materials? Get your Surface Mining notes PDF free download, PYQs, and semester notes on UniNotes.',
+    metaDescription: 'Looking for complete Mining Engineering materials? Get your Surface Mining notes PDF free download, PYQs, and semester notes on UniNote.',
     date: 'May 1, 2026',
     imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800',
     content: `
@@ -541,7 +541,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download Surface Mining notes PDF?</h3>
-        <p class="text-emerald-700">You can easily download complete Surface Mining notes PDFs, diagrams, and previous year questions (PYQs) for free on UniNotes. Our platform hosts specialized mining engineering study materials to help you clear your semester exams.</p>
+        <p class="text-emerald-700">You can easily download complete Surface Mining notes PDFs, diagrams, and previous year questions (PYQs) for free on UniNote. Our platform hosts specialized mining engineering study materials to help you clear your semester exams.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What is Surface Mining?</h2>
@@ -574,12 +574,12 @@ export const blogs = [
         <li>Environmental Impacts and Mine Reclamation</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Find Mining Resources on UniNotes</h2>
-      <p class="mb-4">Stop struggling to find niche engineering notes. <strong>UniNotes</strong> has dedicated sections for specialized branches, ensuring you get the exact <strong>notes pdf</strong> you need.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Find Mining Resources on UniNote</h2>
+      <p class="mb-4">Stop struggling to find niche engineering notes. <strong>UniNote</strong> has dedicated sections for specialized branches, ensuring you get the exact <strong>notes pdf</strong> you need.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -611,7 +611,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -623,7 +623,7 @@ export const blogs = [
         </div>
         <div>
           <h4 class="font-bold">Do you have notes for other mining subjects?</h4>
-          <p class="text-slate-600">Absolutely, UniNotes covers various subjects including Underground Mining and Mine Surveying.</p>
+          <p class="text-slate-600">Absolutely, UniNote covers various subjects including Underground Mining and Mine Surveying.</p>
         </div>
         <div>
           <h4 class="font-bold">Are these notes good for GATE preparation?</h4>
@@ -632,14 +632,14 @@ export const blogs = [
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">Conclusion</h2>
-      <p class="mb-4">A specialized subject requires specialized preparation. Secure your <strong>Surface Mining notes PDF</strong> today, combine it with thorough <strong>previous year questions</strong> practice, and conquer your mining engineering exams with UniNotes!</p>
+      <p class="mb-4">A specialized subject requires specialized preparation. Secure your <strong>Surface Mining notes PDF</strong> today, combine it with thorough <strong>previous year questions</strong> practice, and conquer your mining engineering exams with UniNote!</p>
     `
   },
   {
     id: 7,
     slug: 'architectural-design-notes-pdf',
     title: 'Architectural Design Notes PDF: Study Material & PYQs',
-    metaDescription: 'Need help passing Architecture exams? Get your Architectural Design notes PDF free download, covering design principles, history, and PYQs on UniNotes.',
+    metaDescription: 'Need help passing Architecture exams? Get your Architectural Design notes PDF free download, covering design principles, history, and PYQs on UniNote.',
     date: 'May 1, 2026',
     imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
     content: `
@@ -647,7 +647,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download Architectural Design notes PDF?</h3>
-        <p class="text-emerald-700">You can download comprehensive Architectural Design notes PDFs, theory summaries, and previous year questions (PYQs) for free on UniNotes. We provide top-quality study material for architecture students to help ace theoretical exams.</p>
+        <p class="text-emerald-700">You can download comprehensive Architectural Design notes PDFs, theory summaries, and previous year questions (PYQs) for free on UniNote. We provide top-quality study material for architecture students to help ace theoretical exams.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What is Architectural Design Theory?</h2>
@@ -680,12 +680,12 @@ export const blogs = [
         <li>History of Modern Architecture</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Elevate Your Architecture Prep with UniNotes</h2>
-      <p class="mb-4">Don't let the theory papers bring down your studio grades. <strong>UniNotes</strong> provides verified, easy-to-read architecture resources so you can focus on your drafts.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Elevate Your Architecture Prep with UniNote</h2>
+      <p class="mb-4">Don't let the theory papers bring down your studio grades. <strong>UniNote</strong> provides verified, easy-to-read architecture resources so you can focus on your drafts.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -717,7 +717,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -738,14 +738,14 @@ export const blogs = [
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">Conclusion</h2>
-      <p class="mb-4">Balancing studio work and theory exams is tough. Grab an <strong>Architectural Design notes PDF</strong> from UniNotes, practice those <strong>previous year questions</strong>, and walk into your next exam with total confidence.</p>
+      <p class="mb-4">Balancing studio work and theory exams is tough. Grab an <strong>Architectural Design notes PDF</strong> from UniNote, practice those <strong>previous year questions</strong>, and walk into your next exam with total confidence.</p>
     `
   },
   {
     id: 8,
     slug: 'digital-electronics-notes-pdf',
     title: 'Digital Electronics Notes PDF Free Download & PYQs Guide',
-    metaDescription: 'Confused by logic gates and Karnaugh maps? Get a complete Digital Electronics notes PDF free download, PYQs, and study material on UniNotes!',
+    metaDescription: 'Confused by logic gates and Karnaugh maps? Get a complete Digital Electronics notes PDF free download, PYQs, and study material on UniNote!',
     date: 'May 1, 2026',
     imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800',
     content: `
@@ -753,7 +753,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download Digital Electronics notes PDF?</h3>
-        <p class="text-emerald-700">You can quickly download structured Digital Electronics notes PDFs, circuit diagrams, and previous year questions (PYQs) completely free on UniNotes. We provide top-tier study material to make logic design simple and exam-ready.</p>
+        <p class="text-emerald-700">You can quickly download structured Digital Electronics notes PDFs, circuit diagrams, and previous year questions (PYQs) completely free on UniNote. We provide top-tier study material to make logic design simple and exam-ready.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What is Digital Electronics?</h2>
@@ -786,12 +786,12 @@ export const blogs = [
         <li>Counters and State Machines</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Ace Your Circuits Exam with UniNotes</h2>
-      <p class="mb-4">Stop banging your head against confusing textbook diagrams. <strong>UniNotes</strong> gives you clean, verified digital electronics resources.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Ace Your Circuits Exam with UniNote</h2>
+      <p class="mb-4">Stop banging your head against confusing textbook diagrams. <strong>UniNote</strong> gives you clean, verified digital electronics resources.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -823,7 +823,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -844,14 +844,14 @@ export const blogs = [
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">Conclusion</h2>
-      <p class="mb-4">Digital logic doesn't have to be illogical. With a clear <strong>Digital Electronics notes PDF</strong> and a few hours of practicing <strong>previous year questions</strong>, you can secure an excellent grade. Start learning the smart way with UniNotes today!</p>
+      <p class="mb-4">Digital logic doesn't have to be illogical. With a clear <strong>Digital Electronics notes PDF</strong> and a few hours of practicing <strong>previous year questions</strong>, you can secure an excellent grade. Start learning the smart way with UniNote today!</p>
     `
   },
   {
     id: 9,
     slug: 'compiler-design-notes-pdf',
     title: 'Compiler Design Notes PDF Free Download: CS Guide & PYQs',
-    metaDescription: 'Struggling with parsing and lexical analysis? Secure your Compiler Design notes PDF free download today. Get the best study material and PYQs on UniNotes!',
+    metaDescription: 'Struggling with parsing and lexical analysis? Secure your Compiler Design notes PDF free download today. Get the best study material and PYQs on UniNote!',
     date: 'May 1, 2026',
     imageUrl: 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&q=80&w=800',
     content: `
@@ -859,7 +859,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download Compiler Design notes PDF?</h3>
-        <p class="text-emerald-700">You can instantly download complete Compiler Design notes PDFs, phase diagrams, and previous year questions (PYQs) for free on UniNotes. Our platform breaks down complex compilation phases into easy-to-understand study material.</p>
+        <p class="text-emerald-700">You can instantly download complete Compiler Design notes PDFs, phase diagrams, and previous year questions (PYQs) for free on UniNote. Our platform breaks down complex compilation phases into easy-to-understand study material.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What is Compiler Design?</h2>
@@ -892,12 +892,12 @@ export const blogs = [
         <li>Code Optimization Techniques</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Pass Compilers Easily with UniNotes</h2>
-      <p class="mb-4">Don't let complex automata theory ruin your GPA. <strong>UniNotes</strong> offers premium, student-verified computer science resources so you can study efficiently.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Pass Compilers Easily with UniNote</h2>
+      <p class="mb-4">Don't let complex automata theory ruin your GPA. <strong>UniNote</strong> offers premium, student-verified computer science resources so you can study efficiently.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -929,7 +929,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -957,7 +957,7 @@ export const blogs = [
     id: 10,
     slug: 'engineering-physics-notes-pdf',
     title: 'Engineering Physics Notes PDF: Free Download & B.Tech PYQs',
-    metaDescription: 'Ace your first year with the best Engineering Physics notes PDF free download. Master quantum mechanics, optics, and PYQs with UniNotes study material!',
+    metaDescription: 'Ace your first year with the best Engineering Physics notes PDF free download. Master quantum mechanics, optics, and PYQs with UniNote study material!',
     date: 'May 1, 2026',
     imageUrl: 'https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&q=80&w=800',
     content: `
@@ -965,7 +965,7 @@ export const blogs = [
       
       <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 my-6 rounded-r-lg">
         <h3 class="font-bold text-emerald-800 mb-2">Where to download Engineering Physics notes PDF?</h3>
-        <p class="text-emerald-700">You can easily download comprehensive Engineering Physics notes PDFs, formula sheets, and previous year questions (PYQs) for free on UniNotes. Our platform offers structured, easy-to-read study material specifically for first-year B.Tech students.</p>
+        <p class="text-emerald-700">You can easily download comprehensive Engineering Physics notes PDFs, formula sheets, and previous year questions (PYQs) for free on UniNote. Our platform offers structured, easy-to-read study material specifically for first-year B.Tech students.</p>
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">What is Engineering Physics?</h2>
@@ -998,12 +998,12 @@ export const blogs = [
         <li>Crystallography and X-Ray Diffraction</li>
       </ul>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Kickstart Your B.Tech with UniNotes</h2>
-      <p class="mb-4">Don't let your first year overwhelm you. <strong>UniNotes</strong> gives you the exact resources you need to transition smoothly into engineering.</p>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Kickstart Your B.Tech with UniNote</h2>
+      <p class="mb-4">Don't let your first year overwhelm you. <strong>UniNote</strong> gives you the exact resources you need to transition smoothly into engineering.</p>
 
       <div class="my-8">
         <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-          👉 Download free notes on UniNotes now
+          👉 Download free notes on UniNote now
         </a>
         <p class="text-sm text-slate-500 mt-2">Save time, start studying instantly!</p>
       </div>
@@ -1035,7 +1035,7 @@ export const blogs = [
       <p class="mb-4">Pulling an all-nighter before a crucial engineering exam is a common, yet destructive, tradition. Sleep deprivation severely impairs cognitive function, problem-solving skills, and memory recall. Aim for at least 7 hours of sleep. Your brain needs this time to consolidate the information you studied during the day. Pair this with proper hydration and brain-healthy foods like nuts and berries.</p>
 
       <h3 class="text-xl font-bold mt-8 mb-3">8. Leverage Digital Resources</h3>
-      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNotes provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
+      <p class="mb-4">You are not limited to the textbook assigned by your professor. The internet is filled with incredible resources. Platforms like UniNote provide curated, syllabus-aligned notes, detailed diagrams, and comprehensive PYQ solutions. Using these specialized digital resources can cut your study time in half while providing clearer explanations than traditional textbooks.</p>
       
       <p class="mb-8">By integrating these strategies into your daily routine, you will transform from a stressed, last-minute crammer into a highly efficient, confident engineering student. Remember, consistency is key!</p>
 
@@ -1056,7 +1056,7 @@ export const blogs = [
       </div>
 
       <h2 class="text-2xl font-bold mt-8 mb-4">Conclusion</h2>
-      <p class="mb-4">Start your engineering journey strong. By utilizing a reliable <strong>Engineering Physics notes PDF</strong> and consistently practicing <strong>previous year questions</strong>, scoring an 'A' grade is entirely within your reach. Prepare smarter with UniNotes today!</p>
+      <p class="mb-4">Start your engineering journey strong. By utilizing a reliable <strong>Engineering Physics notes PDF</strong> and consistently practicing <strong>previous year questions</strong>, scoring an 'A' grade is entirely within your reach. Prepare smarter with UniNote today!</p>
     `
   }
 ];

@@ -133,7 +133,7 @@ export default function OverviewTab({ user }) {
             <span className="text-emerald-400">{name}</span>!
           </h1>
           <p className="text-slate-400 text-sm mt-3 max-w-md">
-            Keep contributing to the UniNotes community. Your uploads help hundreds of students prepare better.
+            Keep contributing to the UniNote community. Your uploads help hundreds of students prepare better.
           </p>
         </div>
       </div>

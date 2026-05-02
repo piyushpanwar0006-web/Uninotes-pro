@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { Target, ShieldCheck, FolderTree, Users, Zap, CheckCircle2, Search, Download, UploadCloud } from 'lucide-react';
 
 export const metadata = {
-  title: "About UniNotes",
-  description: "Learn about UniNotes - the platform built for engineering students to access notes, PYQs and study resources."
+  title: "About UniNote",
+  description: "Learn about UniNote - the platform built for engineering students to access notes, PYQs and study resources."
 };
 
 export default function AboutPage() {
@@ -33,7 +33,7 @@ export default function AboutPage() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[400px] bg-gradient-to-b from-emerald-500/10 to-transparent -z-10 pointer-events-none blur-3xl" />
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6" style={{ color: 'var(--text)' }}>
-              About <span className="text-emerald-500">UniNotes</span>
+              About <span className="text-emerald-500">UniNote</span>
             </h1>
             <p className="text-xl md:text-2xl font-bold mb-4" style={{ color: 'var(--text-secondary)' }}>
               Built for students, by students.
@@ -54,11 +54,11 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* WHY UNINOTES SECTION */}
+        {/* WHY UNINOTE SECTION */}
         <section className="py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: 'var(--text)' }}>Why UniNotes?</h2>
+              <h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: 'var(--text)' }}>Why UniNote?</h2>
               <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>Features that make studying efficient.</p>
             </div>
             
@@ -109,10 +109,10 @@ export default function AboutPage() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 blur-[120px] rounded-full -z-10 pointer-events-none" />
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl md:text-5xl font-black mb-8 leading-tight" style={{ color: 'var(--text)' }}>
-              UniNotes is powered by <span className="text-emerald-500">students helping students.</span>
+              UniNote is powered by <span className="text-emerald-500">students helping students.</span>
             </h2>
             <p className="text-lg md:text-xl font-medium mb-10 max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-              Join UniNotes today and start learning smarter. Every upload helps a peer succeed.
+              Join UniNote today and start learning smarter. Every upload helps a peer succeed.
             </p>
             <Link
               href="/upload"

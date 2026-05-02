@@ -6,7 +6,7 @@ import QueryProvider from "@/components/QueryProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Uninotes - Official Study Resources",
+  title: "Uninote - Official Study Resources",
   description: "The smartest way to ace your exams",
 };
 

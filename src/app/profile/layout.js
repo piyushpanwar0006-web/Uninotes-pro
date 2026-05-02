@@ -1,7 +1,7 @@
 import Navbar from '@/components/Navbar';
 
 export const metadata = {
-  title: 'My Profile — Uninotes',
+  title: 'My Profile — Uninote',
   description: 'Manage your uploads, saved notes, downloads, achievements and settings.',
 };
 

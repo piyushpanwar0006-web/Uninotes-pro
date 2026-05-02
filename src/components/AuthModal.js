@@ -298,7 +298,7 @@ export default function AuthModal({ onClose, trigger = null, next = null }) {
               <TriggerBanner trigger={trigger} />
               <div className="mb-6">
                 <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>Welcome back</h1>
-                <p className="text-sm font-medium mt-1" style={{ color: 'var(--text-secondary)' }}>Sign in to your Uninotes account</p>
+                <p className="text-sm font-medium mt-1" style={{ color: 'var(--text-secondary)' }}>Sign in to your Uninote account</p>
               </div>
 
               <form onSubmit={handleSignIn} className="space-y-4" noValidate>

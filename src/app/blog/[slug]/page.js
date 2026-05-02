@@ -17,11 +17,11 @@ export async function generateMetadata({ params }) {
   const blog = blogs.find((b) => b.slug === slug);
 
   if (!blog) {
-    return { title: 'Post Not Found | UniNotes' };
+    return { title: 'Post Not Found | UniNote' };
   }
 
   return {
-    title: `${blog.title} | UniNotes Blog`,
+    title: `${blog.title} | UniNote Blog`,
     description: blog.metaDescription,
   };
 }
@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }) {
         {/* Footer CTA */}
         <div className="mt-16 bg-slate-50 rounded-3xl p-8 md:p-12 text-center border border-slate-100">
           <h3 className="text-2xl font-black text-slate-900 mb-4">Ready to start studying?</h3>
-          <p className="text-slate-600 mb-8 max-w-xl mx-auto">Get access to thousands of verified notes, previous year questions, and study materials on UniNotes.</p>
+          <p className="text-slate-600 mb-8 max-w-xl mx-auto">Get access to thousands of verified notes, previous year questions, and study materials on UniNote.</p>
           <Link href="/" className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:-translate-y-1">
             Explore Study Materials
           </Link>

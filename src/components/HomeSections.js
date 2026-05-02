@@ -8,8 +8,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { blogs as blogData } from '@/lib/blogData';
 
-// --- Why Uninotes Section ---
-export const WhyUninotes = () => {
+// --- Why Uninote Section ---
+export const WhyUninote = () => {
   const points = [
     { title: "Easy Access to Notes", description: "Find exactly what you need in seconds with our optimized search and categorization.", icon: <Layout className="w-6 h-6 text-emerald-500" /> },
     { title: "Verified by Seniors & Toppers", description: "High-quality material uploaded and verified by top-performing students from MBM.", icon: <Users className="w-6 h-6 text-emerald-500" /> },
@@ -22,7 +22,7 @@ export const WhyUninotes = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: 'var(--text)' }}>
-            Why Use <span className="text-emerald-500">Uninotes?</span>
+            Why Use <span className="text-emerald-500">Uninote?</span>
           </h2>
           <p className="max-w-2xl mx-auto font-medium" style={{ color: 'var(--text-secondary)' }}>
             The ultimate academic resource hub designed specifically for engineering students.
@@ -52,7 +52,7 @@ export const WhyUninotes = () => {
 // --- Testimonials Section ---
 export const Testimonials = () => {
   const reviews = [
-    { name: "Divyansh singh", role: "2 Year, ECC", text: "Uninotes helped me find last-minute notes before exams. Very useful and simple to use without any clutter." },
+    { name: "Divyansh singh", role: "2 Year, ECC", text: "Uninote helped me find last-minute notes before exams. Very useful and simple to use without any clutter." },
     { name: "Yuvranj Singh Sisodiya", role: "2nd Year, PE", text: "The collection of PYQs is amazing. It saved me so much time searching through old WhatsApp groups." },
     { name: "Amit Sharma", role: "4th Year, EE", text: "Practical and reliable. The notes are well-organized and the interface is very student-friendly." }
   ];
@@ -93,8 +93,8 @@ export const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(0);
 
   const faqs = [
-    { question: "What is Uninotes?", answer: "Uninotes is a dedicated platform for engineering students to share and access academic resources like notes, previous year questions, and study guides." },
-    { question: "Is the content free or paid?", answer: "Most of the academic content on Uninotes is free to access. Our goal is to make education accessible to every student." },
+    { question: "What is Uninote?", answer: "Uninote is a dedicated platform for engineering students to share and access academic resources like notes, previous year questions, and study guides." },
+    { question: "Is the content free or paid?", answer: "Most of the academic content on Uninote is free to access. Our goal is to make education accessible to every student." },
     { question: "How reliable are the notes?", answer: "The notes are uploaded by students and reviewed by the community. We recommend checking the verified status badges for high-quality material." },
     { question: "Can I upload my own notes?", answer: "Yes! We encourage students to contribute. Simply create an account and use the upload section to share your notes with others." },
     { question: "Is login required?", answer: "You can browse and view most notes without logging in, but features like uploading and bookmarking require a quick account creation." }
