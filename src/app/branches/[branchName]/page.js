@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { branchData } from '@/data/branches';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { createClient } from '@/lib/supabase/client';
 import {
   FileText,
   ChevronRight,
@@ -65,60 +64,51 @@ export default function BranchPage({ params }) {
   const dataKey = getBranchKey(branchName);
   const data = branchData[dataKey];
 
-  // Database ID mapping state
+  // Database ID mapping state — keyed as `${semester}-${name}` → UUID
   const [subjectMappings, setSubjectMappings] = useState({});
   const [dbLoading, setDbLoading] = useState(true);
 
   useEffect(() => {
-    async function resolveAllSubjects() {
+    if (!data || !dataKey) return;
+
+    async function loadSubjectIds() {
       setDbLoading(true);
-      const supabase = createClient();
       const newMappings = {};
 
       try {
-        // Collect all subjects across all semesters for this branch
-        const allSubjects = [];
-        semesters.forEach(sem => {
-          data[sem].forEach(subject => {
-            allSubjects.push({ sem, ...subject });
+        // ✅ USE PUBLIC GET /api/subjects — no auth required.
+        // The old code called POST /api/subjects/resolve which requires login.
+        // Guest users always got 401, dbId was always undefined, and the
+        // fallback subject.code URL caused the WRONG subject to load.
+        //
+        // Fetch ALL subjects for this branch in one request, then map by
+        // semester+name so every subject card gets the correct UUID.
+        const url = `/api/subjects?branch=${encodeURIComponent(dataKey)}`;
+        console.log('[BranchPage] Fetching subject IDs from:', url);
+
+        const res = await fetch(url);
+        const result = await res.json();
+
+        if (result.success && Array.isArray(result.data)) {
+          result.data.forEach((subj) => {
+            // Key matches how getDbId() looks up: `${sem}-${name}`
+            const key = `${subj.semester}-${subj.name}`;
+            newMappings[key] = subj.id;
           });
-        });
-
-        // Resolve each subject (using the API to ensure upsert happens if needed)
-        // We do this in parallel for speed
-        await Promise.all(allSubjects.map(async (subj) => {
-          try {
-            const res = await fetch('/api/subjects/resolve', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                branch: dataKey,
-                semester: parseInt(subj.sem),
-                name: subj.name,
-                code: subj.code
-              })
-            });
-            const result = await res.json();
-            if (result.success && result.data?.id) {
-              newMappings[`${subj.sem}-${subj.name}`] = result.data.id;
-            }
-          } catch (err) {
-            console.error(`Failed to resolve subject ${subj.name}:`, err);
-          }
-        }));
-
-        setSubjectMappings(newMappings);
+          console.log('[BranchPage] Loaded', Object.keys(newMappings).length, 'subject mappings for', dataKey);
+        } else {
+          console.warn('[BranchPage] Unexpected response from /api/subjects:', result);
+        }
       } catch (err) {
-        console.error('Error in batch resolution:', err);
+        console.error('[BranchPage] Failed to load subject IDs:', err);
       } finally {
+        setSubjectMappings(newMappings);
         setDbLoading(false);
       }
     }
 
-    if (data && branchName) {
-      resolveAllSubjects();
-    }
-  }, [dataKey, branchName, data]);
+    loadSubjectIds();
+  }, [dataKey]);  // Only re-run when the branch changes, not on every render
 
   const getDbId = (sem, name) => subjectMappings[`${sem}-${name}`];
   if (!data) {
