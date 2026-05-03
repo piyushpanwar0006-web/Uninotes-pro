@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { withAuth } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { successResponse, errorResponse } from '@/types/api';
-import { publicCacheHeaders } from '@/lib/cache';
+import { NO_CACHE_HEADERS } from '@/lib/cache';
 import { cachedQuery } from '@/lib/queryCache';
 
 // Edge runtime removed: createAdminClient() uses process.env (SUPABASE_SERVICE_ROLE_KEY)
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
 
     // HTTP-level caching: CDN caches for 1 hour, serves stale for 24h while revalidating.
     const response = successResponse(data);
-    const cacheHdrs = publicCacheHeaders(3600, 86400) as Record<string, string>;
+    const cacheHdrs = NO_CACHE_HEADERS as Record<string, string>;
     Object.entries(cacheHdrs).forEach(([k, v]) => response.headers.set(k, v));
     return response;
   } catch (err) {
