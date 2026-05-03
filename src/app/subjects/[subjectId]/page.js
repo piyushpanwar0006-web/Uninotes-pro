@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
@@ -202,6 +202,11 @@ export default function SubjectNotesPage() {
     setShowAuthFromCard(true);
   };
 
+  // ✅ Debug log: verify the subjectId param is correct on mount
+  useEffect(() => {
+    console.log('[SubjectNotesPage] Route param subjectId:', subjectId);
+  }, [subjectId]);
+
   // ── 1. Fetch Papers (Infinite) ─────────────────────────────
   const {
     data: papersData,
@@ -235,20 +240,30 @@ export default function SubjectNotesPage() {
   // Try to extract subject from the first paper
   const firstPaperSubject = papersData?.pages[0]?.papers?.[0]?.subjects;
 
-  // ── 2. Fetch Subject Details (Parallel/Fallback) ─────────────
-  const { data: fallbackSubjectData, isLoading: subjectLoading } = useQuery({
+  // ── 2. Fetch Subject Details (Always run — independent of papers) ────────────────
+  // ✅ FIX: Always fetch subject details directly by subjectId instead of relying
+  // on papers-embedded subject data. When Redis serves a cached papers response
+  // for a DIFFERENT subjectId, the embedded subject info is also wrong, making
+  // both the page title and breadcrumb show the wrong subject name.
+  const { data: subjectDetailData, isLoading: subjectLoading } = useQuery({
     queryKey: ['subjectDetails', subjectId],
     queryFn: async () => {
+      console.log('[SubjectNotesPage] Fetching subject details for ID:', subjectId);
       const res = await fetch(`/api/subjects?subjectId=${subjectId}`, { credentials: 'include' });
       const json = await res.json();
       if (!json.success) throw new Error('Failed to load subject.');
+      console.log('[SubjectNotesPage] Subject detail response:', json.data);
       return json.data;
     },
-    // We can fetch in parallel, but if we already know the subject from papers cache, we can skip
-    enabled: !!subjectId && !firstPaperSubject,
+    enabled: !!subjectId,
+    // ✅ No stale data: always re-fetch when subjectId changes
+    staleTime: 0,
   });
 
-  const subject = firstPaperSubject || (fallbackSubjectData && fallbackSubjectData.length > 0 ? fallbackSubjectData[0] : null);
+  // Subject display data: prefer directly-fetched subject detail over paper-embedded data
+  const subject = (subjectDetailData && subjectDetailData.length > 0)
+    ? subjectDetailData[0]
+    : firstPaperSubject ?? null;
 
   const loading = papersStatus === 'pending' || (subjectLoading && !subject);
   const error = papersError ? papersError.message : '';
@@ -256,6 +271,18 @@ export default function SubjectNotesPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
       <Navbar />
+
+      {/* ✅ Safety guard: invalid or missing subjectId */}
+      {!subjectId ? (
+        <main className="flex-grow flex flex-col items-center justify-center gap-4 p-8">
+          <AlertCircle size={48} className="text-red-500" />
+          <h1 className="text-2xl font-black text-slate-900">Invalid Subject</h1>
+          <p className="text-slate-500 font-medium">No subject ID was provided. Please navigate from the Branches page.</p>
+          <a href="/branches" className="px-6 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 transition-all">
+            Browse Branches
+          </a>
+        </main>
+      ) : (
 
       <main className="flex-grow">
         {/* Hero Header */}
@@ -419,6 +446,8 @@ export default function SubjectNotesPage() {
           )}
         </section>
       </main>
+
+      )} {/* end: subjectId ternary */}
 
       <Footer />
 

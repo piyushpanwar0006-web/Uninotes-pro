@@ -218,12 +218,24 @@ export default function BranchPage({ params }) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {data[sem].map((subject, idx) => {
                       const dbId = getDbId(sem, subject.name);
-                      // Always have a View Notes URL — use DB id if exists, otherwise a search URL
-                      const viewNotesUrl = subject.code && subject.code !== '—'
-                        ? `/subjects/${subject.code}`
-                        : dbId
-                          ? `/subjects/${dbId}`
+
+                      // ✅ FIX: Always prefer the DB UUID (dbId) — it uniquely identifies
+                      // exactly one subject. Subject codes are display labels, NOT unique
+                      // identifiers, and using them as route params caused wrong subjects
+                      // to be loaded (e.g. "HTO-2" resolving to a different subject).
+                      const viewNotesUrl = dbId
+                        ? `/subjects/${dbId}`
+                        : subject.code && subject.code !== '—'
+                          ? `/subjects/${encodeURIComponent(subject.code)}`
                           : `/subjects/search?branch=${encodeURIComponent(dataKey)}&semester=${sem}&name=${encodeURIComponent(subject.name)}`;
+
+                      // Debug log for production tracing
+                      if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+                        console.log(
+                          `[SubjectCard] sem=${sem} name=${subject.name} code=${subject.code} dbId=${dbId} → ${viewNotesUrl}`
+                        );
+                      }
+
                       const uploadUrl = `/upload?branch=${encodeURIComponent(dataKey)}&semester=${sem}&subject=${encodeURIComponent(subject.name)}`;
 
                       return (

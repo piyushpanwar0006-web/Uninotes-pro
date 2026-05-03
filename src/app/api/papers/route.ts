@@ -86,6 +86,13 @@ async function handler(req: NextRequest): Promise<NextResponse> {
       ? /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(subjectId)
       : false;
 
+    // ✅ Debug log — confirm the filter being applied
+    log.debug('GET /api/papers — query params', {
+      subjectId,
+      isUUID,
+      filter: subjectId ? (isUUID ? `subject_id = ${subjectId}` : `subjects.code = ${subjectId}`) : 'none',
+    });
+
     const doInnerJoin = branch || semester || subject || (subjectId && !isUUID);
     const subjectSelector = doInnerJoin
       ? `subjects!inner( id, branch, semester, name, code )`
